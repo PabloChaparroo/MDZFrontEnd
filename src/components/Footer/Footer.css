@@ -1,0 +1,43 @@
+/* Footer.css */
+
+.footer {
+    background-color: #000000; /* Marrón claro tipo madera */
+    color: #fff; /* Texto en color blanco */
+    padding: 30px 0; /* Añadir espacio interno al footer */
+  }
+  
+  .footer p {
+    margin-bottom: 0.5rem; /* Margen inferior entre párrafos */
+  }
+  
+  .footer h5 {
+    margin-bottom: 1rem; /* Margen inferior entre títulos y párrafos */
+    font-weight: bold; /* Hacer que los títulos sean más prominentes */
+  }
+  
+  .footer .border-top {
+    border-top: 2px solid #8b4513; /* Borde superior de color marrón oscuro */
+    padding-top: 20px; /* Añadir espacio interno arriba del borde superior */
+  }
+  
+  .footer .contact-info {
+    border-right: 2px solid #8b4513; /* Borde derecho de color marrón oscuro */
+    padding-right: 30px; /* Añadir espacio interno a la columna derecha */
+  }
+  
+  .footer .footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .footer .footer-content .info-column {
+    flex: 1;
+    margin: 0 15px;
+  }
+  
+  .footer .footer-content .info-column h5 {
+    text-align: center;
+  }
+  
