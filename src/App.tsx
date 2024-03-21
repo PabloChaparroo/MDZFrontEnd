@@ -7,6 +7,7 @@ import AppRoutes from "./routes/AppRoutes"
 import { Container, ToastContainer } from "react-bootstrap"
 import { Suspense } from "react"
 import Loader from "./components/Loader/Loader"
+import 'animate.css/animate.min.css'
 
 function App() {
   return(

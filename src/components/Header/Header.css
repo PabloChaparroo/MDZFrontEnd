@@ -1,0 +1,38 @@
+@keyframes neon {
+    0% {
+      text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffd700, 0 0 40px #ffd700, 0 0 70px #ffd700, 0 0 80px #ffd700, 0 0 100px #ffd700, 0 0 150px #ffd700;
+    }
+    50% {
+      text-shadow: none;
+    }
+    100% {
+      text-shadow: 0 0 10px hwb(51 0% 0%), 0 0 20px #ffd700, 0 0 30px #ffd700, 0 0 40px #ffd700, 0 0 70px #ffd700, 0 0 80px #ffd700, 0 0 100px #ffd700, 0 0 150px #ffd700;
+    }
+  }
+  
+  .neon-text {
+    animation: neon 1.5s infinite alternate;
+  }
+  .nav-link:hover {
+    animation: glow 0.5s infinite alternate;
+  }
+  
+  @keyframes glow {
+    0% {
+      text-shadow: 0px 0px 10px #ffd700 !important;
+    }
+    100% {
+      text-shadow: 50px 00px 100px #ffd700;
+    }
+  }
+
+  
+  .category-container {
+    
+    transition: color 0.3s; /* Agrega una transición suave al cambio de color */
+  }
+  
+  .category-text:hover{
+    color: #f4ff00 !important; /* Cambia el color del texto al pasar el mouse */
+    text-shadow: 5px 5px 5px #ffd700; /* Añade una sombra con efecto de destello al texto */
+  }

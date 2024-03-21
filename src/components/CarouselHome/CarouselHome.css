@@ -1,0 +1,27 @@
+.carousel-image {
+    position: relative;
+    width: 100%;
+    height: 700px; /*  altura */
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .carousel-image::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* fondo oscuro */
+  }
+  
+  .carousel-caption {
+    position: absolute;
+    bottom: 40px; /* distancia del texto desde el borde inferior */
+    left: 50%;
+    transform: translateX(-50%);
+    color: white; /* Cambia el color del texto según sea necesario */
+    text-align: center;
+  }
+  

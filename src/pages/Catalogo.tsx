@@ -1,9 +1,9 @@
-import React from 'react'
 
+import CatalogoMueble from "../components/CatalogoMueble/CatalogoMueble"
 const Catalogo = () => {
   return (
    <>
-   Acá está el catalogo
+    <CatalogoMueble/>
    </>
   )
 }

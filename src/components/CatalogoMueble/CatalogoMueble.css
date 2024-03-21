@@ -1,0 +1,67 @@
+.card:hover {
+  box-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 1px #ffd700, 0 0 5px #ffd700, 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffd700 !important;
+  transition: all 0.7s linear;
+}
+.card {
+  width: 100%; /* Establece el ancho deseado para las tarjetas */
+  max-width: 700px;
+  max-height: 500px;
+  min-width: 250px;
+  margin-top: 30px;
+  margin-bottom: 20px; /* Añade un espacio entre las tarjetas */
+  
+}
+
+/* Tamaño del body */
+.card-body {
+  padding: 1rem 0 !important;
+ margin: 0;
+}
+
+
+.card-img-top {
+  transition: all 0.2s ease-in-out;
+  margin: 0 auto;
+  
+  width: 100%;
+  height: auto;
+}
+
+.card-img-top:hover {
+  transform: scale(1.1);
+}
+
+.overflow {
+  overflow: hidden;
+}
+
+/* Estilos para el contenedor y la alineación */
+.custom-container {
+  max-width: 90%;
+  margin: 0 auto; /* Centra horizontalmente el contenedor */
+}
+
+.category-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.category-text {
+  cursor: pointer;
+  margin: 5px;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease; /* Agrega una transición suave al cambio de sombra */
+}
+
+.category-text:hover {
+  color: #f4ff00 !important; /* Cambia el color del texto al pasar el mouse */
+  text-shadow: 5px 5px 5px #ffd700; /* Añade una sombra con efecto de destello al texto */
+}

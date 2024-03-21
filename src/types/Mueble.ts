@@ -11,5 +11,5 @@ export interface Mueble {
     imagen: string;
 
     //Relacion con categoria 
-    //categoria: Categoria | null ;
+    categoria: Categoria | null ;
 }

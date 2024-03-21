@@ -1,4 +1,4 @@
-import { Button, Form, Table, Modal, FormLabel, DropdownButton, Dropdown } from "react-bootstrap";
+import { Button, Form, Modal, FormLabel } from "react-bootstrap";
 import { ModalType } from "../../types/ModalType";
 import { Mueble } from "../../types/Mueble";
 
@@ -7,6 +7,8 @@ import { useFormik } from "formik";
 import { MuebleService } from "../../services/MuebleService";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Categoria } from "../../types/Categoria";
+
 
 //que tipo de props puede recibir este componente 
 type CatalogoModalMuebleProps = {
@@ -16,17 +18,30 @@ type CatalogoModalMuebleProps = {
     modalType: ModalType;
     mue: Mueble;
     refreshData: React.Dispatch<React.SetStateAction<boolean>>;
+    categoria: string; // Nuevo prop para almacenar la categoría seleccionada
+    categorias: Categoria[]; // Lista de categorías
 
 }
 
-const CatalogoModalMueble = ({show, onHide, nombreMueble, mue, modalType,refreshData }: CatalogoModalMuebleProps) => {
+const CatalogoModalMueble = ({show, onHide, nombreMueble, mue, modalType,refreshData, categoria,categorias }: CatalogoModalMuebleProps) => {
 
     //CREATE - UPDATE
     const handleSaveUpdate = async(mue: Mueble)=>{
         try{
             const isNew = mue.id === 0;
             if(isNew){
-                await MuebleService.createMueble(mue);
+                 // Buscar la categoría correspondiente al nombre seleccionado
+                 const selectedCategory = categorias.find(c => c.nombreCategoria === categoria);
+
+                 if (selectedCategory) {
+                     // Si se encuentra la categoría, asigna el objeto Categoria al mueble
+                     mue.categoria = selectedCategory;
+                     await MuebleService.createMueble(mue);
+                     
+                 } else {
+                     console.error("La categoría seleccionada no se encontró en la lista de categorías.");
+                 }
+                
             } else {
                 await MuebleService.updateMueble(mue.id , mue);
             }
@@ -218,7 +233,7 @@ const handleDelete = async () => {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                         isInvalid= {Boolean(formik.errors.precio && !!formik.touched.precio)}
-                        //isInvalid= {formik.touched.precio && !!formik.errors.precio}
+                        
                         />
                     <Form.Control.Feedback type="invalid">
                         {formik.errors.precio}
@@ -235,7 +250,7 @@ const handleDelete = async () => {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                         isInvalid= {Boolean(formik.errors.descripcion && formik.touched.descripcion)}
-                        //isInvalid= {formik.touched.descripcion && !!formik.errors.descripcion}
+                        
                         />
                     <Form.Control.Feedback type="invalid">
                         {formik.errors.descripcion}
