@@ -26,6 +26,26 @@ const ModalABMCategoria = ({
     modalType,
     refreshData,
 }: CategoriaModalProps) => {
+
+// Función para obtener la fecha actual en formato YYYY-MM-DD
+const today = new Date();
+const year = today.getFullYear();
+let month = today.getMonth() + 1;
+let day = today.getDate();
+
+ // Convierte month y day a números
+ month = parseInt(month.toString());
+ day = parseInt(day.toString());
+ 
+ // Agrega un cero delante si el mes o el día son menores a 10
+ const formattedMonth = month < 10 ? `0${month}` : month;
+ const formattedDay = day < 10 ? `0${day}` : day;
+
+ const initialDate = `${year}-${formattedMonth}-${formattedDay}`;
+
+
+
+
     //CREATE - UPDATE
     const handleSaveUpdate = async (cat: Categoria) => {
         try {
@@ -40,6 +60,8 @@ const ModalABMCategoria = ({
             });
             onHide();
             refreshData(prevState => !prevState);
+           
+
         } catch (error) {
             console.error(error);
             toast.error("Ha ocurrido un error");
@@ -70,13 +92,13 @@ const ModalABMCategoria = ({
         return Yup.object().shape({
             id: Yup.number().integer().min(0),
             nombreCategoria: Yup.string().required("El titulo es requerido"),
-            fechaAltaCategoria: Yup.date().required("La fecha es requerida"),
+            fechaAltaCategoria: Yup.date(),
         });
     };
 
     // Formik, utiliza el esquema de validación para crear un formulario dinámico y que bloquee el formulario en caso de ver errores
     const formik = useFormik({
-        initialValues: cat,
+        initialValues: {...cat, fechaAltaCategoria: initialDate},
         validationSchema: validationSchema(),
         validateOnChange: true,
         validateOnBlur: true,
@@ -129,23 +151,18 @@ const ModalABMCategoria = ({
                                         {formik.errors.nombreCategoria}
                                     </Form.Control.Feedback>
                                 </Form.Group>
-                                <Form.Group controlId="formfechaAltaCategoria">
-                                    <FormLabel> Fecha Actual </FormLabel>
-                                    <div>
-                                    <DatePicker
-                                        name="fechaAltaCategoria"
-                                        selected={formik.values.fechaAltaCategoria ? new Date(formik.values.fechaAltaCategoria) : null}
-                                        onChange={(date) => formik.setFieldValue("fechaAltaCategoria", date)}
-                                        dateFormat="dd/MM/yyyy" // Establecer el formato de fecha
-                                        className={formik.errors.fechaAltaCategoria && formik.touched.fechaAltaCategoria ? "is-invalid" : ""}
-                                />
-                                {formik.errors.fechaAltaCategoria && formik.touched.fechaAltaCategoria && (
-                                    <div className="invalid-feedback">{formik.errors.fechaAltaCategoria}</div>
-                                )}
-
-
-                                    </div>
+                                
+                                <Form.Group controlId="formFechaAltaCategoria">
+                                <FormLabel>Fecha Actual</FormLabel>
+                                <Form.Control
+                                    name="fechaAltaCategoria"
+                                    type="date"
+                                    value={formik.values.fechaAltaCategoria || new Date().toISOString().split('T')[0]} // Utiliza el valor del formulario si está disponible, de lo contrario, usa la fecha actual
+                                    onChange={formik.handleChange} // Actualiza el valor del formulario cuando cambia la fecha
+                                    />
                                 </Form.Group>
+
+
                                 <Modal.Footer className="mt-4">
                                     <Button variant="secondary" onClick={onHide}>
                                         Cancelar

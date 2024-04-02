@@ -1,4 +1,5 @@
 import { Categoria } from "./Categoria";
+import { MuebleImagenes } from "./MuebleImagenes";
 
 export interface Mueble {
     id: number;
@@ -8,8 +9,11 @@ export interface Mueble {
     tipoMadera: string;
     precio: number;
     descripcion: string;
-    imagen: string;
+    fechaAltaMueble: string;
+  
 
     //Relacion con categoria 
     categoria: Categoria | null ;
+     //Relaciones con imagens
+     imagenes: MuebleImagenes[];
 }

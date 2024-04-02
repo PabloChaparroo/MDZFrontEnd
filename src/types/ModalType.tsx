@@ -3,4 +3,6 @@ export enum ModalType {
     CREATE,
     UPDATE,
     DELETE,
+    UPLOADIMAGES
+
 }

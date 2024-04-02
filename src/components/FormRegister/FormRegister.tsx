@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { AuthService } from "../../services/AuthServide";
+import { AuthService } from "../../services/AuthService";
 
 const FormRegister: React.FC = () => {
   const navigate = useNavigate();
@@ -44,10 +44,7 @@ const FormRegister: React.FC = () => {
     .required("El nro del telefono es obligatorio")
     .integer("Debe ser un número entero")
     .positive("Debe ser mayor a 0"),
-    mailcliente: yup
-      .string()
-      .email("Formato de correo electrónico inválido")
-      .required("Este campo es obligatorio"),
+    mailCliente: yup.string().email("Formato de correo electrónico inválido").required("Este campo es obligatorio"),
     calleDomicilio: yup.string().required("La calle es obligatorio"),
     nroCalleDomicilio: yup
       .number()
@@ -238,7 +235,7 @@ const FormRegister: React.FC = () => {
           </Form.Group>
 
           <Form.Group controlId="descripcionDomicilio">
-            <Form.Label>Descripción del lugar de recidencia</Form.Label>
+            <Form.Label>Descripción del lugar de residencia</Form.Label>
             <Form.Control
               name="descripcionDomicilio"
               type="text"
@@ -295,6 +292,7 @@ const FormRegister: React.FC = () => {
             <Button variant="primary" type="submit" disabled={!formik.isValid}>
               Guardar
             </Button>
+
           </Modal.Footer>
         </Form>
       </Modal.Body>

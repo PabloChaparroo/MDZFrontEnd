@@ -5,7 +5,7 @@ import { Form, Container, Button } from "react-bootstrap";
 
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
-import { AuthService } from "../../services/AuthServide";
+import { AuthService } from "../../services/AuthService";
 
 
 const FormLogin: React.FC = () => {
@@ -89,6 +89,13 @@ const FormLogin: React.FC = () => {
           </div>
 
           <div className="text-end">
+          <a className="text-primary px-3">
+            {!localStorage.getItem("token") && (
+              <Button  onClick={() => navigate("/registrarse")}>
+                Registrarse
+              </Button>
+            )}
+            </a>
             <Button className="px-5" variant="primary" type="submit">
               Enviar
             </Button>
