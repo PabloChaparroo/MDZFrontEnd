@@ -6,21 +6,22 @@ import { Categoria } from '../../types/Categoria';
 import { Mueble } from '../../types/Mueble';
 import Loader from '../Loader/Loader';
 import '../CatalogoMueble/CatalogoMueble.css'
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { MuebleImagenes } from '../../types/MuebleImagenes';
+import ViewMueble from '../ViewMueble/ViewMueble';
+
+
 
 
 const CatalogoMueble = () => {
   
+  
+
   const location = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0); // Desplaza la ventana hacia arriba al acceder a la página de inicio
   }, [location]); // Ejecuta el efecto cada vez que cambie la ubicación
-
-
- 
-  
 
 
   const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -69,20 +70,7 @@ const handleLoadMore = () => {
   setPage(page + 1);
 };
 
-/*
-// Llamada a la función de filtrado cada vez que se selecciona una categoría
-useEffect(() => {
-  if (categoriaSeleccionada === 'Todos') {
-    setMueblesFiltrados(muebles); // Si se selecciona "Todos", mostrar todos los muebles
-  } else {
-    const mueblesFiltrados = muebles.filter(mueble => mueble.categoria?.nombreCategoria === categoriaSeleccionada);
-    setMueblesFiltrados(mueblesFiltrados);
-  }
-}, [categoriaSeleccionada, muebles]);*/
 
-// Llamada a la función de filtrado cada vez que se selecciona una categoría
-
-// Llamada a la función de filtrado cada vez que se selecciona una categoría
 useEffect(() => {
   if (categoriaSeleccionada === 'Todos') {
     const paginatedMuebles = muebles.slice(0, (page + 1) * 9);
@@ -109,13 +97,19 @@ const handleMostrarTodos = () => {
   setCategoriaSeleccionada('Todos');
 }
 
-const [imageUrl, setImageUrl] = React.useState<string | null>(null);
+const [mandarMueble, setMandarMueble] = useState("")
 
+const [irViewMueble, setIrViewMueble] = useState(false)
+
+const hanbleClickViewMueble = (nombreMueble: string) => {
+  setIrViewMueble(true)
+  setMandarMueble(nombreMueble)
+}
 
 
   return (
     <>
-    <div className='category-container bg-black animate__animated animate__slideInRight'>
+    <div className='category-container bg-black animate__animated animate__backInDown'>
       
         <Button onClick={handleMostrarTodos} className='category-text bg-black '>Todos</Button>
         {categorias.map((categoria) => (
@@ -151,13 +145,16 @@ const [imageUrl, setImageUrl] = React.useState<string | null>(null);
                         </div>
                       </div>*/
 
-                      <div className=' col-lg-4 col-md-6 mb-4' key={mueble.id}>
+                <div className=' col-lg-4 col-md-6 mb-4' key={mueble.id}>
                 <div className=' package-item bg-white mb-2 animate__animated animate__backInUp '>
+                {mueble.imagenes.filter(imagen => imagen.esPortada).map((imagen, index) => (
                 <img 
-                className='card simg-fluid card-img-top'
-                src={`data:image/png;base64, ${mueble.imagenes[0].imagenes}`}
-                alt={mueble.nombreMueble}
+                    key={index}
+                    className='card simg-fluid card-img-top'
+                    src={`data:image/png;base64, ${imagen.imagenes}`}
+                    alt={mueble.nombreMueble}
                 />
+                ))}
 
 
                   <div className='p-4'>
@@ -171,9 +168,21 @@ const [imageUrl, setImageUrl] = React.useState<string | null>(null);
                       <div className='d-flex justify-content-between'>
                         <h6 className='m-0'><i className='fa fa-star text-primary mr-2'></i>{mueble.precio}</h6>
                         <h5 className='m-0'><i className='fas fa-dollar-sign text-primary mr-2'></i>{mueble.precio}</h5>
+
                       </div>
-                    </div>
+                      
+                      <Link to={`/ViewMueble/${mueble.nombreMueble}`} state={{ mueble }}>
+                        Pedir presupuesto
+                      </Link>
+                       
+                         
+                      
+                     
+                      </div>
+                      
+                      
                   </div>
+                  
                 </div>
               </div>
                     
@@ -182,6 +191,7 @@ const [imageUrl, setImageUrl] = React.useState<string | null>(null);
 )))}</Row>
 
 </Container> )}
+
 {muebles.length > (page + 1) * 9 && (
   <div className='text-center mt-4'>
     <Button onClick={handleLoadMore}>Ver más</Button>

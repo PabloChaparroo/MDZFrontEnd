@@ -22,9 +22,10 @@ export const ClienteService = {
             headers: {
                 'Content-Type': 'application/json'
             },
+           
             body: JSON.stringify(cliente)
         });
-
+        console.log("El cliente se creo correctamente:" ,cliente)
         const data = await response.json();
         return data;
     },
@@ -73,6 +74,20 @@ export const ClienteService = {
             console.error('Error al recuperar datos');
             throw error;
         }
+    },
+    getClienteByMail: async (mailCliente: string): Promise<Cliente | null> => {
+        console.log("Verificación de mail")
+        const response = await fetch(`${BASE_URL}/api/v1/cliente/byMailCliente?mailCliente=${encodeURIComponent(mailCliente)}`);
+        if (!response.ok) {
+            console.log("Se encontro cliente")
+            const data = await response.json();
+            return data;
+        } else {
+            console.log("No existe mail, se pasa a crear instancia de cliente")
+            return null;
+        }
+
     }
-    
+
+   
     };

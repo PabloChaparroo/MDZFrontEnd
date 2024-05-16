@@ -7,10 +7,5 @@ export interface RegisterRequest {
     telefonoCliente: number,
     mailCliente: string,
 
-    calleDomicilio: string,
-    nroCalleDomicilio: number,
-    descripcionDomicilio: string,
-    localidadDomicilio: string,
-    provinciaDomicilio: string,
    
 }

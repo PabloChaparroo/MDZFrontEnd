@@ -72,7 +72,7 @@ const Header = () => {
       {/* Navbar */}
       <Navbar sticky="top" expand="lg" variant="dark" className="bg-black">
         <Container>
-          <Link to="/" className="navbar-brand neon-text">
+          <Link to="/" className="navbar-brand neon-text ">
             <img 
               src={logo}
               alt="MDZ MUEBLES"
@@ -86,10 +86,11 @@ const Header = () => {
             <Nav className="ml-auto">
               <Link to="/" className="nav-link">Inicio</Link>
               <Link to="/catalogo" className="nav-link">Catálogo</Link>
-              <Link to="/contacto" className="nav-link">Contacto</Link>
-              <Link to="/mueblesAMedida" className="nav-link">Muebles a Medida</Link>
-              <Link to="/soliciteSuPresupuesto" className="nav-link">Solicite su presupuesto</Link>
-              <Link to="/administrador" className="nav-link">Administrador</Link>
+              
+              <Link to="/novedades" className="nav-link">Novedades</Link>
+              <Link to="/quienesSomos" className="nav-link">Quienes Somos</Link>
+              <Link to="/administrarCategorias" className="nav-link">Administrar Categorías</Link>
+              <Link to="/administrarSolicitud" className="nav-link">Administrar Solicitud</Link>
             </Nav>
           </Navbar.Collapse>
         </Container>

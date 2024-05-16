@@ -1,7 +1,7 @@
 import { Carousel } from "react-bootstrap";
 import '../CarouselHome/CarouselHome.css';
 import { Link, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 
 const CarouselHome = () => {
@@ -11,6 +11,21 @@ const CarouselHome = () => {
   useEffect(() => {
     window.scrollTo(0, 0); // Desplaza la ventana hacia arriba al acceder a la página de inicio
   }, [location]); // Ejecuta el efecto cada vez que cambie la ubicación
+
+  //Refrezcar imagen
+  const [timestamp, setTimestamp] = useState(Date.now());
+
+// useEffect con un array de dependencias vacío se ejecuta solo una vez, equivalente a componentDidMount
+useEffect(() => {
+  const interval = setInterval(() => {
+    // Actualizamos el timestamp cada 30 segundos
+    setTimestamp(Date.now());
+  }, 10000); // Intervalo de 10 segundos
+// Devolvemos una función de limpieza para detener el intervalo cuando el componente se desmonta
+return () => clearInterval(interval);
+}, []); // Array de dependencias vacío
+
+
   return (/*
     <>
      
@@ -83,7 +98,10 @@ const CarouselHome = () => {
                 <h4 className="header-subtitle" >Muebles a tu medida</h4>
                 <h3 className="header-title">MDZ MUEBLES</h3>
                 <h6 className="header-mono" >Tu visión, nuestra creación: descubre cómo hacemos realidad tus sueños de decoración</h6>
-                <button className="btn btn-primary btn-rounded"><i className="ti-printer pr-2"></i>Ver muebles</button>
+                <a href="/catalogoq" className="btn btn-primary btn-rounded">
+                <i className="ti-printer pr-2"></i>Ver muebles
+                </a>
+
             </div>
         </div>
     </header>
@@ -106,7 +124,7 @@ const CarouselHome = () => {
                 <p>Nos dedicamos a diseñar y fabricar muebles a medida que se adapten perfectamente a tus necesidades y gustos individuales. Nuestro equipo de expertos trabaja con atención al detalle y pasión por el diseño para crear piezas que no solo sean funcionales, sino también estéticamente hermosas. Explora nuestro catálogo diverso y descubre cómo podemos transformar tu espacio en algo verdaderamente extraordinario"</p>
                 <div className="row mb-4">
                   <div className="col-6">
-                    <img className="img-fluid" src="src/assets/images/tele1.jpg" alt="" />
+                  <img className="img-fluid" src={`src/assets/images/tele1.jpg?timestamp=${timestamp}`} alt="" />
                   </div>
                   <div className="col-6">
                     <img className="img-fluid" src="src/assets/images/biblioteca1.jpg" alt="About 2" />
@@ -196,6 +214,60 @@ const CarouselHome = () => {
         </div>
     
 </div>
+
+
+
+
+{/* Contactanos */}
+    <div className="container-fluid bg-registration py-5" style={{margin: '90px 0'}}>
+        <div className="container py-5">
+            <div className="row align-items-center">
+                <div className="col-lg-7 mb-5 mb-lg-0">
+                    <div className="mb-4">
+                        <h6 className="text-primary text-uppercase" style={{letterSpacing: '5px'}}>MDZ Muebles</h6>
+                        <h1 className="text-white"><span className="text-primary">Consulta</span> Tus dudas</h1>
+                    </div>
+                    <p className="text-white">Invidunt lorem justo sanctus clita. Erat lorem labore ea, justo dolor lorem ipsum ut sed eos,
+                        ipsum et dolor kasd sit ea justo. Erat justo sed sed diam. Ea et erat ut sed diam sea ipsum est
+                        dolor</p>
+                    <ul className="list-inline text-white m-0">
+                        <li className="py-2"><i className="fa fa-check text-primary mr-3"></i>Labore eos amet dolor amet diam</li>
+                        <li className="py-2"><i className="fa fa-check text-primary mr-3"></i>Etsea et sit dolor amet ipsum</li>
+                        <li className="py-2"><i className="fa fa-check text-primary mr-3"></i>Diam dolor diam elitripsum vero.</li>
+                    </ul>
+                </div>
+                <div className="col-lg-5">
+                    <div className=" border-0">
+                        <div className="card-header bg-primary text-center p-4">
+                            <h1 className="text-white m-0">Contactanos</h1>
+                        </div>
+                        <div className="card-body rounded-bottom bg-white p-5">
+                            <form>
+                                <div className="form-group">
+                                    <input type="text" className="form-control p-4" placeholder="Your name"  />
+                                </div>
+                                <div className="form-group">
+                                    <input type="email" className="form-control p-4" placeholder="Your email"  />
+                                </div>
+                                <div className="form-group">
+                                    <select className="custom-select px-4" style={{height: '47px'}}>
+                                        <option selected>Select a destination</option>
+                                        <option value="1">Consulta</option>
+                                        <option value="2">Trabajo</option>
+                                        <option value="3">Otros</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <button className="btn btn-primary btn-block py-3" type="submit">Contactanos</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     </>
 

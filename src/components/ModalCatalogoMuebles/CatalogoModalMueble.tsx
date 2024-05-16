@@ -1,4 +1,4 @@
-import { Button, Form, Modal, FormLabel } from "react-bootstrap";
+import { Button, Form, Modal, FormLabel, FormCheck } from "react-bootstrap";
 import { ModalType } from "../../types/ModalType";
 import { Mueble } from "../../types/Mueble";
 
@@ -15,6 +15,7 @@ import { MuebleImagenesService } from "../../services/MuebleImagenesService";
 type SelectedFile = {
     file: File;
     url: string;
+    esPortada: boolean; // Nuevo atributo para indicar si la imagen es la portada o no
   };
 
 //que tipo de props puede recibir este componente 
@@ -30,7 +31,7 @@ type CatalogoModalMuebleProps = {
 
 }
 
-const CatalogoModalMueble = ({show, onHide, nombreMueble, mue, modalType,refreshData, categoria,categorias }: CatalogoModalMuebleProps) => {
+const CatalogoModalMueble = ({show, onHide, nombreMueble, mue, modalType,refreshData, categoria,categorias  }: CatalogoModalMuebleProps) => {
     const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]); // Array de archivos seleccionados
 
     // Función para obtener la fecha actual en formato YYYY-MM-DD
@@ -49,7 +50,9 @@ const CatalogoModalMueble = ({show, onHide, nombreMueble, mue, modalType,refresh
     
      const initialDate = `${year}-${formattedMonth}-${formattedDay}`;
 
-     const [coverImage, setCoverImage] = useState<string | null>(null);
+     
+     const [selectedCoverIndex, setSelectedCoverIndex] = useState<number | null>(null);
+     ;
 
 
     //CREATE - UPDATE
@@ -62,6 +65,7 @@ const CatalogoModalMueble = ({show, onHide, nombreMueble, mue, modalType,refresh
             
             console.log("Valor de isNew:", isNew);
             console.log("Valor de selectedFiles:", selectedFiles);
+            
            
            
             if (isNew  && selectedFiles.length > 0) {
@@ -77,9 +81,10 @@ const CatalogoModalMueble = ({show, onHide, nombreMueble, mue, modalType,refresh
                     const fileList = new DataTransfer();
                     selectedFiles.forEach((file) => fileList.items.add(file.file));
                     // Crear el mueble
-                    await MuebleService.createMueble(mue,fileList.files);
-
-      
+                    //await MuebleService.createMueble(mue,fileList.files);
+                    
+                    await MuebleService.createMueble(mue, fileList.files, selectedFiles.findIndex(file => file.esPortada));
+                    console.log("Valor de esPortada:", selectedFiles)
                 } else {
                     console.error("La categoría seleccionada no se encontró en la lista de categorías.");
                 }
@@ -93,7 +98,7 @@ const CatalogoModalMueble = ({show, onHide, nombreMueble, mue, modalType,refresh
                 selectedFiles.forEach((file) => fileList.items.add(file.file));
                         
                 // Actualizar el mueble
-                await MuebleService.updateMueble(mue.id, mue, fileList.files);
+                await MuebleService.updateMueble(mue.id, mue, fileList.files, selectedFiles.findIndex(file => file.esPortada));
                 
                 
             } 
@@ -163,7 +168,7 @@ const handleDelete = async () => {
             tipoMadera: Yup.string().required('El tipo madera es requerido'),
             precio: Yup.number().positive('El precio tiene que ser positivo').required('El precio es requerido'),
             descripcion: Yup.string().min(0).required('La descripción es requerida'),
-            //imagenes: Yup.mixed().required('La imagen es requerida') 
+            
         });
     };
 
@@ -189,6 +194,13 @@ const handleDelete = async () => {
         );
       };
 
+     
+      const handleDeleteImage = (indexToDelete: number) => {
+        const updatedFiles = selectedFiles.filter((file, index) => index !== indexToDelete);
+        setSelectedFiles(updatedFiles);
+    };
+    
+
 
   return  (
     
@@ -206,6 +218,9 @@ const handleDelete = async () => {
   <p> ¿Está seguro que desea eliminar el producto  
       <br /> <strong> {mue.nombreMueble} </strong> ?
   </p>
+
+
+
 </Modal.Body>
 
 <Modal.Footer>
@@ -222,7 +237,7 @@ const handleDelete = async () => {
 
 </>     ) : (
         <>
-        <Modal show={show} onHide={onHide} centered backdrop= 'static' className="modal-xl">
+        <Modal show={show} onHide={onHide} >
             <Modal.Header closeButton>
                 <Modal.Title> { nombreMueble }</Modal.Title>
             </Modal.Header>
@@ -361,39 +376,57 @@ const handleDelete = async () => {
 
                     
                     <Form.Group controlId="formImagenes">
-        <FormLabel>Imagen</FormLabel>
-        <Form.Control
-          name="imagenes"
-          type="file"
-          onBlur={formik.handleBlur}
-          onChange={(event) => {
-            const inputElement = event.target as HTMLInputElement;
-            const files = inputElement.files;
+    <FormLabel>Imagen</FormLabel>
+    <Form.Control
+    name="imagenes"
+    type="file"
+    onBlur={formik.handleBlur}
+    onChange={(event) => {
+        const inputElement = event.target as HTMLInputElement;
+        const files = inputElement.files;
 
-            if (files && files.length > 0) {
-              const newFiles: SelectedFile[] = Array.from(files).map((file) => ({
+        if (files && files.length > 0) {
+            const newFiles: SelectedFile[] = Array.from(files).map((file, index) => ({
                 file,
                 url: URL.createObjectURL(file),
-              }));
+                esPortada: index === 0 && selectedFiles.length === 0 ? true : false, // Marca la primera imagen como portada solo si no hay imágenes seleccionadas aún
+            }));
 
-              setSelectedFiles((prevFiles) => [...prevFiles, ...newFiles]); // Agregar nuevos archivos al array
-            }
-          }}
-          multiple // Permite seleccionar múltiples archivos
-          isInvalid={Boolean(formik.errors.imagenes && formik.touched.imagenes)}
-        />
-        <div>
-          {selectedFiles.map((file, index) => (
-            <div key={index} style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
-              <img src={file.url} alt={file.file.name} style={{ maxWidth: "100px", maxHeight: "100px", marginRight: "10px" }} />
-              <span>{file.file.name}</span>
-              <Button variant="danger" size="sm" onClick={() => handleRemoveFile(index)} style={{ marginLeft: "10px" }}>
-                Eliminar
-              </Button>
-            </div>
-          ))}
+            setSelectedFiles((prevFiles) => [...prevFiles, ...newFiles]);
+        }
+    }}
+    multiple // Permite seleccionar múltiples archivos
+    isInvalid={Boolean(formik.errors.imagenes && formik.touched.imagenes)}
+/>
+    {/* Mostrar las imágenes seleccionadas */}
+    <FormLabel>Seleccione imagen de portada:</FormLabel>
+    {selectedFiles.map((file, index) => 
+    (
+        
+        <div key={index} style={{ marginBottom: "5px" }}>
+            <FormCheck
+                type="checkbox"
+                id={`checkbox-${index}`}
+                label={`Imagen ${index + 1}`}
+                checked={file.esPortada}
+                onChange={() => {
+                    const updatedFiles = selectedFiles.map((f, i) => ({
+                        ...f,
+                        esPortada: i === index, // Marca solo la imagen correspondiente como portada
+                    }));
+                    setSelectedFiles(updatedFiles);
+                }}
+            />
+            <Button variant="danger" size="sm" onClick={() => handleDeleteImage(index)}>Eliminar</Button> {/* Botón para eliminar la imagen */}
         </div>
-      </Form.Group>
+    ))}
+</Form.Group>
+
+
+
+
+
+
 
 
             

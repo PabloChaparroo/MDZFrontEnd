@@ -1,7 +1,7 @@
-import React from 'react'
+
 import CatalogoTabla from '../components/ABMAdministrador/CatalogoTabla'
 
-const Administrador = () => {
+const AdministrarCategorias = () => {
   return (
     <>
     <CatalogoTabla/>
@@ -9,4 +9,4 @@ const Administrador = () => {
   )
 }
 
-export default Administrador
+export default AdministrarCategorias

@@ -54,7 +54,7 @@ export  const MuebleService = {
             console.error("Error al crear el mueble:", error);
             throw error; // Lanza nuevamente el error para que el código que llamó a esta función también pueda manejarlo
         }
-    },
+    },/*
 
     createMueble: async (mueble: Mueble, files: FileList): Promise<void> => {
         try {
@@ -129,12 +129,13 @@ export  const MuebleService = {
             throw error; // Lanza nuevamente el error para que el código que llamó a esta función también pueda manejarlo
         }
     }
-    ,/*
+    ,*/
 
     createMueble: async (mueble: Mueble, files: FileList, portadaIndex?: number): Promise<void> => {
         try {
             const formData = new FormData();
             formData.append('mueble', JSON.stringify(mueble)); // Convertir el objeto Mueble a JSON y agregarlo al formulario
+            formData.append('portadaIndex', portadaIndex?.toString() || ''); // Agregar el índice de la imagen marcada como portada
 
             // Agregar archivos al formulario
             for (let i = 0; i < files.length; i++) {
@@ -165,6 +166,7 @@ export  const MuebleService = {
 
     updateMueble: async (id: number, mueble: Mueble, files: FileList | null, portadaIndex?: number): Promise<void> => {
         try {
+            
             // Primero, actualizamos los datos del mueble
             const responseMueble = await fetch(`${BASE_URL}/api/v1/mueble/${id}`, {
                 method: "PUT",
@@ -182,7 +184,7 @@ export  const MuebleService = {
             // Luego, si hay archivos nuevos, actualizamos las imágenes asociadas al mueble
             if (files) {
                 const formData = new FormData();
-                formData.append('muebleId', id.toString()); // Agregar el ID del mueble al formulario
+                formData.append('portadaIndex', portadaIndex?.toString() || ''); // Agregar el índice de la imagen marcada como portada
 
                 // Agregar archivos al formulario
                 for (let i = 0; i < files.length; i++) {
@@ -208,7 +210,7 @@ export  const MuebleService = {
             console.error("Error al actualizar el mueble:", error);
             throw error;
         }
-    },*/
+    },
     deleteMueble: async (id: number): Promise<void> => {
         await fetch(`${BASE_URL}/api/v1/mueble/${id}`, {
             method: "DELETE"

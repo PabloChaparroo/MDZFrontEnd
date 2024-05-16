@@ -131,7 +131,7 @@ let day = today.getDate();
                 </>
             ) : (
                 <>
-                    <Modal show={show} onHide={onHide} centered backdrop="static" className="modal-xl">
+                    <Modal show={show} onHide={onHide}>
                         <Modal.Header closeButton>
                             <Modal.Title> {nombreCategoria}</Modal.Title>
                         </Modal.Header>

@@ -12,29 +12,8 @@ const FormRegister: React.FC = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(true);
 
-  {
-    /*
-  //almacenar las localidades que nos trae el servicio
-  const [localidades, setLocalidades] = useState<Localidad[]>([]);
-
-  
-   //buscar las localidades
-  useEffect(() => {
-    const fetchLocalidades = async () => {
-      try {
-        const localidadesData = await LocalidadService.getAllLocalidades();
-        setLocalidades(localidadesData);
-      } catch (error) {
-        console.error("Error al obtener las localidades", error);
-      }
-    };
-
-    fetchLocalidades();
-  }, []); */
-  }
-
   // YUP - Esquema de validación
-  const validationSchema = yup.object().shape({
+  const validationSchema = yup.object().shape({ 
     username: yup.string().required("Este campo es obligatorio"),
     password: yup.string().required("Este campo es obligatorio"),
     nombreCliente: yup.string().required("El nombre es obligatorio"),
@@ -45,15 +24,7 @@ const FormRegister: React.FC = () => {
     .integer("Debe ser un número entero")
     .positive("Debe ser mayor a 0"),
     mailCliente: yup.string().email("Formato de correo electrónico inválido").required("Este campo es obligatorio"),
-    calleDomicilio: yup.string().required("La calle es obligatorio"),
-    nroCalleDomicilio: yup
-      .number()
-      .required("El nro de calle es obligatorio")
-      .integer("Debe ser un número entero")
-      .positive("Debe ser mayor a 0"),
-    descripcionDomicilio: yup.string().required("La descripción es obligatorio"),
-    localidadDomicilio: yup.string().required("La localidad es obligatorio"),
-    provinciaDomicilio: yup.string().required("La provincia es obligatorio"),
+    
   });
 
   const formik = useFormik({
@@ -64,11 +35,7 @@ const FormRegister: React.FC = () => {
       apellidoCliente: "",
       telefonoCliente: 0,
       mailCliente: "",
-      calleDomicilio: "",
-      nroCalleDomicilio: 0,
-      descripcionDomicilio: "",
-      localidadDomicilio: "",
-      provinciaDomicilio: "",
+      
      
     },
 
@@ -94,9 +61,7 @@ const FormRegister: React.FC = () => {
     <Modal
       show={show}
       onHide={handleHide}
-      centered
-      backdrop="static"
-      className="modal-xl"
+      
     >
       <Modal.Header closeButton>
         <Modal.Title>Registrarse</Modal.Title>
@@ -202,88 +167,7 @@ const FormRegister: React.FC = () => {
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Form.Group controlId="calleDomicilio">
-            <Form.Label>Calle</Form.Label>
-            <Form.Control
-              name="calleDomicilio"
-              type="text"
-              value={formik.values.calleDomicilio}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={Boolean(formik.errors.calleDomicilio && formik.touched.calleDomicilio)}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.calleDomicilio}
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group controlId="nroCalleDomicilio">
-            <Form.Label>Numero de Calle</Form.Label>
-            <Form.Control
-              name="nroCalleDomicilio"
-              type="number"
-              value={formik.values.nroCalleDomicilio}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={Boolean(
-                formik.errors.nroCalleDomicilio && formik.touched.nroCalleDomicilio
-              )}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.nroCalleDomicilio}
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group controlId="descripcionDomicilio">
-            <Form.Label>Descripción del lugar de residencia</Form.Label>
-            <Form.Control
-              name="descripcionDomicilio"
-              type="text"
-              value={formik.values.descripcionDomicilio}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={Boolean(
-                formik.errors.descripcionDomicilio && formik.touched.descripcionDomicilio
-              )}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.descripcionDomicilio}
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group controlId="localidadDomicilio">
-            <Form.Label>Localidad</Form.Label>
-            <Form.Control
-              name="localidadDomicilio"
-              type="text"
-              value={formik.values.localidadDomicilio}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={Boolean(
-                formik.errors.localidadDomicilio && formik.touched.localidadDomicilio
-              )}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.localidadDomicilio}
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group controlId="provinciaDomicilio">
-            <Form.Label>Provincia</Form.Label>
-            <Form.Control
-              name="provinciaDomicilio"
-              type="text"
-              value={formik.values.provinciaDomicilio}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={Boolean(
-                formik.errors.provinciaDomicilio && formik.touched.provinciaDomicilio
-              )}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.provinciaDomicilio}
-            </Form.Control.Feedback>
-          </Form.Group>
+          
          
           <Modal.Footer className="mt-4">
             <Button variant="secondary" onClick={handleHide}>

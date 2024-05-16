@@ -1,12 +1,13 @@
 import { Route, Routes } from "react-router-dom"
 import HomePage from "../pages/HomePage"
 import Catalogo from "../pages/Catalogo";
-import Contacto from "../pages/Contacto";
-import Administrador from "../pages/Administrador";
-import MueblesAMedida from "../pages/MueblesAMedida";
-import SoliciteSuPresupuesto from "../pages/SoliciteSuPresupuesto";
 import LoginPage from "../pages/LoginPage/LoginPage";
 import RegisterPage from "../pages/RegisterPage/RegisterPage";
+import ViewMueble from "../components/ViewMueble/ViewMueble";
+import AdministrarCategorias from "../pages/AdministrarCategorias";
+import Novedades from "../pages/Novedades";
+import QuienesSomos from "../pages/QuienesSomos";
+import AdministrarSolicitudPage from "../pages/AdministrarSolicitud";
 
 
 const AppRoutes: React.FC = () => {
@@ -16,14 +17,19 @@ const AppRoutes: React.FC = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/registrarse" element={<RegisterPage />} />
             <Route path="/catalogo" element={<Catalogo/>}/>
-            <Route path="/contacto" element={<Contacto/>}/>
-            <Route path="/administrador" element={<Administrador/>}/>
-            <Route path="/MueblesAMedida" element={<MueblesAMedida/>}/>
-            <Route path="/SoliciteSuPresupuesto" element={<SoliciteSuPresupuesto/>}/>
+            
+            <Route path="/administrarCategorias" element={<AdministrarCategorias/>}/>
+            <Route path="/administrarSolicitud" element={<AdministrarSolicitudPage/>}/>
+            <Route path="/novedades" element={<Novedades/>}/>
+            <Route path="/quienesSomos" element={<QuienesSomos/>}/>
+            <Route path="/ViewMueble/:nombreMueble" element={<ViewMueble/>} />
 
-
-
+            
         </Routes>
+
+
+
+    
     )
 }
 export default AppRoutes;

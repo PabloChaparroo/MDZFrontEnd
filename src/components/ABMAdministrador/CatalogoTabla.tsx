@@ -14,6 +14,7 @@ import { CategoriaService } from '../../services/CategoriaService';
 import '../CatalogoMueble/CatalogoMueble.css'
 import ModalABMCategoria from '../ModalABMCategoria/ModalABMCategoria';
 import { useLocation } from 'react-router-dom';
+import './CatalogoTabla.css'
 
 
 
@@ -62,6 +63,8 @@ const filtrarMueblesPorCategoria = (categoria: string | null) => {
   if (categoria) {
     const mueblesFiltrados = muebles.filter(mueble => mueble.categoria?.nombreCategoria === categoria);
     setMueblesFiltrados(mueblesFiltrados); // Actualizamos el estado de los muebles filtrados
+     //Transforma el JSon en un formato mas legible
+    console.log(JSON.stringify(muebles, null, 2));
   } else {
     setMueblesFiltrados([]); // Si la categoría es null, establecemos la lista de muebles filtrados como vacía
   }
@@ -69,6 +72,8 @@ const filtrarMueblesPorCategoria = (categoria: string | null) => {
 // Llamada a la función de filtrado cada vez que se selecciona una categoría
 useEffect(() => {
   filtrarMueblesPorCategoria(categoriaSeleccionada);
+   //Transforma el JSon en un formato mas legible
+ console.log(JSON.stringify(categorias, null, 2));
 }, [categoriaSeleccionada]);
 
 //Logica de Modal categoria 
@@ -187,10 +192,8 @@ const handleClick = (newNombreMueble: string, mue: Mueble, modal: ModalType) => 
 
  
 
-  //Transforma el JSon en un formato mas legible
-  console.log(JSON.stringify(categorias, null, 2));
- //Transforma el JSon en un formato mas legible
-  console.log(JSON.stringify(muebles, null, 2));
+ 
+
 
 const [showEditCategory, setShowEditCategory] = useState(false)
 const [editCategory, setEditCategory] = useState(false)
@@ -205,7 +208,8 @@ const handleClickEditCategory = ()=>{
 
 return( 
 <>
-<div className='category-container bg-black' >
+<div className='category-container bg-black'>
+  
          {/*Itera sobre las categorías para generar los botones */}
         {categorias.map((categoria) => (
 
@@ -216,7 +220,7 @@ return(
           
         <Button className='category-text bg-dark' onClick={() => handleClickEditCategory()}> Editar Categorías </Button>
 
-      </div>
+      </div >
       {
         editCategory && (
           <>
@@ -225,6 +229,7 @@ return(
         initializeNewCategoria(), ModalType.CREATE)}>
         NUEVA CATEGORÍA
       </Button>
+      <div style={{ overflowX: 'auto' }}> 
         <Table hover>
           <thead>
             <tr>
@@ -248,6 +253,7 @@ return(
             ))}
           </tbody>
         </Table>
+        </div>
         {showEditCategory && (
   <ModalABMCategoria
   show = {showEditCategory}
@@ -276,7 +282,7 @@ return(
 </Button>
       
 {isLoading ? <Loader/>: (
-   
+   <div style={{ overflowX: 'auto' }}> 
 <Table hover>
     <thead>
         <tr>
@@ -304,22 +310,27 @@ return(
         <td>{mueble.dimension}</td>
         <td>{mueble.tipoMadera}</td>
         <td>{mueble.precio}</td>
-        <td>{mueble.descripcion}</td>
-        <td>{mueble.imagenes.length > 0 && (
-          <img
-              className='card simg-fluid card-img-top'
-              src={`data:image/png;base64, ${mueble.imagenes[0].imagenes}`}
-              alt={mueble.nombreMueble}
-    
-            style={{ width: '100px' }}
-          />
-        )}</td>
+        <td style={{ maxWidth: "150px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+  {mueble.descripcion}
+</td>
+
+
+        <td>{mueble.imagenes.filter(imagen => imagen.esPortada).map((imagen, index) => (
+                <img 
+                    key={index}
+                    style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    className='card simg-fluid card-img-top'
+                    src={`data:image/png;base64, ${imagen.imagenes}`}
+                    alt={mueble.nombreMueble}
+                />
+                ))}</td>
         <td><EditButton onClick={()=>handleClick("Editar producto", mueble,ModalType.UPDATE)}/></td>
         <td><DeleteButton onClick={()=>handleClick("Eliminar producto", mueble,ModalType.DELETE)}/></td>
         </tr>
         ))}
     </tbody>
 </Table>
+</div>
 
 )}
 
@@ -334,6 +345,8 @@ return(
   categoria={categoriaSeleccionada} // Pasa la categoría al modal
   categorias={categorias}
   
+ 
+
   
   />
   )}

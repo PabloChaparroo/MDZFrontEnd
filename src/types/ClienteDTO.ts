@@ -1,4 +1,4 @@
-import {Domicilio} from '../types/Domicilio';
+
 
 export interface ClienteDTO {
     username: string,
@@ -8,5 +8,5 @@ export interface ClienteDTO {
     telefonoCliente: number,
     mailCliente: string,
     fechaHoraModificacionCliente: string,
-    domicilioList: Domicilio[],
+
 }
