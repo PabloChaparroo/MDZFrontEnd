@@ -2,6 +2,6 @@ export interface Categoria{
     id: number;
     nombreCategoria: string;
     fechaAltaCategoria: string;
-    //fechaModificacionCategoria: string;
+    fechaModificacionCategoria: string | null;
     //fechaBajaCategoria: string;
 }

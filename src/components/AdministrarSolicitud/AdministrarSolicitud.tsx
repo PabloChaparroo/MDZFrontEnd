@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { SolicitarVisitaService } from "../../services/SolicitarVisitaService"
 import { SolicitarVisita } from "../../types/SolicitarVisita"
-import { Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 
 
 
@@ -15,16 +15,35 @@ const AdministrarSolicitud = () => {
         setSolicitarVisita(solicitarVisita.reverse());
     }
     fetchSolicitarVisita();
-   },[])
+   },[]);
 
+
+   const handleClickVerSolicitud = () => {
+                 
+                  
+   };
 
   return (
+    <>
+    
+<Button className='category-text bg-black' onClick={() => handleClickVerSolicitud()}>
+        Solicitudes 
+</Button>
+<Button className='category-text bg-black' onClick={() => handleClickVerSolicitud()}>
+        Lista de clientes
+</Button>
+<Button className='category-text bg-black' onClick={() => handleClickVerSolicitud()}>
+        Ranking 
+</Button>
+<Button className='category-text bg-black' onClick={() => handleClickVerSolicitud()}>
+        Consultas
+</Button>
     <div style={{ overflowX: "auto" }}>
       <Table hover>
           <thead>
             <tr>
               <th>ID</th>
-              <th>FECHA DE SOLICITUD</th>
+             
               <th>NOMBRE</th>
               <th>APELLIDO</th>
               <th>FECHA CREACION DEL CLIENTE</th>
@@ -39,7 +58,7 @@ const AdministrarSolicitud = () => {
             {solicitarVisita.map((solicitarVisita) => (
               <tr key={solicitarVisita.id}>
                 <td>{solicitarVisita.id}</td>
-                <td>{solicitarVisita.fechaHoraAltaSolicitarVisita}</td>
+               
                 <td>{solicitarVisita.cliente?.nombreCliente}</td>
                 <td>{solicitarVisita.cliente?.apellidoCliente}</td>
                 <td>{solicitarVisita.cliente?.fechaHoraAltaCliente}</td>
@@ -56,7 +75,7 @@ const AdministrarSolicitud = () => {
           </tbody>
         </Table>
     </div>
-  )
+    </>)
 }
 
 export default AdministrarSolicitud

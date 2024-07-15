@@ -109,6 +109,7 @@ const hanbleClickViewMueble = (nombreMueble: string) => {
 
   return (
     <>
+    
     <div className='category-container bg-black animate__animated animate__backInDown'>
       
         <Button onClick={handleMostrarTodos} className='category-text bg-black '>Todos</Button>
@@ -117,8 +118,12 @@ const hanbleClickViewMueble = (nombreMueble: string) => {
         {categoria.nombreCategoria}</Button>
      
         ))}
-      
+       
+
       </div>
+      
+     
+                                     
       <div className='content-wrapper'>
       {categoriaSeleccionada && (
         <Container className ='custom-container d-flex justify-content-center  '>
@@ -128,22 +133,7 @@ const hanbleClickViewMueble = (nombreMueble: string) => {
               ) : (
                 
                 mueblesFiltrados.map((mueble) => (
-                  /*
-                <div className='col-md-4'  key={mueble.id} >
-                      <div className='card text-center bg-black animate__animated animate__backInUp'>
-                        <div className='overflow'>
-                          <img src={mueble.imagen} alt={mueble.nombreMueble} className='card-img-top ' />
-                        </div>
-                          <div className='card-body'>
-                            <h3 className='card-title text-light'>
-                              {mueble.nombreMueble}
-                            </h3>
-                            <a href='#!' className='btn btn-outline-secondary rounded-0'>
-                              Leer más
-                            </a>
-                          </div> 
-                        </div>
-                      </div>*/
+            
 
                 <div className=' col-lg-4 col-md-6 mb-4' key={mueble.id}>
                 <div className=' package-item bg-white mb-2 animate__animated animate__backInUp '>
@@ -159,36 +149,44 @@ const hanbleClickViewMueble = (nombreMueble: string) => {
 
                   <div className='p-4'>
                     <div className='d-flex justify-content-between mb-3'>
-                      <small className='m-0'><i className='fas fa-paint-brush text-primary mr-2'></i>{mueble.colorMueble}</small>
-                      <small className='m-0'><i className='fas fa-couch text-primary mr-2'></i>{mueble.tipoMadera}</small>
+                      <small className='m-0'><i className='fas  fa-couch mr-2'></i>{mueble.tipoMadera}</small>
                       <small className='m-0'><i className='fas fa-ruler text-primary mr-2'></i>{mueble.dimension}</small>
                     </div>
-                    <a className='h5 text-decoration-none' href='#'> {mueble.nombreMueble}</a>
-                    <div className='border-top mt-4 pt-4'>
+                    <div className=' mt-2 pt-2'></div>
+                    <Link
+                    className='h5 text-decoration-none'
+                    to={`/ViewMueble/${mueble.nombreMueble}`}
+                    state={{ mueble }}
+                  >
+                    {mueble.nombreMueble}
+                  </Link>
+                    <div className=' mt-2 pt-4'>
                       <div className='d-flex justify-content-between'>
-                        <h6 className='m-0'><i className='fa fa-star text-primary mr-2'></i>{mueble.precio}</h6>
+                        <h6 className='m-0'><i className='fa fa-paint-brush text-primary mr-2'></i>{mueble.colorMueble}</h6>
                         <h5 className='m-0'><i className='fas fa-dollar-sign text-primary mr-2'></i>{mueble.precio}</h5>
 
                       </div>
-                      
-                      <Link to={`/ViewMueble/${mueble.nombreMueble}`} state={{ mueble }}>
-                        Pedir presupuesto
+                      <div className='border-top mt-4 pt-4'></div>
+                      <Link className='h4 text-primary-verMas text-decoration-none' to={`/ViewMueble/${mueble.nombreMueble}`} state={{ mueble }}>
+                        Ver más
                       </Link>
                        
-                         
-                      
-                     
+                    
                       </div>
                       
                       
                   </div>
                   
                 </div>
+                
               </div>
                     
                   
                 
-)))}</Row>
+)
+))}</Row>
+
+
 
 </Container> )}
 
@@ -197,7 +195,10 @@ const hanbleClickViewMueble = (nombreMueble: string) => {
     <Button onClick={handleLoadMore}>Ver más</Button>
   </div>
 )}
+
 </div>
+  
+
 </>
   );
 };

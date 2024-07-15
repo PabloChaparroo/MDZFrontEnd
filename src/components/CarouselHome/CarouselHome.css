@@ -30,7 +30,7 @@
     border-radius: 10px; /* Añade esquinas redondeadas */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Añade un efecto de difuminado */
   }
-  
+ 
 
 
   /*Tranparente NO LO USO POR AHORA*/
@@ -182,20 +182,29 @@
   }
   
   .header .header-content .header-subtitle {
+    margin-left: 6px;
+    margin-bottom: 0%;
     font-weight: 200;
     font-size: calc(20px + (45 - 20) * ((100vw - 300px) / (1600 - 300)));
   }
   
   .header .header-content .header-title {
-    font-size: calc(40px + (120 - 40) * ((100vw - 300px) / (1600 - 300)));
-    font-weight: bold;
-    line-height: .7;
-    margin-bottom: 25px;
-    color: inherit;
+  font-size: calc(40px + (120 - 40) * ((100vw - 300px) / (1600 - 300)));
+  font-family: sans-serif;
+  font-weight: bold;
+  margin-left: 0px;
+  margin-top: -20px;
+  line-height: 1.2; /* Ajuste para mejorar la legibilidad */
+  margin-bottom: 0px; /* Reducir el margen inferior para acercar el título al contenido siguiente */
+  color: #d7d700; /* Cambiar el color del texto a uno que resalte */
+  text-transform: uppercase; /* Convertir el texto a mayúsculas */
+  letter-spacing: 1px; /* Ajustar el espaciado entre letras */
   }
   
   .header .header-content .header-mono {
-    letter-spacing: 5px;
+    letter-spacing: 3px;
+    margin-top: -15px;
+    margin-left: 8px;
     font-weight: 500;
     font-size: calc(12px + (19 - 12) * ((100vw - 300px) / (1600 - 300)));
     margin-bottom: 40px;
@@ -273,14 +282,57 @@
   .text-center {
     text-align: center !important;
   }
-
+/*emoticones de redes sociales*/
   .text-primary {
-    color: #7AB730 !important;
+    color: #000000 !important;
   }
   
   a.text-primary:hover, a.text-primary:focus {
-    color: #527a20 !important;
+    color: #ffc800 !important;
   }
+
+  .text-primary-verMas {
+    margin-top: 5px;
+    color: #000000 !important;
+  }
+  
+  a.text-primary-verMas:hover, a.text-primary-verMas:focus {
+    color: #ffc800 !important;
+  }
+
+  .text-primary-consulta{
+      color: #ffc800 !important; 
+  }
+  a.text-primary-consulta:hover, a.text-primary-consulta:focus {
+    color: #ffc800 !important;
+  }
+
+  .text-primary-white{
+    color: #ffffff !important; 
+}
+a.text-primary-white:hover, a.text-primary-white:focus {
+  color: #ffc800 !important;
+}
+
+
+/* styles.css */
+.custom-link {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 1.5rem; /* Tamaño de fuente más grande */
+  color: #ffd000; /* Color primario */
+  text-decoration: none; /* Sin subrayado */
+  border: 2px solid transparent; /* Borde transparente para espacio */
+  border-radius: 5px; /* Borde redondeado */
+  transition: background-color 0.3s, color 0.3s; /* Transición suave */
+}
+
+.custom-link:hover {
+  background-color: #007bff; /* Fondo azul al pasar el ratón */
+  color: #fff; /* Texto blanco al pasar el ratón */
+  border-color: #007bff; /* Borde azul al pasar el ratón */
+}
+
 
   .text-uppercase {
     text-transform: uppercase !important;

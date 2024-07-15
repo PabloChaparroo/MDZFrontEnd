@@ -10,6 +10,7 @@ import { ClienteService } from "../../services/ClienteService";
 import { Cliente } from "../../types/Cliente";
 import { SolicitarVisitaService } from "../../services/SolicitarVisitaService";
 import { SolicitarVisita } from "../../types/SolicitarVisita";
+import { Button } from "react-bootstrap";
 
 
 
@@ -166,6 +167,7 @@ useEffect(() => {
                 id: 0,
                 fechaHoraAltaSolicitarVisita: null,
                 fechaHoraBajaSolicitarVisita: null,
+                fechaHotaModificacionSolicitarVisita: null,
                 consultaSolicitarVisita: consultaPresupuesto,
                 mueble: null,
                 cliente: null,
@@ -185,14 +187,10 @@ if (modalRef.current) {
 }
   
                   
-               
-
-               
-  
                 };
 
 
-
+              
 
   
 
@@ -201,6 +199,7 @@ if (modalRef.current) {
                 return (
     
                   <>
+
                 
                  <div className="container-fluid py-5 animate__animated animate__fadeInUp">
                       <div className="container py-5 ">
@@ -261,7 +260,7 @@ if (modalRef.current) {
                   
                                   
                                   <div className="bg-white mb-3" style={{ padding: '30px' }}>
-                  <h4 className="text-uppercase mb-4" style={{ letterSpacing: '5px' }}>SOLICITE UNA VISITA</h4>
+                  <h4 className="text-uppercase mb-4" style={{ letterSpacing: '5px' }}>SOLICITAR MUEBLE</h4>
               
                   <form onSubmit={handleSubmit}>
                   <div className="form-group">
@@ -314,7 +313,7 @@ if (modalRef.current) {
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="text">Mensaje: Descripción y medidas del mueble que desea realizar</label>
+                      <label htmlFor="text">Solicita un presupuesto específico para el mueble que están visualizando, programando una visita para un diseño completamente nuevo o simplemente haciendo otras consultas sobre el mueble en cuestión </label>
                       <input
                         type="text"
                         className="form-control"
@@ -376,17 +375,9 @@ if (modalRef.current) {
                                   </div>
                   
                         
-                                  <div className="mb-5">
-                                      <div className="bg-white" style={{padding: '30px'}}>
-                                          <div className="input-group">
-                                              <input type="text" className="form-control p-4" placeholder="Keyword"/>
-                                              <div className="input-group-append">
-                                                  <span className="input-group-text bg-primary border-primary text-white"><i
-                                                          className="fa fa-search"></i></span>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
+                                 
+
+
                                              
                                   <div className="mb-5">
                                       <h4 className="text-uppercase mb-4" style={{letterSpacing: '5px'}}>Categories</h4>
@@ -418,15 +409,15 @@ if (modalRef.current) {
                                   </div>
                   
                               
-                                  <div className="mb-5">
-                                      <h4 className="text-uppercase mb-4" style={{letterSpacing: '5px'}}>¿Cómo pedir su presupuesto?</h4>
+                                  <div className="mb-2">
+                                      <h4 className="text-uppercase mb-5" style={{letterSpacing: '6px'}}>¿Cómo pedir solicitar una visita?</h4>
                                       <a className="d-flex align-items-center text-decoration-none bg-white mb-3" href="/">
                                           <img className="img-fluid" src="img/blog-100x100.jpg" alt=""/>
                                           <div className="pl-3">
                                               <h6 className="d-flex align-items-center text-decoration-none bg-white mb-3">Cada mueble visualizado en el catalogo son imagenes reales de trabajos realizados a medida para cada cliente, puedes consultar presupuesta para otras medidas, colores o incluso otros diseño. </h6>
                                               <h6 className="text-dark bg-white mb-3">Se notificara el presupuesto por vía Cliente </h6>
                                           </div>
-                  Cliente                    </a>
+                                   </a>
                                      
                                   </div>
                   

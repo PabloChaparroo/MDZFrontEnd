@@ -8,8 +8,11 @@ function Footer() {
     <footer className="footer">
       <Container>
         <Row className="border-top justify-content-between p-3 footer-content">
-          <Col className="p-0 info-column" md={4} sm={12}>
-            <h4>Contacto</h4>
+          <Col className="p-0 info-column  " md={4} sm={12}>
+         
+            <h4 className='text-primary-consulta'>Contacto</h4>  
+          
+            
             <div className="d-flex align-items-center">
               
               <div>

@@ -10,6 +10,8 @@ export interface Mueble {
     precio: number;
     descripcion: string;
     fechaAltaMueble: string;
+    fechaModificacionMueble: string | null,
+    fechaBajaMueble: string | null
   
 
     //Relacion con categoria 

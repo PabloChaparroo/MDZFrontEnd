@@ -92,7 +92,7 @@ const FormLogin: React.FC = () => {
           <a className="text-primary px-3">
             {!localStorage.getItem("token") && (
               <Button  onClick={() => navigate("/registrarse")}>
-                Registrarse
+                Registrar
               </Button>
             )}
             </a>

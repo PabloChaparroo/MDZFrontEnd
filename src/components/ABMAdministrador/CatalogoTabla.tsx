@@ -8,6 +8,7 @@ import Loader from '../Loader/Loader';
 import { ModalType } from '../../types/ModalType';
 import CatalogoModalMueble from '../ModalCatalogoMuebles/CatalogoModalMueble';
 import { EditButton } from '../EditButton/EditButton';
+
 import DeleteButton from '../DeleteButton/DeleteButton';
 import { Categoria } from '../../types/Categoria';
 import { CategoriaService } from '../../services/CategoriaService';
@@ -15,6 +16,7 @@ import '../CatalogoMueble/CatalogoMueble.css'
 import ModalABMCategoria from '../ModalABMCategoria/ModalABMCategoria';
 import { useLocation } from 'react-router-dom';
 import './CatalogoTabla.css'
+import InhabilitarButton from '../InhabilitarButton/InhabilitarButton';
 
 
 
@@ -90,7 +92,8 @@ const initializeNewCategoria = (): Categoria => {
   return {
       id: 0,
       nombreCategoria:'',
-      fechaAltaCategoria: ''
+      fechaAltaCategoria: '',
+      fechaModificacionCategoria: '',
   };
 };
 
@@ -148,6 +151,8 @@ const initializeNewMueble= (): Mueble => {
       id: 0,
       nombreMueble:'',
       fechaAltaMueble: '',
+      fechaModificacionMueble:'',
+      fechaBajaMueble:'',
       colorMueble: '',
       dimension: '',
       tipoMadera:'',
@@ -180,6 +185,15 @@ const handleClick = (newNombreMueble: string, mue: Mueble, modal: ModalType) => 
   
 };
 
+
+const handleClickMueblesInhabilitados = () => {
+
+  
+};
+const handleClickMueblesEditarPrecios = () => {
+
+  
+};
 //-------------------------------------------
 
 
@@ -225,7 +239,7 @@ return(
         editCategory && (
           <>
           
-          <Button className='category-text bg-black' onClick={() => handleClickCategoriaButton("Nueva categoria",
+          <Button className='category-text bg-black' onClick={() => handleClickCategoriaButton("Editar Categoría",
         initializeNewCategoria(), ModalType.CREATE)}>
         NUEVA CATEGORÍA
       </Button>
@@ -236,6 +250,7 @@ return(
               <th>ID</th>
               <th>NOMBRE</th>
               <th>FECHA CREACIÓN</th>
+              <th>FECHA MODIFICACIÓN</th>
               <th>EDITAR</th>
               <th>BORRAR</th>
             </tr>
@@ -246,6 +261,7 @@ return(
                 <td>{categoria.id}</td>
                 <td>{categoria.nombreCategoria}</td>
                 <td>{categoria.fechaAltaCategoria}</td>
+                <td>{categoria.fechaModificacionCategoria}</td>
                 <td><EditButton onClick={() => handleClickCategoriaButton("Editar categoria", categoria, ModalType.UPDATE)}/></td>
                 <td><DeleteButton onClick={() => handleClickCategoriaButton("Borrar categoria", categoria, ModalType.DELETE)}/></td>
                 
@@ -276,11 +292,18 @@ return(
        <>
 
        {/* Botón para que cuando el usuario haga click llame a la función que declaramos*/} 
-<Button className='category-text bg-black' onClick={() => handleClick("Nueva producto",
+<Button className='category-text bg-black' onClick={() => handleClick("Nuevo mueble",
         initializeNewMueble(), ModalType.CREATE)}>
-        Nuevo Producto
+        Nuevo Mueble
+</Button>
+
+<Button className='category-text bg-black' onClick={() => handleClickMueblesInhabilitados()}>
+        Muebles Inhabilitados
 </Button>
       
+<Button className='category-text bg-black' onClick={() => handleClickMueblesEditarPrecios()}>
+        Editar precios
+</Button>
 {isLoading ? <Loader/>: (
    <div style={{ overflowX: 'auto' }}> 
 <Table hover>
@@ -289,6 +312,7 @@ return(
             <th> ID </th>
             <th> NOMBRE </th>
             <th> FECHA CREACIÓN</th>
+            <th> FECHA MODIFICACION</th>
             <th> COLOR </th>
             <th> TAMAÑO </th>
             <th> TIPO DE MADERA </th>
@@ -296,6 +320,7 @@ return(
             <th> DESCRIPCIÓN </th>
             <th> IMAGEN </th>
             <th> EDITAR </th>
+            <th> INHABILITAR</th>
             <th> BORRAR </th>
         </tr>
     </thead>
@@ -306,6 +331,7 @@ return(
         <td>{mueble.id}</td>
         <td>{mueble.nombreMueble}</td>
         <td>{mueble.fechaAltaMueble}</td>
+        <td>{mueble.fechaModificacionMueble}</td>
         <td>{mueble.colorMueble}</td>
         <td>{mueble.dimension}</td>
         <td>{mueble.tipoMadera}</td>
@@ -325,7 +351,9 @@ return(
                 />
                 ))}</td>
         <td><EditButton onClick={()=>handleClick("Editar producto", mueble,ModalType.UPDATE)}/></td>
+        <td><InhabilitarButton onClick={()=>handleClick("Inhabilitar mueble", mueble,ModalType.UPDATE)}/></td>
         <td><DeleteButton onClick={()=>handleClick("Eliminar producto", mueble,ModalType.DELETE)}/></td>
+
         </tr>
         ))}
     </tbody>

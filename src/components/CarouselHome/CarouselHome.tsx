@@ -99,7 +99,7 @@ return () => clearInterval(interval);
                 <h3 className="header-title">MDZ MUEBLES</h3>
                 <h6 className="header-mono" >Tu visión, nuestra creación: descubre cómo hacemos realidad tus sueños de decoración</h6>
                 <a href="/catalogoq" className="btn btn-primary btn-rounded">
-                <i className="ti-printer pr-2"></i>Ver muebles
+                <i className="ti-printer pr-0"></i> Ver muebles
                 </a>
 
             </div>
@@ -121,7 +121,7 @@ return () => clearInterval(interval);
               <div className="about-text bg-white p-4 p-lg-5 my-lg-5">
                 <h6 className="text-primary text-uppercase" style={{ letterSpacing: '5px' }}>Nuestra empresa</h6>
                 <h1 className="mb-3">Descubre MDZ Muebles: Expertos en Muebles a Medida</h1>
-                <p>Nos dedicamos a diseñar y fabricar muebles a medida que se adapten perfectamente a tus necesidades y gustos individuales. Nuestro equipo de expertos trabaja con atención al detalle y pasión por el diseño para crear piezas que no solo sean funcionales, sino también estéticamente hermosas. Explora nuestro catálogo diverso y descubre cómo podemos transformar tu espacio en algo verdaderamente extraordinario"</p>
+                <p>Nos dedicamos a diseñar y fabricar muebles a medida que se adapten perfectamente a tus necesidades y gustos individuales. Nuestro equipo de expertos trabaja con atención al detalle y pasión por el diseño para crear piezas que no solo sean funcionales, sino también estéticamente hermosas. Explora nuestro catálogo y descubre cómo podemos transformar tu espacio en algo verdaderamente extraordinario"</p>
                 <div className="row mb-4">
                   <div className="col-6">
                   <img className="img-fluid" src={`src/assets/images/tele1.jpg?timestamp=${timestamp}`} alt="" />
@@ -224,16 +224,15 @@ return () => clearInterval(interval);
             <div className="row align-items-center">
                 <div className="col-lg-7 mb-5 mb-lg-0">
                     <div className="mb-4">
-                        <h6 className="text-primary text-uppercase" style={{letterSpacing: '5px'}}>MDZ Muebles</h6>
-                        <h1 className="text-white"><span className="text-primary">Consulta</span> Tus dudas</h1>
+                        <h6 className="text-primary-white text-uppercase" style={{letterSpacing: '5px'}}>MDZ Muebles</h6>
+                        <h1 className="text-white"><span className="text-primary-consulta">Consulta</span> Tus dudas</h1>
                     </div>
-                    <p className="text-white">Invidunt lorem justo sanctus clita. Erat lorem labore ea, justo dolor lorem ipsum ut sed eos,
-                        ipsum et dolor kasd sit ea justo. Erat justo sed sed diam. Ea et erat ut sed diam sea ipsum est
-                        dolor</p>
+                    <p className="text-white">Si tienes alguna pregunta o consulta no dudes en contactarnos.
+                    Para enviarnos tu consulta, simplemente completa el formulario y en breve nos comunicaremos contigo. </p>
                     <ul className="list-inline text-white m-0">
-                        <li className="py-2"><i className="fa fa-check text-primary mr-3"></i>Labore eos amet dolor amet diam</li>
-                        <li className="py-2"><i className="fa fa-check text-primary mr-3"></i>Etsea et sit dolor amet ipsum</li>
-                        <li className="py-2"><i className="fa fa-check text-primary mr-3"></i>Diam dolor diam elitripsum vero.</li>
+                        <li className="py-2"><i className="fa fa-check text-primary-consulta mr-3"></i>Calidad en productos</li>
+                        <li className="py-2"><i className="fa fa-check text-primary-consulta mr-3"></i>Atención al cliente</li>
+                        <li className="py-2"><i className="fa fa-check text-primary-consulta mr-3"></i>Bienestar y comodidad</li>
                     </ul>
                 </div>
                 <div className="col-lg-5">
@@ -244,21 +243,22 @@ return () => clearInterval(interval);
                         <div className="card-body rounded-bottom bg-white p-5">
                             <form>
                                 <div className="form-group">
-                                    <input type="text" className="form-control p-4" placeholder="Your name"  />
+                                    <input type="text" className="form-control p-4" placeholder="Nombre"  />
                                 </div>
                                 <div className="form-group">
-                                    <input type="email" className="form-control p-4" placeholder="Your email"  />
+                                    <input type="email" className="form-control p-4" placeholder="Apellido"  />
                                 </div>
                                 <div className="form-group">
-                                    <select className="custom-select px-4" style={{height: '47px'}}>
-                                        <option selected>Select a destination</option>
-                                        <option value="1">Consulta</option>
-                                        <option value="2">Trabajo</option>
-                                        <option value="3">Otros</option>
-                                    </select>
+                                    <input type="email" className="form-control p-4" placeholder="Email"  />
+                                </div>
+                                <div className="form-group">
+                                    <input type="email" className="form-control p-4" placeholder="Telefono(opcional)"  />
+                                </div>
+                                <div className="form-group">
+                                    <input type="email" className="form-control p-4" placeholder="Consulta"  />
                                 </div>
                                 <div>
-                                    <button className="btn btn-primary btn-block py-3" type="submit">Contactanos</button>
+                                    <button className="btn btn-primary-enviar btn-block py-3 text-center " type="submit">Enviar</button>
                                 </div>
                             </form>
                         </div>

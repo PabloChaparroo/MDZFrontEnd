@@ -5,7 +5,9 @@ export interface SolicitarVisita{
     id: number,
     fechaHoraAltaSolicitarVisita: string | null,
     fechaHoraBajaSolicitarVisita: string | null,
+    fechaHotaModificacionSolicitarVisita: string | null,
     consultaSolicitarVisita: string,
+
 
     mueble: Mueble | null,
     cliente: Cliente | null,

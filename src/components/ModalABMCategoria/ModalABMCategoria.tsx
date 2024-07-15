@@ -138,7 +138,7 @@ let day = today.getDate();
                         <Modal.Body>
                             <Form onSubmit={formik.handleSubmit}>
                                 <Form.Group controlId="formNombreCategoria">
-                                    <FormLabel> Nombre de la categoría </FormLabel>
+                                    <FormLabel> Nombre Categoría: </FormLabel>
                                     <Form.Control
                                         name="nombreCategoria"
                                         type="text"

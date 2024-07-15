@@ -64,7 +64,7 @@ const FormRegister: React.FC = () => {
       
     >
       <Modal.Header closeButton>
-        <Modal.Title>Registrarse</Modal.Title>
+        <Modal.Title>Registrar</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>

@@ -84,15 +84,16 @@ const Header = () => {
           <Navbar.Toggle aria-controls="navbarSupportedContent" />
           <Navbar.Collapse id="navbarSupportedContent">
             <Nav className="ml-auto">
-              <Link to="/" className="nav-link">Inicio</Link>
+              <Link to="/" className="nav-link ">Inicio</Link>
               <Link to="/catalogo" className="nav-link">Catálogo</Link>
-              
+
               <Link to="/novedades" className="nav-link">Novedades</Link>
               <Link to="/quienesSomos" className="nav-link">Quienes Somos</Link>
               <Link to="/administrarCategorias" className="nav-link">Administrar Categorías</Link>
               <Link to="/administrarSolicitud" className="nav-link">Administrar Solicitud</Link>
             </Nav>
           </Navbar.Collapse>
+          
         </Container>
       </Navbar>
       {/* End Navbar */}
