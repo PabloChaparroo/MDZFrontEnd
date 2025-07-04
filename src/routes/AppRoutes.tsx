@@ -5,7 +5,6 @@ import LoginPage from "../pages/LoginPage/LoginPage";
 import RegisterPage from "../pages/RegisterPage/RegisterPage";
 import ViewMueble from "../components/ViewMueble/ViewMueble";
 import AdministrarCategorias from "../pages/AdministrarCategorias";
-import Novedades from "../pages/Novedades";
 import QuienesSomos from "../pages/QuienesSomos";
 import AdministrarSolicitudPage from "../pages/AdministrarSolicitud";
 
@@ -20,7 +19,6 @@ const AppRoutes: React.FC = () => {
             
             <Route path="/administrarCategorias" element={<AdministrarCategorias/>}/>
             <Route path="/administrarSolicitud" element={<AdministrarSolicitudPage/>}/>
-            <Route path="/novedades" element={<Novedades/>}/>
             <Route path="/quienesSomos" element={<QuienesSomos/>}/>
             <Route path="/ViewMueble/:nombreMueble" element={<ViewMueble/>} />
 

@@ -3,6 +3,6 @@ export enum ModalType {
     CREATE,
     UPDATE,
     DELETE,
+    BAJA_LOGICA,
     UPLOADIMAGES
-
 }

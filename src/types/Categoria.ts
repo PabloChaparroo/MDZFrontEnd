@@ -3,5 +3,5 @@ export interface Categoria{
     nombreCategoria: string;
     fechaAltaCategoria: string;
     fechaModificacionCategoria: string | null;
-    //fechaBajaCategoria: string;
+    fechaBajaCategoria: string | null;
 }

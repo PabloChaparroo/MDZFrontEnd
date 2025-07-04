@@ -33,7 +33,7 @@ export  const MuebleService = {
     //Por defecto fetch es un get entonces hacemos lo siguiente para convertirlo en un post
     createMuebleSoly: async (mueble: Mueble): Promise<Mueble> => {
         try {
-            const response = await fetch(`${BASE_URL}/api/v1/mueble`, {
+            const response = await fetch(`${BASE_URL}/api/v1/mueble/create`, {
                 method: "POST",
                 
                 headers: {

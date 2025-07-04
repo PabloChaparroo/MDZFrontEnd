@@ -1,105 +1,203 @@
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import logo from '../../assets/images/logoMZD.png'; 
 import '../Header/Header.css'; 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
+    // Cargar Font Awesome 6 y Google Fonts
     const fontAwesomeLink = document.createElement('link');
     fontAwesomeLink.rel = 'stylesheet';
-    fontAwesomeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css';
+    fontAwesomeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
     document.head.appendChild(fontAwesomeLink);
 
-    const googleFontsLink = document.createElement('link');
-    googleFontsLink.rel = 'stylesheet';
-    googleFontsLink.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap';
-    document.head.appendChild(googleFontsLink);
+    const googleFonts = document.createElement('link');
+    googleFonts.rel = 'stylesheet';
+    googleFonts.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap';
+    document.head.appendChild(googleFonts);
 
+    // Efecto de scroll mejorado
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const shouldHideTopbar = scrollTop > 80;
+      setIsScrolled(shouldHideTopbar);
+      
+      // Aplicar clase al body para ajustar el padding
+      if (shouldHideTopbar) {
+        document.body.classList.add('topbar-hidden');
+      } else {
+        document.body.classList.remove('topbar-hidden');
+      }
+    };
+
+    // Agregar el listener de scroll
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Cleanup function
     return () => {
-      document.head.removeChild(fontAwesomeLink);
-      document.head.removeChild(googleFontsLink);
+      if (document.head.contains(fontAwesomeLink)) {
+        document.head.removeChild(fontAwesomeLink);
+      }
+      if (document.head.contains(googleFonts)) {
+        document.head.removeChild(googleFonts);
+      }
+      window.removeEventListener('scroll', handleScroll);
+      // Limpiar clase del body
+      document.body.classList.remove('topbar-hidden');
     };
   }, []);
+
+  // Función para determinar si un enlace está activo
+  const isActiveLink = (path: string) => {
+    return location.pathname === path;
+  };
   
   return (
     <>
-
-    
-      {/* Topbar */}
-      <div className="container-fluid bg-light pt-2 d-none d-lg-block">
-  <div className="container">
-    <div className="row align-items-center justify-content-between">
-      <div className="col-lg-6 text-lg-left mb-2 mb-lg-0">
-        <div className="d-inline-flex align-items-center">
-          <p className="m-0"><i className="fa fa-envelope mr-2"></i>info@example.com</p>
-          <p className="m-0 ml-3"><i className="fa fa-phone-alt mr-2"></i>+012 345 6789</p>
-        </div>
+      {/* Topbar Profesional */}
+      <div className={`header-topbar d-none d-lg-block ${isScrolled ? 'hidden' : ''}`}>
+        <Container>
+          <div className="topbar-content">
+            <div className="topbar-contact">
+              <p>
+                <i className="fas fa-envelope"></i>
+                info@mdzmuebles.com
+              </p>
+              <p>
+                <i className="fas fa-phone-alt"></i>
+                +54 261 123 4567
+              </p>
+              <p>
+                <i className="fas fa-map-marker-alt"></i>
+                Mendoza, Argentina
+              </p>
+            </div>
+            
+            <div className="topbar-social">
+              <a href="#" className="social-link" aria-label="Facebook">
+                <i className="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" className="social-link" aria-label="Instagram">
+                <i className="fab fa-instagram"></i>
+              </a>
+              <a href="#" className="social-link" aria-label="WhatsApp">
+                <i className="fab fa-whatsapp"></i>
+              </a>
+              <a href="#" className="social-link" aria-label="LinkedIn">
+                <i className="fab fa-linkedin-in"></i>
+              </a>
+              <a href="#" className="social-link" aria-label="YouTube">
+                <i className="fab fa-youtube"></i>
+              </a>
+              
+              {!localStorage.getItem("token") && (
+                <Button 
+                  onClick={() => navigate("/login")} 
+                  className="login-btn"
+                >
+                  <i className="fas fa-sign-in-alt me-2"></i>
+                  Iniciar sesión
+                </Button>
+              )}
+            </div>
+          </div>
+        </Container>
       </div>
-      <div className="col-lg-6 text-lg-right mb-2 mb-lg-0">
-        <div className="d-inline-flex align-items-center justify-content-end">
-          <a className="text-primary px-3" href="#">
-            <i className="fab fa-facebook-f"></i>
-          </a>
-          <a className="text-primary px-3" href="#">
-            <i className="fab fa-twitter"></i>
-          </a>
-          <a className="text-primary px-3" href="#">
-            <i className="fab fa-linkedin-in"></i>
-          </a>
-          <a className="text-primary px-3" href="#">
-            <i className="fab fa-instagram"></i>
-          </a>
-          <a className="text-primary px-3" href="#">
-            <i className="fab fa-youtube"></i>
-          </a>
-          {!localStorage.getItem("token") && (
-            <Button onClick={() => navigate("/login")} className="btn btn-primary ml-3">
-              Iniciar sesión
-            </Button>
-          )}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
       {/* End Topbar */}
 
-
-
-      {/* Navbar */}
-      <Navbar sticky="top" expand="lg" variant="dark" className="bg-black">
-        <Container>
-          <Link to="/" className="navbar-brand neon-text ">
+      {/* Navbar Principal Ultra Moderno */}
+      <Navbar 
+        expand="lg" 
+        variant="dark" 
+        className={`main-navbar ${isScrolled ? 'navbar-top' : ''}`}
+        style={{
+          position: 'fixed',
+          left: 0,
+          right: 0,
+          width: '100%',
+          zIndex: 1000,
+          display: 'block',
+          visibility: 'visible',
+          opacity: 1,
+          top: isScrolled ? '0px' : '48px' // Dinámicamente ajustar la posición
+        }}
+      >
+        <Container className="navbar-container">
+          {/* Logo y Marca */}
+          <Link to="/" className="brand-container">
             <img 
               src={logo}
-              alt="MDZ MUEBLES"
-              height="70"
-              className="mr-3"
+              alt="MDZ MUEBLES Logo"
+              className="brand-logo"
             />
-            MDZ MUEBLES
+            <span className="brand-text">MDZ MUEBLES</span>
           </Link>
-          <Navbar.Toggle aria-controls="navbarSupportedContent" />
+          
+          {/* Hamburger Menu Animado */}
+          <Navbar.Toggle 
+            aria-controls="navbarSupportedContent"
+            className="navbar-toggler"
+          >
+            <div className="hamburger-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </Navbar.Toggle>
+          
+          {/* Navegación */}
           <Navbar.Collapse id="navbarSupportedContent">
-            <Nav className="ml-auto">
-              <Link to="/" className="nav-link ">Inicio</Link>
-              <Link to="/catalogo" className="nav-link">Catálogo</Link>
-
-              <Link to="/novedades" className="nav-link">Novedades</Link>
-              <Link to="/quienesSomos" className="nav-link">Quienes Somos</Link>
-              <Link to="/administrarCategorias" className="nav-link">Administrar Categorías</Link>
-              <Link to="/administrarSolicitud" className="nav-link">Administrar Solicitud</Link>
+            <Nav className="navbar-nav">
+              <Link 
+                to="/" 
+                className={`nav-link-modern ${isActiveLink('/') ? 'active' : ''}`}
+              >
+                <i className="fas fa-home"></i>
+                Inicio
+              </Link>
+              
+              <Link 
+                to="/catalogo" 
+                className={`nav-link-modern ${isActiveLink('/catalogo') ? 'active' : ''}`}
+              >
+                <i className="fas fa-couch"></i>
+                Catálogo
+              </Link>
+             
+              <Link 
+                to="/quienesSomos" 
+                className={`nav-link-modern ${isActiveLink('/quienesSomos') ? 'active' : ''}`}
+              >
+                <i className="fas fa-users"></i>
+                Nosotros
+              </Link>
+              
+              <Link 
+                to="/administrarCategorias" 
+                className={`nav-link-modern ${isActiveLink('/administrarCategorias') ? 'active' : ''}`}
+              >
+                <i className="fas fa-cogs"></i>
+                Admin Categorías
+              </Link>
+              
+              <Link 
+                to="/administrarSolicitud" 
+                className={`nav-link-modern ${isActiveLink('/administrarSolicitud') ? 'active' : ''}`}
+              >
+                <i className="fas fa-clipboard-list"></i>
+                Admin Solicitudes
+              </Link>
             </Nav>
           </Navbar.Collapse>
-          
         </Container>
       </Navbar>
       {/* End Navbar */}
     </>
-
-
   );
 };
 

@@ -1,10 +1,10 @@
+import AbmCategoriaTabla from "../components/AbmCategoria/AbmCategoriaTabla"
 
-import CatalogoTabla from '../components/ABMAdministrador/CatalogoTabla'
 
 const AdministrarCategorias = () => {
   return (
     <>
-    <CatalogoTabla/>
+    <AbmCategoriaTabla/>
     </>
   )
 }

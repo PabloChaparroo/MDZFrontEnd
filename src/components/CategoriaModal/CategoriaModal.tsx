@@ -6,13 +6,10 @@ import { useFormik } from "formik";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from "react-toastify";
 import { Button, FormLabel, Modal, Form } from "react-bootstrap";
-import DatePicker from "react-datepicker"; // Importar react-datepicker
-import "react-datepicker/dist/react-datepicker.css"; // Importar los estilos de react-datepicker
 
 type CategoriaModalProps = {
     show: boolean;
     onHide: () => void;
-    nombreCategoria: string;
     modalType: ModalType;
     cat: Categoria;
     refreshData: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,30 +18,26 @@ type CategoriaModalProps = {
 const ModalABMCategoria = ({
     show,
     onHide,
-    nombreCategoria,
     cat,
     modalType,
     refreshData,
 }: CategoriaModalProps) => {
 
-// Función para obtener la fecha actual en formato YYYY-MM-DD
-const today = new Date();
-const year = today.getFullYear();
-let month = today.getMonth() + 1;
-let day = today.getDate();
-
- // Convierte month y day a números
- month = parseInt(month.toString());
- day = parseInt(day.toString());
- 
- // Agrega un cero delante si el mes o el día son menores a 10
- const formattedMonth = month < 10 ? `0${month}` : month;
- const formattedDay = day < 10 ? `0${day}` : day;
-
- const initialDate = `${year}-${formattedMonth}-${formattedDay}`;
-
-
-
+    // Función para obtener el título del modal según el tipo
+    const getModalTitle = () => {
+        switch (modalType) {
+            case ModalType.CREATE:
+                return "Crear Nueva Categoría";
+            case ModalType.UPDATE:
+                return "Editar Categoría";
+            case ModalType.DELETE:
+                return "Eliminar Categoría";
+            case ModalType.BAJA_LOGICA:
+                return "Dar de Baja Categoría";
+            default:
+                return "Categoría";
+        }
+    };
 
     //CREATE - UPDATE
     const handleSaveUpdate = async (cat: Categoria) => {
@@ -52,19 +45,26 @@ let day = today.getDate();
             const isNew = cat.id === 0;
             if (isNew) {
                 await CategoriaService.createCategoria(cat);
+                toast.success("Categoría creada exitosamente", {
+                    position: "top-center",
+                });
             } else {
+                console.log("Actualizando categoría con ID:", cat.id);
                 await CategoriaService.updateCategoria(cat.id, cat);
+                toast.success("Categoría actualizada exitosamente", {
+                    position: "top-center",
+                });
             }
-            toast.success(isNew ? "Categoría creado" : "Categoría actualizado", {
-                position: "top-center",
-            });
+            
+            // Cerrar el modal primero
             onHide();
+            
+            // Luego refrescar los datos
             refreshData(prevState => !prevState);
            
-
         } catch (error) {
             console.error(error);
-            toast.error("Ha ocurrido un error");
+            toast.error("Ha ocurrido un error al guardar la categoría");
         }
     };
 
@@ -73,17 +73,46 @@ let day = today.getDate();
         try {
             if (cat.id) {
                 await CategoriaService.deleteCategoria(cat.id);
-                toast.success("Categoría borrado", {
+                toast.success("Categoría eliminada exitosamente", {
                     position: "top-center",
                 });
+                
+                // Cerrar el modal primero
                 onHide();
-                refreshData((prevState) => !prevState);
+                
+                // Luego refrescar los datos
+                refreshData(prevState => !prevState);
             } else {
                 console.error("El identificador de la categoria es undefined");
+                toast.error("Error: No se pudo identificar la categoría");
             }
         } catch (error) {
             console.error(error);
-            toast.error("Ha ocurrido un error");
+            toast.error("Ha ocurrido un error al eliminar la categoría");
+        }
+    };
+
+    // Función handleBajaLogica (BAJA_LOGICA)
+    const handleBajaLogica = async () => {
+        try {
+            if (cat.id) {
+                const response = await CategoriaService.bajaLogicaCategoria(cat.id);
+                toast.success(`Categoría dada de baja exitosamente el ${response.fechaBaja}`, {
+                    position: "top-center",
+                });
+                
+                // Cerrar el modal primero
+                onHide();
+                
+                // Luego refrescar los datos
+                refreshData(prevState => !prevState);
+            } else {
+                console.error("El identificador de la categoria es undefined");
+                toast.error("Error: No se pudo identificar la categoría");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Ha ocurrido un error al dar de baja la categoría");
         }
     };
 
@@ -92,13 +121,12 @@ let day = today.getDate();
         return Yup.object().shape({
             id: Yup.number().integer().min(0),
             nombreCategoria: Yup.string().required("El titulo es requerido"),
-            fechaAltaCategoria: Yup.date(),
         });
     };
 
     // Formik, utiliza el esquema de validación para crear un formulario dinámico y que bloquee el formulario en caso de ver errores
     const formik = useFormik({
-        initialValues: {...cat, fechaAltaCategoria: initialDate},
+        initialValues: cat,
         validationSchema: validationSchema(),
         validateOnChange: true,
         validateOnBlur: true,
@@ -111,7 +139,7 @@ let day = today.getDate();
                 <>
                     <Modal show={show} onHide={onHide} centered backdrop="static">
                         <Modal.Header closeButton>
-                            <Modal.Title>{nombreCategoria}</Modal.Title>
+                            <Modal.Title>{getModalTitle()}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <p>
@@ -129,11 +157,38 @@ let day = today.getDate();
                         </Modal.Footer>
                     </Modal>
                 </>
+            ) : modalType === ModalType.BAJA_LOGICA ? (
+                <>
+                    <Modal show={show} onHide={onHide} centered backdrop="static">
+                        <Modal.Header closeButton>
+                            <Modal.Title>{getModalTitle()}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p>
+                                ¿Está seguro que desea dar de baja la categoría?
+                                <br /> <strong>{cat.nombreCategoria}</strong> ?
+                            </p>
+                            <div className="alert alert-warning mt-3">
+                                <i className="fas fa-exclamation-triangle me-2"></i>
+                                <strong>Nota:</strong> Esta acción realizará una baja lógica. 
+                                La categoría no será eliminada permanentemente, solo será deshabilitada.
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={onHide}>
+                                Cancelar
+                            </Button>
+                            <Button variant="warning" onClick={handleBajaLogica}>
+                                Dar de Baja
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                </>
             ) : (
                 <>
-                    <Modal show={show} onHide={onHide}>
+                    <Modal show={show} onHide={onHide} centered backdrop="static">
                         <Modal.Header closeButton>
-                            <Modal.Title> {nombreCategoria}</Modal.Title>
+                            <Modal.Title>{getModalTitle()}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Form onSubmit={formik.handleSubmit}>
@@ -151,17 +206,6 @@ let day = today.getDate();
                                         {formik.errors.nombreCategoria}
                                     </Form.Control.Feedback>
                                 </Form.Group>
-                                
-                                <Form.Group controlId="formFechaAltaCategoria">
-                                <FormLabel>Fecha Actual</FormLabel>
-                                <Form.Control
-                                    name="fechaAltaCategoria"
-                                    type="date"
-                                    value={formik.values.fechaAltaCategoria || new Date().toISOString().split('T')[0]} // Utiliza el valor del formulario si está disponible, de lo contrario, usa la fecha actual
-                                    onChange={formik.handleChange} // Actualiza el valor del formulario cuando cambia la fecha
-                                    />
-                                </Form.Group>
-
 
                                 <Modal.Footer className="mt-4">
                                     <Button variant="secondary" onClick={onHide}>

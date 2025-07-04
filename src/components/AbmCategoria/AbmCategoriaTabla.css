@@ -1,0 +1,483 @@
+/* ================================
+   PROFESSIONAL ABM DESIGN SYSTEM
+   ================================ */
+
+/* Overlay para oscurecer el fondo cuando se abre un modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1040;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+}
+
+/* Asegurar que el modal aparezca por encima del overlay */
+.modal {
+  z-index: 1050;
+}
+
+/* ================================
+   PROFESSIONAL CONTAINER LAYOUT
+   ================================ */
+
+.abm-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* ================================
+   PROFESSIONAL HEADER SECTIONS
+   ================================ */
+
+.section-header {
+  background: linear-gradient(135deg, #000000 0%, #495057 100%);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-header .icon {
+  font-size: 1.8rem;
+  color: #ffc107;
+  margin-right: 1rem;
+}
+
+.section-header h3 {
+  color: white;
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.section-header .subtitle {
+  color: #ffc107;
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+/* ================================
+   PROFESSIONAL CATEGORY BUTTONS
+   ================================ */
+
+.category-buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.category-btn {
+  background: linear-gradient(135deg, #495057 0%, #6c757d 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.category-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+}
+
+.category-btn.active {
+  background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
+  color: #212529;
+}
+
+.category-btn.edit-btn {
+  background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+}
+
+.category-btn.edit-btn:hover {
+  background: linear-gradient(135deg, #138496 0%, #1e7e34 100%);
+}
+
+.category-btn.new-btn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.category-btn.new-btn:hover {
+  background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+}
+
+/* ================================
+   PROFESSIONAL TABLES
+   ================================ */
+
+.table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.table-responsive {
+  border-radius: 12px;
+}
+
+.professional-table {
+  margin: 0;
+  background: white;
+}
+
+.professional-table thead {
+  background: linear-gradient(135deg, #000000 0%, #495057 100%);
+}
+
+.professional-table thead th {
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding: 1rem 0.75rem !important;
+  border: none !important;
+  white-space: nowrap !important;
+  background: linear-gradient(135deg, #495057 0%, #6c757d 100%) !important;
+}
+
+.professional-table tbody tr {
+  border-bottom: 1px solid #e9ecef;
+  transition: all 0.2s ease;
+}
+
+.professional-table tbody tr:hover {
+  background-color: #f8f9fa;
+  transform: translateX(2px);
+}
+
+.professional-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.professional-table tbody td {
+  padding: 1rem 0.75rem !important;
+  vertical-align: middle !important;
+  font-size: 0.9rem !important;
+  color: #495057 !important;
+  background: white !important;
+}
+
+/* ================================
+   PROFESSIONAL ACTION BUTTONS
+   ================================ */
+
+.action-btn {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  margin: 0 0.25rem;
+  min-width: 80px;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn.edit-btn {
+  background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+  color: white;
+}
+
+.action-btn.edit-btn:hover {
+  background: linear-gradient(135deg, #138496 0%, #1e7e34 100%);
+}
+
+.action-btn.delete-btn {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+}
+
+.action-btn.delete-btn:hover {
+  background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+}
+
+.action-btn.disable-btn {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  color: white;
+}
+
+.action-btn.disable-btn:hover {
+  background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+}
+
+/* ================================
+   PROFESSIONAL BADGES AND ELEMENTS
+   ================================ */
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.status-badge.active {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.status-badge.inactive {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  color: white;
+}
+
+.price-display {
+  font-weight: 600;
+  color: #28a745;
+  font-size: 1rem;
+}
+
+.description-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+}
+
+.description-cell:hover {
+  overflow: visible;
+  white-space: normal;
+  background: #f8f9fa;
+  z-index: 10;
+  padding: 0.75rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.image-preview {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.image-preview:hover {
+  transform: scale(1.05);
+}
+
+/* ================================
+   CATEGORY INFO STYLING
+   ================================ */
+
+.category-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.category-name {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.category-name:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+}
+
+/* ================================
+   ENHANCED TABLE STYLING
+   ================================ */
+
+/* ================================
+   PRODUCT DETAILS STYLING
+   ================================ */
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-item i {
+  color: #3498db;
+  font-size: 0.7rem;
+  width: 12px;
+  text-align: center;
+}
+
+.detail-item span {
+  line-height: 1.2;
+}
+
+.detail-item strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* ================================
+   ENHANCED CATEGORY INFO
+   ================================ */
+
+/* ================================
+   ESTILOS ESPECÍFICOS PARA TABLAS
+   ================================ */
+
+/* Información de categoría */
+.category-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.category-name {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white !important;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Detalles del producto */
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #495057 !important;
+}
+
+.detail-item i {
+  color: #6c757d !important;
+  width: 12px;
+  text-align: center;
+}
+
+.detail-item strong {
+  color: #343a40 !important;
+}
+
+/* Forzar visibilidad de texto en tablas */
+.professional-table * {
+  color: inherit !important;
+}
+
+.professional-table thead th {
+  color: white !important;
+}
+
+.professional-table tbody td {
+  color: #495057 !important;
+}
+
+.professional-table tbody td strong {
+  color: #343a40 !important;
+}
+
+/* ================================
+   OVERRIDE BOOTSTRAP STYLES
+   ================================ */
+
+/* Forzar estilos para tablas profesionales */
+.table-container .professional-table {
+  color: #495057 !important;
+}
+
+.table-container .professional-table thead {
+  background: linear-gradient(135deg, #495057 0%, #6c757d 100%) !important;
+}
+
+.table-container .professional-table thead th {
+  color: white !important;
+  border-color: transparent !important;
+}
+
+.table-container .professional-table tbody td {
+  color: #495057 !important;
+  border-color: #e9ecef !important;
+}
+
+.table-container .professional-table tbody td strong {
+  color: #343a40 !important;
+}
+
+/* Estilos específicos para badges */
+.status-badge {
+  display: inline-block !important;
+  padding: 0.25rem 0.75rem !important;
+  border-radius: 20px !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+  color: white !important;
+}
+
+.status-badge.active {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+  color: white !important;
+}
+
+.status-badge.inactive {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+  color: white !important;
+}

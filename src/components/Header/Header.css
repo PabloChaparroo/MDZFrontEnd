@@ -1,41 +1,830 @@
-@keyframes neon {
-    0% {
-      text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffd700, 0 0 40px #ffd700, 0 0 70px #ffd700, 0 0 80px #ffd700, 0 0 100px #ffd700, 0 0 150px #ffd700;
-    }
-    50% {
-      text-shadow: none;
-    }
-    100% {
-      text-shadow: 0 0 10px hwb(51 0% 0%), 0 0 20px #ffd700, 0 0 30px #ffd700, 0 0 40px #ffd700, 0 0 70px #ffd700, 0 0 80px #ffd700, 0 0 100px #ffd700, 0 0 150px #ffd700;
-    }
-  }
-  
-  .neon-text {
-    animation: neon 1.5s infinite alternate;
-  }
-  .nav-link:hover {
-    animation: glow 0.5s infinite alternate;
-  }
-  
-  @keyframes glow {
-    0% {
-      text-shadow: 0px 0px 10px #ffd700 !important;
-    }
-    100% {
-      text-shadow: 50px 00px 100px #ffd700;
-    }
-  }
+/* ========================================== */
+/* HEADER PROFESIONAL ULTRA MODERNO - MDZ MUEBLES */
+/* ========================================== */
 
-  
-  .category-container {
-    
-    transition: color 0.3s; /* Agrega una transición suave al cambio de color */
+/* Importar fuentes elegantes */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+
+/* Variables CSS para un diseño consistente */
+:root {
+  --primary-gold: #ffb347;
+  --secondary-gold: #ffd700;
+  --dark-gold: #b8860b;
+  --accent-orange: #ff8c00;
+  --vibrant-yellow: #ffef00;
+  --bg-black: #0a0a0a;
+  --bg-dark: #1a1a1a;
+  --bg-darker: #0d0d0d;
+  --text-white: #ffffff;
+  --text-gray: #cccccc;
+  --text-light-gray: #e0e0e0;
+  --shadow-primary: 0 0 30px rgba(255, 179, 71, 0.4);
+  --shadow-glow: 0 0 20px rgba(255, 239, 0, 0.6);
+  --shadow-deep: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --gradient-gold: linear-gradient(135deg, #ffb347 0%, #ffd700 50%, #ff8c00 100%);
+  --gradient-dark: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2d2d2d 100%);
+  --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-fast: all 0.2s ease-in-out;
+  --border-radius: 12px;
+}
+
+/* Reset y configuración base */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  /* Espacio para ambos headers: topbar (48px) + navbar (65px) = 113px */
+  padding-top: 113px;
+  transition: padding-top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Cuando el topbar está oculto, solo espacio para el navbar */
+body.topbar-hidden {
+  padding-top: 65px;
+}
+
+/* ========================================== */
+/* TOPBAR PROFESIONAL */
+/* ========================================== */
+.header-topbar {
+  background: var(--gradient-dark);
+  border-bottom: 2px solid rgba(255, 179, 71, 0.3);
+  padding: 8px 0; /* Reducido para altura exacta de 48px */
+  height: 48px; /* Altura fija exacta */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1100; /* Por encima del navbar */
+  overflow: hidden;
+  transform: translateY(0);
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center; /* Centrar contenido verticalmente */
+}
+
+/* Estado cuando se hace scroll hacia abajo */
+.header-topbar.hidden {
+  transform: translateY(-100%);
+}
+
+/* ========================================== */
+/* NAVBAR PRINCIPAL ULTRA PROFESIONAL - SIEMPRE FIJO */
+/* ========================================== */
+.main-navbar {
+  background: var(--bg-black) !important;
+  border-bottom: 3px solid var(--primary-gold);
+  padding: 0 !important;
+  position: fixed !important;
+  top: 48px !important; /* Por debajo del topbar cuando está visible */
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 1000 !important; /* Debajo del topbar */
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-deep);
+  transition: var(--transition-smooth);
+  display: block !important; /* Forzar que siempre sea visible */
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Cuando el topbar está oculto, el navbar sube a la parte superior */
+.main-navbar.navbar-top {
+  top: 0 !important;
+}
+
+.header-topbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 179, 71, 0.1), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.topbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  height: 100%; /* Usar toda la altura del contenedor */
+  width: 100%;
+}
+
+.topbar-contact {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  height: 100%; /* Usar toda la altura disponible */
+}
+
+.topbar-contact p {
+  margin: 0;
+  color: var(--text-light-gray);
+  font-size: 13px; /* Reducido para mejor ajuste */
+  font-weight: 500;
+  transition: var(--transition-smooth);
+  position: relative;
+  padding: 6px 10px; /* Reducido el padding */
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.topbar-contact p:hover {
+  color: var(--vibrant-yellow);
+  background: rgba(255, 179, 71, 0.15);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.topbar-contact i {
+  color: var(--primary-gold);
+  margin-right: 8px;
+  font-size: 16px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.topbar-social {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%; /* Usar toda la altura disponible */
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; /* Reducido de 40px */
+  height: 32px; /* Reducido de 40px */
+  color: var(--text-gray);
+  font-size: 14px; /* Reducido de 16px */
+  text-decoration: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 179, 71, 0.2);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.social-link::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: var(--gradient-gold);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: var(--transition-smooth);
+  z-index: -1;
+}
+
+.social-link:hover {
+  color: var(--bg-black);
+  border-color: var(--primary-gold);
+  transform: translateY(-3px) rotate(360deg);
+  box-shadow: var(--shadow-glow);
+}
+
+.social-link:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+.login-btn {
+  background: var(--gradient-gold);
+  border: none;
+  color: var(--bg-black);
+  font-weight: 600;
+  padding: 6px 16px; /* Reducido el padding */
+  border-radius: 20px; /* Reducido de 25px */
+  font-size: 12px; /* Reducido de 13px */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-deep);
+  height: 32px; /* Altura fija para consistencia */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px; /* Separación de los iconos sociales */
+  align-self: center; /* Forzar alineación al centro */
+}
+
+/* Regla específica para el botón de login para sobrescribir Bootstrap */
+.login-btn.btn.btn-primary,
+.login-btn.btn,
+button.login-btn {
+  background: var(--gradient-gold) !important;
+  border: none !important;
+  color: var(--bg-black) !important;
+  font-weight: 600 !important;
+  padding: 6px 16px !important;
+  border-radius: 20px !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-left: 8px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  vertical-align: middle !important;
+  line-height: 1 !important;
+  box-shadow: var(--shadow-deep) !important;
+}
+
+.login-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: var(--transition-smooth);
+}
+
+.login-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: var(--shadow-glow), var(--shadow-deep);
+  color: var(--bg-black);
+}
+
+.login-btn:hover::before {
+  left: 100%;
+}
+
+/* ========================================== */
+/* NAVBAR PRINCIPAL - CONFIGURACIÓN ARREGLADA */
+/* ========================================== */
+/* Esta sección se eliminó para evitar conflictos con la definición fixed anterior */
+
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 10px 20px; /* Reducido el padding vertical */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ========================================== */
+/* LOGO Y MARCA ÉPICA */
+/* ========================================== */
+.brand-container {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+  position: relative;
+  padding: 8px 12px; /* Ajustado el padding */
+  border-radius: var(--border-radius);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 179, 71, 0.3);
+  height: 45px; /* Altura fija igual a los enlaces */
+}
+
+.brand-container:hover {
+  text-decoration: none;
+  transform: scale(1.02);
+  background: rgba(255, 179, 71, 0.1);
+  border-color: var(--primary-gold);
+  box-shadow: var(--shadow-primary);
+}
+
+.brand-logo {
+  height: 45px; /* Reducido de 60px para estar más proporcionado */
+  width: auto;
+  margin-right: 12px; /* Reducido el margen */
+  transition: var(--transition-smooth);
+  filter: drop-shadow(0 0 15px rgba(255, 179, 71, 0.5));
+  border-radius: 8px;
+}
+
+.brand-logo:hover {
+  filter: drop-shadow(0 0 25px rgba(255, 179, 71, 0.8));
+  transform: rotate(5deg) scale(1.1);
+}
+
+.brand-text {
+  font-family: 'Playfair Display', serif; /* Cambiado a la misma fuente del home */
+  font-weight: 900;
+  font-size: 22px; /* Reducido de 32px para estar más proporcionado */
+  color: var(--text-white);
+  text-transform: uppercase;
+  letter-spacing: 2px; /* Reducido el espaciado */
+  position: relative;
+  background: var(--gradient-gold);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientFlow 4s ease-in-out infinite, textGlow 2s ease-in-out infinite alternate;
+  text-shadow: 0 0 30px rgba(255, 179, 71, 0.6);
+}
+
+@keyframes gradientFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes textGlow {
+  0% {
+    filter: drop-shadow(0 0 5px rgba(255, 179, 71, 0.8))
+            drop-shadow(0 0 10px rgba(255, 179, 71, 0.6))
+            drop-shadow(0 0 20px rgba(255, 179, 71, 0.4));
+  }
+  100% {
+    filter: drop-shadow(0 0 10px rgba(255, 239, 0, 1))
+            drop-shadow(0 0 20px rgba(255, 239, 0, 0.8))
+            drop-shadow(0 0 40px rgba(255, 239, 0, 0.6));
+  }
+}
+
+/* ========================================== */
+/* NAVEGACIÓN MODERNA */
+/* ========================================== */
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.nav-link-modern {
+  color: var(--text-gray) !important;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600; /* Aumentado para mejor visibilidad */
+  font-size: 15px; /* Ligeramente reducido para proporcionalidad */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  padding: 12px 16px; /* Ajustado el padding horizontal */
+  border-radius: var(--border-radius);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Reducido el gap entre icono y texto */
+  height: 45px; /* Altura fija igual al logo */
+  min-width: auto; /* Permitir ancho automático */
+}
+
+.nav-link-modern::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: var(--gradient-gold);
+  transition: var(--transition-smooth);
+}
+
+.nav-link-modern::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-gold);
+  opacity: 0;
+  transition: var(--transition-smooth);
+  z-index: -1;
+}
+
+.nav-link-modern:hover {
+  color: var(--bg-black) !important;
+  text-decoration: none;
+  transform: translateY(-3px);
+  border-color: var(--primary-gold);
+  box-shadow: var(--shadow-glow);
+}
+
+.nav-link-modern:hover::before {
+  width: 100%;
+}
+
+.nav-link-modern:hover::after {
+  opacity: 1;
+}
+
+.nav-link-modern.active {
+  color: var(--bg-black) !important;
+  background: var(--gradient-gold);
+  border-color: var(--primary-gold);
+  box-shadow: var(--shadow-glow);
+  animation: activeGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes activeGlow {
+  0% { box-shadow: var(--shadow-glow); }
+  100% { box-shadow: 0 0 40px rgba(255, 239, 0, 0.8), var(--shadow-deep); }
+}
+
+.nav-link-modern i {
+  font-size: 14px;
+  transition: var(--transition-fast);
+}
+
+.nav-link-modern:hover i {
+  transform: scale(1.2) rotate(360deg);
+}
+
+/* ========================================== */
+/* HAMBURGER MENU ANIMADO */
+/* ========================================== */
+.navbar-toggler {
+  border: none;
+  padding: 10px;
+  border-radius: var(--border-radius);
+  background: rgba(255, 179, 71, 0.1);
+  backdrop-filter: blur(10px);
+  border: 2px solid var(--primary-gold);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar-toggler:focus {
+  box-shadow: var(--shadow-glow);
+  outline: none;
+}
+
+.navbar-toggler::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 179, 71, 0.3), transparent);
+  transition: var(--transition-smooth);
+}
+
+.navbar-toggler:hover::before {
+  left: 100%;
+}
+
+.hamburger-icon {
+  width: 30px;
+  height: 24px;
+  position: relative;
+  transform: rotate(0deg);
+  transition: var(--transition-smooth);
+  cursor: pointer;
+}
+
+.hamburger-icon span {
+  display: block;
+  position: absolute;
+  height: 3px;
+  width: 100%;
+  background: var(--primary-gold);
+  border-radius: 3px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: var(--transition-smooth);
+  box-shadow: 0 0 10px rgba(255, 179, 71, 0.5);
+}
+
+.hamburger-icon span:nth-child(1) { top: 0px; }
+.hamburger-icon span:nth-child(2) { top: 10px; }
+.hamburger-icon span:nth-child(3) { top: 20px; }
+
+.navbar-toggler[aria-expanded="true"] .hamburger-icon span:nth-child(1) {
+  top: 10px;
+  transform: rotate(135deg);
+}
+
+.navbar-toggler[aria-expanded="true"] .hamburger-icon span:nth-child(2) {
+  opacity: 0;
+  left: -60px;
+}
+
+.navbar-toggler[aria-expanded="true"] .hamburger-icon span:nth-child(3) {
+  top: 10px;
+  transform: rotate(-135deg);
+}
+
+/* ========================================== */
+/* RESPONSIVE DESIGN PROFESIONAL */
+/* ========================================== */
+
+/* Tablet */
+@media (max-width: 991.98px) {
+  .header-topbar {
+    padding: 8px 0;
   }
   
-  .category-text:hover{
-    color: #f4ff00 !important; /* Cambia el color del texto al pasar el mouse */
-    text-shadow: 5px 5px 5px #ffd700; /* Añade una sombra con efecto de destello al texto */
+  .topbar-contact {
+    gap: 15px;
   }
+  
+  .topbar-contact p {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  
+  .brand-text {
+    font-size: 26px;
+    letter-spacing: 2px;
+  }
+  
+  .brand-logo {
+    height: 50px;
+    margin-right: 10px;
+  }
+  
+  .navbar-nav {
+    background: var(--gradient-dark);
+    margin: 20px -15px 0 -15px;
+    padding: 25px 20px;
+    border-radius: 0 0 15px 15px;
+    border-top: 3px solid var(--primary-gold);
+    box-shadow: var(--shadow-deep);
+    flex-direction: column;
+    gap: 12px;
+    backdrop-filter: blur(20px);
+  }
+  
+  .nav-link-modern {
+    width: 100%;
+    text-align: center;
+    padding: 15px 20px;
+    background: rgba(255, 179, 71, 0.1);
+    border: 1px solid rgba(255, 179, 71, 0.3);
+    margin: 0;
+  }
+  
+  .nav-link-modern:hover {
+    background: var(--gradient-gold);
+    border-color: var(--primary-gold);
+  }
+}
+
+/* Mobile */
+@media (max-width: 767.98px) {
+  .header-topbar {
+    display: none;
+  }
+  
+  .navbar-container {
+    padding: 12px 15px;
+  }
+  
+  .brand-text {
+    font-size: 22px;
+    letter-spacing: 1px;
+  }
+  
+  .brand-logo {
+    height: 45px;
+    margin-right: 8px;
+  }
+  
+  .navbar-nav {
+    margin: 15px -10px 0 -10px;
+    padding: 20px 15px;
+    gap: 10px;
+  }
+  
+  .nav-link-modern {
+    font-size: 14px;
+    padding: 12px 15px;
+  }
+  
+  .social-link {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
+  
+  .login-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}
+
+/* Mobile muy pequeño */
+@media (max-width: 575.98px) {
+  .brand-container {
+    padding: 6px;
+  }
+  
+  .brand-text {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+  }
+  
+  .brand-logo {
+    height: 40px;
+    margin-right: 6px;
+  }
+  
+  .topbar-contact {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .topbar-social {
+    gap: 6px;
+  }
+  
+  .social-link {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+}
+
+/* ========================================== */
+/* FORZAR VISIBILIDAD DEL NAVBAR PRINCIPAL */
+/* ========================================== */
+/* Reglas más específicas para sobrescribir cualquier interferencia de Bootstrap */
+.navbar.main-navbar,
+.main-navbar.navbar,
+nav.main-navbar {
+  position: fixed !important;
+  top: 48px !important; /* Por defecto debajo del topbar */
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 1000 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  transition: var(--transition-smooth) !important;
+}
+
+/* Cuando tiene la clase navbar-top, va a la parte superior */
+.navbar.main-navbar.navbar-top,
+.main-navbar.navbar.navbar-top,
+nav.main-navbar.navbar-top {
+  top: 0 !important;
+}
+
+/* Asegurar que funcione en todas las resoluciones */
+@media (max-width: 991.98px) {
+  .navbar.main-navbar,
+  .main-navbar.navbar,
+  nav.main-navbar {
+    position: fixed !important;
+    top: 0 !important; /* En mobile siempre arriba ya que no hay topbar */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .navbar.main-navbar,
+  .main-navbar.navbar,
+  nav.main-navbar {
+    position: fixed !important;
+    top: 0 !important; /* En mobile siempre arriba ya que no hay topbar */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ========================================== */
+/* EFECTOS ESPECIALES Y ANIMACIONES */
+/* ========================================== */
+
+/* Efecto de parallax sutil */
+.main-navbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255, 179, 71, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 140, 0, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Hover glow para toda la navbar */
+.main-navbar:hover::before {
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255, 179, 71, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 140, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+}
+
+/* Scroll effect */
+.navbar-scrolled {
+  background: rgba(10, 10, 10, 0.95) !important;
+  backdrop-filter: blur(25px);
+  border-bottom: 2px solid var(--primary-gold);
+}
+
+.navbar-scrolled .brand-text {
+  font-size: 26px;
+}
+
+.navbar-scrolled .brand-logo {
+  height: 50px;
+}
+
+/* Accesibilidad mejorada */
+.brand-container:focus,
+.nav-link-modern:focus,
+.social-link:focus,
+.login-btn:focus,
+.navbar-toggler:focus {
+  outline: 3px solid var(--vibrant-yellow);
+  outline-offset: 2px;
+}
+
+/* Performance optimizations */
+.brand-text,
+.brand-logo,
+.nav-link-modern,
+.social-link {
+  will-change: transform;
+}
+
+/* Animaciones reducidas para usuarios que lo prefieran */
+@media (prefers-reduced-motion: reduce) {
+  .brand-text,
+  .brand-logo,
+  .nav-link-modern,
+  .social-link {
+    will-change: auto;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Fix para el overflow del body */
+body {
+  padding-top: 140px;
+}
+
+@media (max-width: 991.98px) {
+  body {
+    padding-top: 100px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  body {
+    padding-top: 80px;
+  }
+}
 
 
 
@@ -661,13 +1450,13 @@ pre code {
 
 @media (min-width: 992px) {
   .container, .container-sm, .container-md, .container-lg {
-    max-width: 960px;
+    max-width: 1024px;
   }
 }
 
 @media (min-width: 1200px) {
   .container, .container-sm, .container-md, .container-lg, .container-xl {
-    max-width: 1140px;
+    max-width: 1024px;
   }
 }
 
@@ -2412,7 +3201,6 @@ fieldset:disabled a.btn {
   text-align: left; /* Centra el contenido del botón horizontalmente */
   padding: 10px 35px;
   margin: 2px;
-  margin-top: -7px;
   color: #ffffff;
   background-color: #000000;
   border-color: #ffffff;
