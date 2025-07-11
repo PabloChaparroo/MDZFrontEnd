@@ -7,7 +7,7 @@ export interface SolicitarVisita{
     fechaHoraBajaSolicitarVisita: string | null,
     fechaHotaModificacionSolicitarVisita: string | null,
     consultaSolicitarVisita: string,
-
+    estado?: string,
 
     mueble: Mueble | null,
     cliente: Cliente | null,

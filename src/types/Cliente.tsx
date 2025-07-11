@@ -10,7 +10,5 @@ export interface Cliente {
     fechaHoraModificacionCliente: string | null;
     fechaHoraBajaCliente: string | null;
     estadoCliente: string | null;
-    
-    //Relaciones
-    //domicilioList: Domicilio[];
+
  }

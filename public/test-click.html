@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Click - Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        .btn-warning { background-color: #ffc107; color: black; }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #cce7ff; color: #004085; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 Test de Clicks - Debug</h1>
+        
+        <div class="info status">
+            <strong>Instrucciones:</strong> Haz click en cada botón para verificar que los event handlers funcionen correctamente.
+        </div>
+        
+        <button class="test-button btn-primary" onclick="testClick('Botón 1')">
+            🎯 Test Button 1 - onclick inline
+        </button>
+        
+        <button class="test-button btn-success" id="btn2">
+            🎯 Test Button 2 - addEventListener
+        </button>
+        
+        <button class="test-button btn-danger" onclick="testNavigation()">
+            🚀 Test Navigation - Ir a /perfil
+        </button>
+        
+        <button class="test-button btn-warning" onclick="testConsole()">
+            📝 Test Console - Ver logs
+        </button>
+        
+        <div id="status" class="status info">
+            Status: Esperando clicks...
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function testClick(buttonName) {
+            console.log('✅ Click funcionando en:', buttonName);
+            updateStatus(`✅ Click exitoso: ${buttonName}`, 'success');
+        }
+        
+        function testNavigation() {
+            console.log('🚀 Probando navegación...');
+            updateStatus('🚀 Intentando navegar a /perfil...', 'info');
+            
+            // Simular navegación
+            setTimeout(() => {
+                window.location.href = '/perfil';
+            }, 1000);
+        }
+        
+        function testConsole() {
+            console.log('📝 Test de console.log');
+            console.warn('⚠️ Test de console.warn');
+            console.error('❌ Test de console.error');
+            updateStatus('📝 Logs enviados a la consola', 'info');
+        }
+        
+        function updateStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            
+            const resultsDiv = document.getElementById('results');
+            const result = document.createElement('div');
+            result.className = `status ${type}`;
+            result.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+            resultsDiv.appendChild(result);
+        }
+        
+        // Agregar event listener al botón 2
+        document.getElementById('btn2').addEventListener('click', function() {
+            testClick('Botón 2 (addEventListener)');
+        });
+        
+        // Log inicial
+        console.log('🔧 Test HTML cargado correctamente');
+        updateStatus('🔧 Página de test cargada', 'info');
+    </script>
+</body>
+</html>

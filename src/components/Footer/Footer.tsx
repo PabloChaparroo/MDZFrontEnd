@@ -1,7 +1,6 @@
-import React from 'react';
+
 import { Container, Row, Col } from 'react-bootstrap';
 import './Footer.css'; // Archivo de estilos CSS para personalizar el footer
-import logoLocation from './assets/logos/location_on_FILL0_wght400_GRAD0_opsz24.png'; // Importar la imagen del logo de la localidad
 
 function Footer() {
   return (

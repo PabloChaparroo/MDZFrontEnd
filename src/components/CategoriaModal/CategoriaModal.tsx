@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from "react-toastify";
 import { Button, FormLabel, Modal, Form } from "react-bootstrap";
+import { useState } from "react";
 
 type CategoriaModalProps = {
     show: boolean;
@@ -23,6 +24,8 @@ const ModalABMCategoria = ({
     refreshData,
 }: CategoriaModalProps) => {
 
+    const [isLoading, setIsLoading] = useState(false); // Estado para controlar la carga
+
     // Función para obtener el título del modal según el tipo
     const getModalTitle = () => {
         switch (modalType) {
@@ -30,8 +33,6 @@ const ModalABMCategoria = ({
                 return "Crear Nueva Categoría";
             case ModalType.UPDATE:
                 return "Editar Categoría";
-            case ModalType.DELETE:
-                return "Eliminar Categoría";
             case ModalType.BAJA_LOGICA:
                 return "Dar de Baja Categoría";
             default:
@@ -41,78 +42,123 @@ const ModalABMCategoria = ({
 
     //CREATE - UPDATE
     const handleSaveUpdate = async (cat: Categoria) => {
+        setIsLoading(true); // Activar indicador de carga
+        
         try {
             const isNew = cat.id === 0;
+            
             if (isNew) {
                 await CategoriaService.createCategoria(cat);
                 toast.success("Categoría creada exitosamente", {
-                    position: "top-center",
+                    autoClose: 3000,
                 });
             } else {
-                console.log("Actualizando categoría con ID:", cat.id);
                 await CategoriaService.updateCategoria(cat.id, cat);
                 toast.success("Categoría actualizada exitosamente", {
-                    position: "top-center",
+                    autoClose: 3000,
                 });
             }
             
-            // Cerrar el modal primero
-            onHide();
-            
-            // Luego refrescar los datos
+            // Refrescar datos inmediatamente
             refreshData(prevState => !prevState);
+            
+            // Cerrar modal sin delay
+            onHide();
            
         } catch (error) {
             console.error(error);
-            toast.error("Ha ocurrido un error al guardar la categoría");
-        }
-    };
-
-    // Función handleDelete (DELETE)
-    const handleDelete = async () => {
-        try {
-            if (cat.id) {
-                await CategoriaService.deleteCategoria(cat.id);
-                toast.success("Categoría eliminada exitosamente", {
-                    position: "top-center",
-                });
+            
+            // Optimizar manejo de errores
+            let errorMessage = "Ha ocurrido un error al guardar la categoría";
+            
+            if (error instanceof Error) {
+                const errorText = error.message;
                 
-                // Cerrar el modal primero
-                onHide();
-                
-                // Luego refrescar los datos
-                refreshData(prevState => !prevState);
-            } else {
-                console.error("El identificador de la categoria es undefined");
-                toast.error("Error: No se pudo identificar la categoría");
+                if (errorText.includes("Ya existe una categoría")) {
+                    const matches = errorText.match(/Ya existe una categoría[^"]*/);
+                    if (matches) {
+                        errorMessage = matches[0];
+                    }
+                } else if (errorText.includes("Detalles:")) {
+                    try {
+                        const jsonMatch = errorText.match(/Detalles: ({.*})/);
+                        if (jsonMatch && jsonMatch[1]) {
+                            const errorObj = JSON.parse(jsonMatch[1]);
+                            if (errorObj.error) {
+                                errorMessage = errorObj.error;
+                            }
+                        }
+                    } catch (jsonError) {
+                        // Usar mensaje original si no se puede parsear
+                        const detailsMatch = errorText.match(/Detalles: (.+)$/);
+                        if (detailsMatch && detailsMatch[1]) {
+                            errorMessage = detailsMatch[1];
+                        }
+                    }
+                }
             }
-        } catch (error) {
-            console.error(error);
-            toast.error("Ha ocurrido un error al eliminar la categoría");
+            
+            toast.error(errorMessage, {
+                autoClose: 5000,
+            });
+        } finally {
+            setIsLoading(false); // Desactivar indicador de carga
         }
     };
 
     // Función handleBajaLogica (BAJA_LOGICA)
     const handleBajaLogica = async () => {
+        setIsLoading(true); // Activar indicador de carga
+        
         try {
             if (cat.id) {
                 const response = await CategoriaService.bajaLogicaCategoria(cat.id);
                 toast.success(`Categoría dada de baja exitosamente el ${response.fechaBaja}`, {
-                    position: "top-center",
+                    autoClose: 3000,
                 });
                 
-                // Cerrar el modal primero
-                onHide();
-                
-                // Luego refrescar los datos
+                // Refrescar datos inmediatamente
                 refreshData(prevState => !prevState);
+                
+                // Cerrar modal sin delay
+                onHide();
             } else {
-                console.error("El identificador de la categoria es undefined");
-                toast.error("Error: No se pudo identificar la categoría");
+                throw new Error("El identificador de la categoría es inválido");
             }
         } catch (error) {
             console.error(error);
-            toast.error("Ha ocurrido un error al dar de baja la categoría");
+            
+            // Optimizar manejo de errores
+            let errorMessage = "Ha ocurrido un error al dar de baja la categoría";
+            
+            if (error instanceof Error) {
+                const errorText = error.message;
+                
+                if (errorText.includes("Detalles:")) {
+                    try {
+                        const jsonMatch = errorText.match(/Detalles: ({.*})/);
+                        if (jsonMatch && jsonMatch[1]) {
+                            const errorObj = JSON.parse(jsonMatch[1]);
+                            if (errorObj.error) {
+                                errorMessage = errorObj.error;
+                            }
+                        }
+                    } catch (jsonError) {
+                        const detailsMatch = errorText.match(/Detalles: (.+)$/);
+                        if (detailsMatch && detailsMatch[1]) {
+                            errorMessage = detailsMatch[1];
+                        }
+                    }
+                } else {
+                    errorMessage = errorText;
+                }
+            }
+            
+            toast.error(errorMessage, {
+                autoClose: 5000,
+            });
+        } finally {
+            setIsLoading(false); // Desactivar indicador de carga
         }
     };
 
@@ -135,33 +181,14 @@ const ModalABMCategoria = ({
 
     return (
         <>
-            {modalType === ModalType.DELETE ? (
+            {modalType === ModalType.BAJA_LOGICA ? (
                 <>
                     <Modal show={show} onHide={onHide} centered backdrop="static">
                         <Modal.Header closeButton>
-                            <Modal.Title>{getModalTitle()}</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <p>
-                                ¿Está seguro que desea eliminar la categoría?
-                                <br /> <strong>{cat.nombreCategoria}</strong> ?
-                            </p>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={onHide}>
-                                Cancelar
-                            </Button>
-                            <Button variant="danger" onClick={handleDelete}>
-                                Borrar
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
-                </>
-            ) : modalType === ModalType.BAJA_LOGICA ? (
-                <>
-                    <Modal show={show} onHide={onHide} centered backdrop="static">
-                        <Modal.Header closeButton>
-                            <Modal.Title>{getModalTitle()}</Modal.Title>
+                            <Modal.Title>
+                                {isLoading && <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>}
+                                {getModalTitle()}
+                            </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <p>
@@ -175,11 +202,21 @@ const ModalABMCategoria = ({
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={onHide}>
+                            <Button variant="secondary" onClick={onHide} disabled={isLoading}>
                                 Cancelar
                             </Button>
-                            <Button variant="warning" onClick={handleBajaLogica}>
-                                Dar de Baja
+                            <Button variant="warning" onClick={handleBajaLogica} disabled={isLoading}>
+                                {isLoading ? (
+                                    <>
+                                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        Procesando...
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="fas fa-ban me-2"></i>
+                                        Dar de Baja
+                                    </>
+                                )}
                             </Button>
                         </Modal.Footer>
                     </Modal>
@@ -188,31 +225,46 @@ const ModalABMCategoria = ({
                 <>
                     <Modal show={show} onHide={onHide} centered backdrop="static">
                         <Modal.Header closeButton>
-                            <Modal.Title>{getModalTitle()}</Modal.Title>
+                            <Modal.Title>
+                                {isLoading && <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>}
+                                {getModalTitle()}
+                            </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Form onSubmit={formik.handleSubmit}>
-                                <Form.Group controlId="formNombreCategoria">
-                                    <FormLabel> Nombre Categoría: </FormLabel>
-                                    <Form.Control
-                                        name="nombreCategoria"
-                                        type="text"
-                                        value={formik.values.nombreCategoria || ""}
-                                        onBlur={formik.handleBlur}
-                                        onChange={formik.handleChange}
-                                        isInvalid={Boolean(formik.errors.nombreCategoria && formik.touched.nombreCategoria)}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        {formik.errors.nombreCategoria}
-                                    </Form.Control.Feedback>
-                                </Form.Group>
+                                <fieldset disabled={isLoading}>
+                                    <Form.Group controlId="formNombreCategoria">
+                                        <FormLabel> Nombre Categoría: </FormLabel>
+                                        <Form.Control
+                                            name="nombreCategoria"
+                                            type="text"
+                                            value={formik.values.nombreCategoria || ""}
+                                            onBlur={formik.handleBlur}
+                                            onChange={formik.handleChange}
+                                            isInvalid={Boolean(formik.errors.nombreCategoria && formik.touched.nombreCategoria)}
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {formik.errors.nombreCategoria}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                </fieldset>
 
                                 <Modal.Footer className="mt-4">
-                                    <Button variant="secondary" onClick={onHide}>
+                                    <Button variant="secondary" onClick={onHide} disabled={isLoading}>
                                         Cancelar
                                     </Button>
-                                    <Button variant="primary" type="submit" disabled={!formik.isValid}>
-                                        Guardar
+                                    <Button variant="primary" type="submit" disabled={!formik.isValid || isLoading}>
+                                        {isLoading ? (
+                                            <>
+                                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                Guardando...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="fas fa-save me-2"></i>
+                                                Guardar
+                                            </>
+                                        )}
                                     </Button>
                                 </Modal.Footer>
                             </Form>

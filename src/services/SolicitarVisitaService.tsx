@@ -7,44 +7,63 @@ const BASE_URL = 'http://localhost:8080';
 
 export const SolicitarVisitaService = {
     getAllPresupuestos: async (): Promise<SolicitarVisita[]> => {
-        const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/paged`);
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('No autenticado');
+
+        const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/paged`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) throw new Error("Error al obtener solicitudes de visita");
         const data = await response.json();
         return data;
     },
 
     getSolicitarVisita: async (id: number): Promise<SolicitarVisita> => {
-        const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/${id}`);
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('No autenticado');
+
+        const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) throw new Error("Solicitud de visita no encontrada");
         const data = await response.json();
         return data;
     },
 
-    createSolicitarVisita: async (solicitarVisita: SolicitarVisita, mueble: Mueble, cliente: Cliente)  => {
-    
+    createSolicitarVisita: async (solicitarVisita: SolicitarVisita, mueble: Mueble, cliente: Cliente) => {
+        // Ahora solo se envía el id del mueble, no el objeto completo
         try {
             const formData = new FormData();
             formData.append('solicitarVisita', JSON.stringify(solicitarVisita));
-            formData.append('mueble', JSON.stringify(mueble));
+            formData.append('muebleId', String(mueble.id));
             formData.append('cliente', JSON.stringify(cliente));
 
             const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/createSolicitarVisita`, {
                 method: "POST",
                 body: formData,
-               
-               
             });
     
             if (!response.ok) {
-                throw new Error('Error al crear la solicitud de visita');
+                const errorText = await response.text();
+                throw new Error(`Error al crear la solicitud de visita: ${response.status} ${response.statusText}. Detalles: ${errorText}`);
             }
     
             return await response.json();
         } catch (error) {
-            //console.error('Error al crear la solicitud de visita:', error);
             throw error;
         }
     },
-    createSolicitarVisitaSinCliente: async (solicitarVisita: SolicitarVisita)  => {
-    
+
+    createSolicitarVisitaSinCliente: async (solicitarVisita: SolicitarVisita) => {
+        // Este método puede mantenerse sin token ya que es para clientes públicos
         try {
             const formData = new FormData();
             formData.append('solicitarVisita', JSON.stringify(solicitarVisita));
@@ -70,28 +89,149 @@ export const SolicitarVisitaService = {
     },
 
     getUltimos30Solicitudes: async (): Promise<SolicitarVisita[]> => {
-        const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/solicitudes?page=0&size=30`);
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('No autenticado');
+
+        const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/solicitudes?page=0&size=30`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) throw new Error("Error al obtener últimas solicitudes");
         const data = await response.json();
         return data;
     },
-    
 
     updateSolicitarVisita: async (id: number, SolicitarVisita: SolicitarVisita): Promise<SolicitarVisita> => {
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('No autenticado');
+
         const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/${id}`, {
             method: "PUT",
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(SolicitarVisita)
         });
 
+        if (!response.ok) throw new Error("Error al actualizar solicitud de visita");
         const data = await response.json();
         return data;
     },
 
     deleteSolicitarVisita: async (id: number): Promise<void> => {
-        await fetch(`${BASE_URL}/api/v1/solicitarVisita/${id}`, {
-            method: "DELETE"
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('No autenticado');
+
+        const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/${id}`, {
+            method: "DELETE",
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
+
+        if (!response.ok) throw new Error("Error al eliminar solicitud de visita");
+    },
+
+    crearConsulta: async (crearConsultaDTO: { cliente: Cliente, consultaSolicitarVisita: string }) => {
+        // Este método puede mantenerse sin token ya que es para consultas públicas
+        try {
+            const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/crearConsulta`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(crearConsultaDTO)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error al crear la consulta: ${response.status} ${response.statusText}. Detalles: ${errorText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error al crear la consulta:', error);
+            throw error;
+        }
+    },
+
+    obtenerConsultasPaginadas: async (pageNumber: number) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No autenticado');
+            const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/obtener-consultas/${pageNumber}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            if (!response.ok) {
+                throw new Error(`Error al obtener consultas: ${response.status} ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error al obtener consultas paginadas:', error);
+            throw error;
+        }
+    },
+
+    cambiarEstadoSolicitud: async (id: number, nuevoEstado: string) => {
+        try {
+            console.log('🔄 [FRONTEND] Iniciando cambio de estado:', { id, nuevoEstado });
+            
+            const cambiarEstadoDTO = { estado: nuevoEstado };
+            console.log('📤 [FRONTEND] Enviando DTO:', cambiarEstadoDTO);
+            
+            const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/${id}/estado`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(cambiarEstadoDTO)
+            });
+
+            console.log('📥 [FRONTEND] Response status:', response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ [FRONTEND] Error response:', errorText);
+                throw new Error(`Error al cambiar estado: ${response.status} ${response.statusText}. Detalles: ${errorText}`);
+            }
+
+            const resultado = await response.json();
+            console.log('✅ [FRONTEND] Estado cambiado exitosamente:', resultado);
+            return resultado;
+        } catch (error) {
+            console.error('❌ [FRONTEND] Error al cambiar estado de solicitud:', error);
+            throw error;
+        }
+    },
+
+    obtenerSolicitudesConMueblePaginadas: async (pageNumber: number) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No autenticado');
+            const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/obtener-solicitudes-con-mueble/${pageNumber}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            if (!response.ok) {
+                throw new Error(`Error al obtener solicitudes con mueble: ${response.status} ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error al obtener solicitudes con mueble paginadas:', error);
+            throw error;
+        }
     }
 };

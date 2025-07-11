@@ -1,0 +1,30 @@
+/* Modal scrollable y responsive para CatalogoModalMueble */
+.responsive-scrollable-modal .modal-dialog {
+  max-width: 95vw;
+  width: 100%;
+  margin: 1.75rem auto;
+}
+
+.responsive-scrollable-modal .modal-content {
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body-scrollable {
+  overflow-y: auto;
+  max-height: 65vh;
+  min-height: 200px;
+}
+
+@media (max-width: 768px) {
+  .responsive-scrollable-modal .modal-dialog {
+    max-width: 99vw;
+    margin: 0.5rem auto;
+  }
+  .modal-body-scrollable {
+    max-height: 55vh;
+    padding: 0.5rem;
+  }
+}

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { SolicitarVisitaService } from "../services/SolicitarVisitaService";
+import { Cliente } from "../types/Cliente";
 import '../pages/Home.css';
 
 const HomePage = () => {
@@ -7,6 +9,17 @@ const HomePage = () => {
   const [timestamp, setTimestamp] = useState(Date.now());
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Estados del formulario
+  const [formData, setFormData] = useState({
+    nombreCompleto: '',
+    email: '',
+    telefono: '',
+    consulta: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   // Array de imágenes para el carrusel
   const heroImages = [
@@ -45,6 +58,80 @@ const HomePage = () => {
     return () => clearInterval(imageInterval);
   }, [heroImages.length]);
 
+  // Funciones del formulario
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setShowErrorMessage(false);
+
+    try {
+      // Separar nombre y apellido
+      const nombreParts = formData.nombreCompleto.trim().split(' ');
+      const nombre = nombreParts[0] || '';
+      const apellido = nombreParts.slice(1).join(' ') || '';
+
+      // Crear objeto cliente
+      const cliente: Cliente = {
+        id: 0,
+        nombreCliente: nombre,
+        apellidoCliente: apellido,
+        mailCliente: formData.email,
+        telefonoCliente: formData.telefono ? parseInt(formData.telefono) : 0,
+        fechaHoraAltaCliente: null,
+        fechaHoraModificacionCliente: null,
+        estadoCliente: "PENDIENTE",
+        fechaHoraBajaCliente: null
+      };
+
+      // Crear consulta completa
+      const consultaTexto = formData.consulta;
+
+      // Crear objeto para enviar
+      const crearConsultaDTO = {
+        cliente: cliente,
+        consultaSolicitarVisita: consultaTexto
+      };
+
+      // Enviar consulta
+      await SolicitarVisitaService.crearConsulta(crearConsultaDTO);
+
+      // Mostrar mensaje de éxito
+      setShowSuccessMessage(true);
+      
+      // Limpiar formulario
+      setFormData({
+        nombreCompleto: '',
+        email: '',
+        telefono: '',
+        consulta: ''
+      });
+
+      // Ocultar mensaje después de 5 segundos
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 5000);
+
+    } catch (error) {
+      console.error('Error al enviar consulta:', error);
+      setShowErrorMessage(true);
+      
+      // Ocultar mensaje de error después de 5 segundos
+      setTimeout(() => {
+        setShowErrorMessage(false);
+      }, 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <>
       {/* Hero Section profesional */}
@@ -54,7 +141,7 @@ const HomePage = () => {
           <div className="hero-left">
             <div className="hero-badge">
               <i className="fas fa-award"></i>
-              <span>15 años de experiencia</span>
+              <span>10 años de experiencia</span>
             </div>
             <h1 className="hero-title">MDZ MUEBLES</h1>
             <h2 className="hero-subtitle">Carpintería de alta calidad</h2>
@@ -124,7 +211,7 @@ const HomePage = () => {
         <div className="container">
           <div className="row align-items-center">
             <h6 className="section-subtitle">NUESTRA EXPERIENCIA</h6>
-            <h2 className="section-title">Lo que ofrecemos</h2>
+            <h2 className="section-title-new">Lo que ofrecemos</h2>
             <div className="divider-center"></div>
           </div>
           
@@ -156,59 +243,181 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Sección "Sobre Nosotros" mejorada */}
-      <section className="about-section">
+      {/* Sección "Nuestra Empresa" completamente rediseñada */}
+      <section className="about-section-new">
         <div className="container">
-          <div className="about-content">
-            <div className="about-text">
-              <h6 className="section-subtitle">NUESTRA EMPRESA</h6>
-              <h2 className="section-title">Artesanía en cada detalle</h2>
-              <div className="divider-left"></div>
-              <p className="lead">
-                En <strong>MDZ Muebles</strong> combinamos tradición e innovación para crear piezas únicas que se adaptan perfectamente a tus espacios y estilo de vida.
-              </p>
-              <p>
-                Cada mueble es diseñado con atención meticulosa a los detalles y fabricado con los más altos estándares de calidad. Nuestro equipo de diseñadores y artesanos trabaja en estrecha colaboración contigo para materializar tus ideas en piezas funcionales y estéticamente impresionantes.
-              </p>
-              <div className="features-list">
-                <div className="feature-item">
-                  <i className="fas fa-check-circle"></i>
-                  <span>15 años de experiencia</span>
-                </div>
-                <div className="feature-item">
-                  <i className="fas fa-check-circle"></i>
-                  <span>+500 clientes satisfechos</span>
-                </div>
-                <div className="feature-item">
-                  <i className="fas fa-check-circle"></i>
-                  <span>Garantía de 2 años</span>
-                </div>
-              </div>
-              <a href="/nosotros" className="btn btn-primary">
-                Conoce más sobre nosotros <i className="fas fa-arrow-right ml-2"></i>
-              </a>
+          {/* Header de la sección */}
+          <div className="about-header">
+            <div className="about-badge">
+              <i className="fas fa-gem"></i>
+              <span>Desde 2020</span>
             </div>
-            <div className="about-gallery">
-              <div className="gallery-main">
-                <img 
-                  src={`src/assets/images/placar.jpg?timestamp=${timestamp}`} 
-                  alt="Placar MDZ Muebles" 
-                  className="img-main"
-                />
+            <h6 className="section-subtitle">NUESTRA EMPRESA</h6>
+            <h2 className="section-title-new">Creamos <span className="highlight">sueños</span> en madera</h2>
+            <div className="divider-center"></div>
+          </div>
+
+          {/* Contenido principal */}
+          <div className="about-main-content">
+            <div className="about-story">
+              <div className="story-text">
+                <h3>La pasión por la madera nos define</h3>
+                <p className="lead-text">
+                  En <strong>MDZ Muebles</strong> no solo fabricamos muebles, creamos experiencias. 
+                  Cada pieza cuenta una historia única, diseñada específicamente para ti y tu hogar.
+                </p>
+                <p>
+                  Nuestro compromiso va más allá de la simple carpintería. Somos artesanos del diseño, 
+                  especialistas en convertir espacios ordinarios en lugares extraordinarios donde cada 
+                  detalle refleja tu personalidad y estilo de vida.
+                </p>
               </div>
-              <div className="gallery-secondary">
+              
+              <div className="story-image">
                 <img 
-                  src={`src/assets/images/racks.jpg?timestamp=${timestamp}`} 
-                  alt="Mueble de TV" 
-                  className="img-secondary"
+                  src={`src/assets/images/FotoAbout.jpg?timestamp=${timestamp}`} 
+                  alt="Taller MDZ Muebles"
+                  className="story-img"
                 />
-                <img 
-                  src="src/assets/images/cocinaUno.jpeg" 
-                  alt="Cocina" 
-                  className="img-secondary"
-                />
+                <a href="/quienesSomos" className="story-overlay">
+                  <div className="overlay-content" style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px',
+                    width: '100%',
+                    height: '100%',
+                    textAlign: 'center',
+                  }}>
+                    <i className="fas fa-play-circle" style={{ fontSize: '2rem', verticalAlign: 'middle' }}></i>
+                    <span style={{ fontWeight: 600, fontSize: '1.1rem', verticalAlign: 'middle' }}>Ver más sobre nosotros</span>
+                  </div>
+                </a>
               </div>
             </div>
+
+            {/* Estadísticas destacadas */}
+            <div className="about-stats">
+              <div className="stat-card">
+                <div className="stat-icon">
+                  <i className="fas fa-calendar-alt"></i>
+                </div>
+                <div className="stat-content">
+                  <h4>10+</h4>
+                  <p>Años de experiencia</p>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon">
+                  <i className="fas fa-users"></i>
+                </div>
+                <div className="stat-content">
+                  <h4>500+</h4>
+                  <p>Clientes satisfechos</p>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon">
+                  <i className="fas fa-hammer"></i>
+                </div>
+                <div className="stat-content">
+                  <h4>1000+</h4>
+                  <p>Muebles creados</p>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon">
+                  <i className="fas fa-shield-alt"></i>
+                </div>
+                <div className="stat-content">
+                  <h4>2 años</h4>
+                  <p>Garantía total</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Proceso de trabajo */}
+            <div className="work-process">
+              <h3>Nuestro proceso creativo</h3>
+              <div className="process-steps">
+                <div className="process-step">
+                  <div className="step-number">01</div>
+                  <div className="step-content">
+                    <h4>Consulta inicial</h4>
+                    <p>Analizamos tus necesidades y espacios para entender tu visión perfectamente.</p>
+                  </div>
+                </div>
+                <div className="process-step">
+                  <div className="step-number">02</div>
+                  <div className="step-content">
+                    <h4>Fabricación</h4>
+                    <p>Utilizamos técnicas tradicionales y tecnología moderna para crear tu mueble.</p>
+                  </div>
+                </div>
+                <div className="process-step">
+                  <div className="step-number">03</div>
+                  <div className="step-content">
+                    <h4>Entrega perfecta</h4>
+                    <p>Instalamos y ajustamos cada detalle hasta que quede exactamente como lo soñaste.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Galería de trabajos */}
+           
+            <div className="about-gallery-new">
+               <div className="section-header">
+            <h6 className="section-subtitle">NUESTROS TRABAJOS</h6>
+            <h2 className="section-title-center">Algunos de nuestros trabajos</h2>
+            <div className="divider-center"></div>
+            <p className="section-description" style={{ color: '#FFD600' }}>
+              Cada proyecto es único y refleja la personalidad de nuestros clientes
+            </p>
+          </div>
+              <div className="gallery-grid-new">
+                <div className="gallery-item-new gallery-large">
+                  <img 
+                    src={`src/assets/images/placar.jpg?timestamp=${timestamp}`} 
+                    alt="Placard a medida"
+                  />
+                  <div className="gallery-overlay-new">
+                    <h4>Placard a medida</h4>
+                    <p>Diseño moderno y funcional</p>
+                  </div>
+                </div>
+                <div className="gallery-item-new">
+                  <img 
+                    src={`src/assets/images/racks.jpg?timestamp=${timestamp}`} 
+                    alt="Mueble de TV"
+                  />
+                  <div className="gallery-overlay-new">
+                    <h4>Mueble de TV</h4>
+                    <p>Elegante y práctico</p>
+                  </div>
+                </div>
+                <div className="gallery-item-new">
+                  <img 
+                    src="src/assets/images/cocinaUno.jpeg" 
+                    alt="Cocina integral"
+                  />
+                  <div className="gallery-overlay-new">
+                    <h4>Cocina integral</h4>
+                    <p>Funcionalidad premium</p>
+                  </div>
+                </div>
+                <div className="gallery-item-new">
+                  <img 
+                    src={`src/assets/images/cama1.jpg?timestamp=${timestamp}`} 
+                    alt="Dormitorio completo"
+                  />
+                  <div className="gallery-overlay-new">
+                    <h4>Dormitorio</h4>
+                    <p>Confort y estilo</p>
+                  </div>
+                </div>
+              </div>
+            </div>            
           </div>
         </div>
       </section>
@@ -218,9 +427,9 @@ const HomePage = () => {
         <div className="container">
           <div className="section-header">
             <h6 className="section-subtitle">NUESTROS PRODUCTOS</h6>
-            <h2 className="section-title">Explora Nuestro Catálogo</h2>
+            <h2 className="section-title-center">Explora Nuestro Catálogo</h2>
             <div className="divider-center"></div>
-            <p className="section-description">
+            <p className="section-description" style={{ color: '#FFD600' }}>
               Descubre nuestra amplia gama de muebles diseñados para cada espacio de tu hogar
             </p>
           </div>
@@ -279,87 +488,13 @@ const HomePage = () => {
               Ver catálogo completo <i className="fas fa-arrow-right ml-2"></i>
             </a>
           </div>
+          <hr/>
+          <hr/>
         </div>
+        
+            
       </section>
-
-      {/* Galería de proyectos destacados */}
-      <section className="gallery-section">
-        <div className="container">
-          <div className="section-header">
-            <h6 className="section-subtitle">NUESTRO TRABAJO</h6>
-            <h2 className="section-title">Proyectos Destacados</h2>
-            <div className="divider-center"></div>
-            <p className="section-description">
-              Algunos de nuestros trabajos más recientes y destacados
-            </p>
-          </div>
-          
-          <div className="gallery-grid">
-            {[
-              "src/assets/images/proyecto1.jpg",
-              "src/assets/images/proyecto2.jpg",
-              "src/assets/images/proyecto3.jpg",
-              "src/assets/images/proyecto4.jpg",
-              "src/assets/images/proyecto5.jpg",
-              "src/assets/images/proyecto6.jpg"
-            ].map((img, index) => (
-              <div className="gallery-item" key={index}>
-                <img src={img} alt={`Proyecto MDZ Muebles ${index + 1}`} />
-                <div className="gallery-hover">
-                  <i className="fas fa-search-plus"></i>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonios de clientes */}
-      <section className="testimonials-section">
-        <div className="container">
-          <div className="section-header">
-            <h6 className="section-subtitle">OPINIONES</h6>
-            <h2 className="section-title">Lo que dicen nuestros clientes</h2>
-            <div className="divider-center"></div>
-          </div>
-          
-          <div className="testimonials-slider">
-            {[
-              {
-                name: "María González",
-                role: "Cliente residencial",
-                text: "Quedé encantada con mi placard a medida. El equipo de MDZ Muebles entendió perfectamente lo que necesitaba y el resultado superó mis expectativas. La calidad de los materiales es excelente.",
-                rating: 5
-              },
-              {
-                name: "Carlos Martínez",
-                role: "Cliente corporativo",
-                text: "Contratamos a MDZ Muebles para amueblar nuestras nuevas oficinas y el trabajo fue impecable. Cumplieron con los plazos y los muebles tienen un diseño moderno y funcional.",
-                rating: 5
-              },
-              {
-                name: "Lucía Fernández",
-                role: "Cliente residencial",
-                text: "El mueble de TV que me hicieron es exactamente como lo soñé. El proceso de diseño fue muy profesional y el resultado final es de una calidad excepcional. ¡Los recomiendo totalmente!",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <div className="testimonial-card" key={index}>
-                <div className="testimonial-rating">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <i className="fas fa-star" key={i}></i>
-                  ))}
-                </div>
-                <p className="testimonial-text">"{testimonial.text}"</p>
-                <div className="testimonial-author">
-                  <h5>{testimonial.name}</h5>
-                  <p>{testimonial.role}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* Sección de contacto mejorada */}
       <section className="contact-section" id="contacto">
@@ -406,57 +541,88 @@ const HomePage = () => {
               </div>
               
               <div className="social-links">
-                <a href="#"><i className="fab fa-facebook-f"></i></a>
-                <a href="#"><i className="fab fa-instagram"></i></a>
-                <a href="#"><i className="fab fa-whatsapp"></i></a>
-                <a href="#"><i className="fab fa-pinterest-p"></i></a>
+                <a href="https://www.facebook.com/Esteban.Chaparro028" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/mdz.muebles/" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
+                <a href="https://wa.me/542613663197" target="_blank" rel="noopener noreferrer"><i className="fab fa-whatsapp"></i></a>
               </div>
             </div>
             
             <div className="contact-form">
-              <form>
+              {/* Mensaje de éxito */}
+              {showSuccessMessage && (
+                <div className="alert alert-success mb-3">
+                  <i className="fas fa-check-circle me-2"></i>
+                  ¡Consulta enviada exitosamente! Nos pondremos en contacto contigo pronto.
+                </div>
+              )}
+              
+              {/* Mensaje de error */}
+              {showErrorMessage && (
+                <div className="alert alert-danger mb-3">
+                  <i className="fas fa-exclamation-circle me-2"></i>
+                  Hubo un error al enviar tu consulta. Por favor, intenta nuevamente.
+                </div>
+              )}
+              
+              <form onSubmit={handleSubmit}>
                 <div className="form-group">
                   <input 
                     type="text" 
+                    name="nombreCompleto"
                     className="form-control" 
                     placeholder="Nombre completo" 
+                    value={formData.nombreCompleto}
+                    onChange={handleInputChange}
                     required 
                   />
                 </div>
                 <div className="form-group">
                   <input 
                     type="email" 
+                    name="email"
                     className="form-control" 
                     placeholder="Correo electrónico" 
+                    value={formData.email}
+                    onChange={handleInputChange}
                     required 
                   />
                 </div>
                 <div className="form-group">
                   <input 
                     type="tel" 
+                    name="telefono"
                     className="form-control" 
                     placeholder="Teléfono (opcional)" 
+                    value={formData.telefono}
+                    onChange={handleInputChange}
                   />
                 </div>
                 <div className="form-group">
-                  <select className="form-control" required>
-                    <option value="">Tipo de consulta</option>
-                    <option value="cotizacion">Cotización</option>
-                    <option value="diseno">Diseño personalizado</option>
-                    <option value="general">Consulta general</option>
-                    <option value="otro">Otro</option>
-                  </select>
-                </div>
-                <div className="form-group">
                   <textarea 
+                    name="consulta"
                     className="form-control" 
                     placeholder="Cuéntanos sobre tu proyecto..." 
                     rows={5}
+                    value={formData.consulta}
+                    onChange={handleInputChange}
                     required
                   ></textarea>
                 </div>
-                <button type="submit" className="btn btn-primary btn-block">
-                  Enviar consulta <i className="fas fa-paper-plane ml-2"></i>
+                <button 
+                  type="submit" 
+                  className="btn btn-primary btn-block"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <i className="fas fa-spinner fa-spin me-2"></i>
+                      Enviando...
+                    </>
+                  ) : (
+                    <>
+                      Enviar consulta <i className="fas fa-paper-plane ml-2"></i>
+                    </>
+                  )}
                 </button>
               </form>
             </div>
@@ -464,22 +630,54 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Newsletter */}
+      {/* Sección de contacto final */}
       <section className="newsletter-section">
         <div className="container">
           <div className="newsletter-content">
-            <h3>Suscríbete a nuestro newsletter</h3>
-            <p>Recibe novedades, promociones y consejos de decoración directamente en tu email.</p>
-            <form className="newsletter-form">
-              <input 
-                type="email" 
-                placeholder="Tu correo electrónico" 
-                required 
-              />
-              <button type="submit">
-                Suscribirse <i className="fas fa-envelope ml-2"></i>
-              </button>
-            </form>
+            <h3>¿Tienes alguna pregunta?</h3>
+            <p>No dudes en ponerte en contacto con nosotros. Estamos aquí para ayudarte a crear el mueble de tus sueños.</p>
+            <div className="newsletter-form" style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              marginTop: '30px'
+            }}>
+              <a href="#contacto" className="btn btn-secondary" style={{
+                background: 'linear-gradient(135deg, #8B4513 0%, #A0522D 100%)',
+                color: 'white',
+                border: 'none',
+                padding: '18px 50px',
+                borderRadius: '50px',
+                fontSize: '18px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '12px',
+                boxShadow: '0 8px 25px rgba(139, 69, 19, 0.3)',
+                transform: 'translateY(0)',
+                position: 'relative',
+                zIndex: 1
+              }}
+              onMouseOver={(e) => {
+                const target = e.target as HTMLAnchorElement;
+                target.style.transform = 'translateY(-3px)';
+                target.style.boxShadow = '0 12px 35px rgba(139, 69, 19, 0.4)';
+                target.style.background = 'linear-gradient(135deg, #A0522D 0%, #8B4513 100%)';
+              }}
+              onMouseOut={(e) => {
+                const target = e.target as HTMLAnchorElement;
+                target.style.transform = 'translateY(0)';
+                target.style.boxShadow = '0 8px 25px rgba(139, 69, 19, 0.3)';
+                target.style.background = 'linear-gradient(135deg, #8B4513 0%, #A0522D 100%)';
+              }}>
+                <i className="fas fa-phone"></i>
+                Contáctanos ahora
+              </a>
+            </div>
           </div>
         </div>
       </section>

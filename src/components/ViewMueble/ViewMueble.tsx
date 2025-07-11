@@ -1,16 +1,14 @@
 
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { MuebleImagenes } from "../../types/MuebleImagenes";
 import { useEffect, useRef, useState } from "react";
 import { CategoriaService } from "../../services/CategoriaService";
 import { Categoria } from "../../types/Categoria";
-import { Mueble } from "../../types/Mueble";
 import "./ViewMueble.css"
-import { ClienteService } from "../../services/ClienteService";
 import { Cliente } from "../../types/Cliente";
 import { SolicitarVisitaService } from "../../services/SolicitarVisitaService";
 import { SolicitarVisita } from "../../types/SolicitarVisita";
-import { Button } from "react-bootstrap";
+import { MuebleService } from "../../services/MuebleService";
 
 
 
@@ -31,13 +29,9 @@ const ViewMueble = () => {
   useEffect(() => {
     window.scrollTo(0, 0); // Desplaza la ventana hacia arriba al acceder a la página de inicio
   }, [location]); // Ejecuta el efecto cada vez que cambie la ubicación
-  // Ahora puedes acceder a todos los atributos del objeto mueble
-  console.log(mueble);
 
   
 
-  const[isLoading, setIsLoading] = useState(true); 
-  const [refreshData, setRefreshData] = useState(false);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
 
   useEffect(() =>{
@@ -45,51 +39,133 @@ const ViewMueble = () => {
     const fetchCategoria= async() => {
       const categorias = await CategoriaService.getAllCategoria();
       setCategorias(categorias);
-    setIsLoading(false)
     };
     fetchCategoria();
-  }, [refreshData]);
+  }, []);
 
-  const [imagenPrincipal, setImagenPrincipal] = useState(mueble.imagenes.find((imagen: any) => imagen.esPortada));
+  const [imagenesFromBackend, setImagenesFromBackend] = useState<MuebleImagenes[]>([]);
+  const [imagenPrincipal, setImagenPrincipal] = useState<MuebleImagenes | null>(null);
+  const [loadingImages, setLoadingImages] = useState(true);
+  const [showFullscreen, setShowFullscreen] = useState(false);
+  const [fullscreenImage, setFullscreenImage] = useState<MuebleImagenes | null>(null);
 
-  const handleClickImagen = (imagen: any) => {
+  // Efecto para cargar las imágenes del mueble desde el backend
+  useEffect(() => {
+    const fetchImagenes = async () => {
+      try {
+        setLoadingImages(true);
+        const imagenes = await MuebleService.obtenerImagenesMueble(mueble.id);
+        setImagenesFromBackend(imagenes);
+        // Establecer la imagen principal como la primera imagen de portada o la primera imagen
+        const imagenPortada = imagenes.find((img: MuebleImagenes) => img.esPortada) || imagenes[0];
+        setImagenPrincipal(imagenPortada);
+      } catch (error) {
+        console.error('Error al obtener las imágenes del mueble:', error);
+        // Fallback: usar las imágenes que vienen con el mueble
+        if (mueble.imagenes && mueble.imagenes.length > 0) {
+          setImagenesFromBackend(mueble.imagenes);
+          setImagenPrincipal(mueble.imagenes.find((imagen: any) => imagen.esPortada) || mueble.imagenes[0]);
+        }
+      } finally {
+        setLoadingImages(false);
+      }
+    };
+
+    fetchImagenes();
+  }, [mueble.id]);
+
+  const handleClickImagen = (imagen: MuebleImagenes) => {
     setImagenPrincipal(imagen);
   };
+
+  const handleFullscreenImage = (imagen: MuebleImagenes) => {
+    setFullscreenImage(imagen);
+    setShowFullscreen(true);
+  };
+
+  const handleCloseFullscreen = () => {
+    setShowFullscreen(false);
+    setFullscreenImage(null);
+  };
+
+  // Cerrar fullscreen con tecla ESC
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && showFullscreen) {
+        handleCloseFullscreen();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showFullscreen]);
   
 
+  // Estados y referencias para el zoom
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [isZooming, setIsZooming] = useState(false);
+  const mouseThrottleRef = useRef<number | null>(null);
+
   const handleMouseEnter = () => {
-    setZoomLevel(2); 
+    console.log('Mouse enter - activating zoom');
+    setZoomLevel(1.5);
+    setIsZooming(true);
   };
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = (event?: React.MouseEvent<HTMLImageElement>) => {
+    console.log('Mouse leave - deactivating zoom');
     setZoomLevel(1);
+    setIsZooming(false);
+    
+    if (event?.currentTarget) {
+      event.currentTarget.style.setProperty('transform', 'scale(1)', 'important');
+      event.currentTarget.style.setProperty('transform-origin', 'center center', 'important');
+      event.currentTarget.style.removeProperty('z-index');
+    }
+    
+    if (mouseThrottleRef.current) {
+      window.cancelAnimationFrame(mouseThrottleRef.current);
+      mouseThrottleRef.current = null;
+    }
   };
-  const [zoomLevel, setZoomLevel] = useState(1);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLImageElement>) => {
-    const { left, top, width, height } = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - left;
-    const y = event.clientY - top;
-
-    // Calculamos la posición del mouse relativa a la imagen
-    const percentX = x / width;
-    const percentY = y / height;
-
-    // Ajustamos el zoom
-    const newZoomLevel = 1.4; // Puedes ajustar este valor según tus necesidades
-
-    const maxOffsetX = (width * (newZoomLevel - 1)) / 4.5; // Máximo desplazamiento permitido en el eje X
-    const maxOffsetY = (height * (newZoomLevel - 1)) / 4.5; // Máximo desplazamiento permitido en el eje Y
+    console.log('Mouse move detected - isZooming:', isZooming, 'zoomLevel:', zoomLevel);
     
-    // Calculamos el desplazamiento asegurándonos de no exceder los límites
-    const offsetX = Math.min(Math.max((width * (newZoomLevel - 1)) * (0.5 - percentX), -maxOffsetX), maxOffsetX);
-    const offsetY = Math.min(Math.max((height * (newZoomLevel - 1)) * (0.5 - percentY), -maxOffsetY), maxOffsetY);
+    if (!isZooming || zoomLevel === 1) {
+      console.log('Zoom not active, returning');
+      return;
+    }
     
- 
+    if (!event.currentTarget) {
+      console.log('No current target, returning');
+      return;
+    }
+    
+    // Simplificar - no usar throttling inicialmente para ver si funciona
+    try {
+      const target = event.currentTarget;
+      const rect = target.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
 
-    // Aplicamos transformaciones solo si el zoom cambia
-    event.currentTarget.style.transform = `scale(${newZoomLevel}) translate(${offsetX}px, ${offsetY}px)`;
-};
+      const percentX = Math.max(0, Math.min(1, x / rect.width));
+      const percentY = Math.max(0, Math.min(1, y / rect.height));
+      
+      console.log(`Applying zoom: scale(${zoomLevel}) at ${percentX * 100}%, ${percentY * 100}%`);
+      
+      // Aplicar transformación directamente
+      target.style.setProperty('transform', `scale(${zoomLevel})`, 'important');
+      target.style.setProperty('transform-origin', `${percentX * 100}% ${percentY * 100}%`, 'important');
+      target.style.setProperty('z-index', '9999', 'important');
+      target.style.setProperty('position', 'relative', 'important');
+      
+    } catch (error) {
+      console.error('Error en handleMouseMove:', error);
+    }
+  };
 
 
 const [mailCliente, setMailCliente] = useState('');
@@ -147,47 +223,42 @@ useEffect(() => {
       console.log('Número de contacto:', telefonoCliente);
       console.log('Consulta:', consultaPresupuesto);
 
+      // Crear el cliente (solo datos, sin imágenes ni objetos anidados)
+      const newCliente: Cliente = {
+        id: 0, // O cualquier valor predeterminado que tu backend acepte
+        nombreCliente: nombreCliente,
+        apellidoCliente: apellidoCliente,
+        mailCliente: mailCliente,
+        telefonoCliente: telefonoCliente,
+        fechaHoraAltaCliente: null, 
+        fechaHoraModificacionCliente: null, 
+        estadoCliente: "PENDIENTE",
+        fechaHoraBajaCliente: null,  
+      };
 
+      // Crear la solicitud de visita (sin mueble ni cliente anidados)
+      const newSolicitudVisita: SolicitarVisita = {
+        id: 0,
+        fechaHoraAltaSolicitarVisita: null,
+        fechaHoraBajaSolicitarVisita: null,
+        fechaHotaModificacionSolicitarVisita: null,
+        consultaSolicitarVisita: consultaPresupuesto,
+        mueble: null, // No enviar objeto mueble
+        cliente: null, // No enviar objeto cliente
+      }
 
-        
-              // El cliente no existe, crear un nuevo cliente
-              const newCliente: Cliente = {
-                id: 0, // O cualquier valor predeterminado que tu backend acepte
-                nombreCliente: nombreCliente,
-                apellidoCliente: apellidoCliente,
-                mailCliente: mailCliente,
-                telefonoCliente: telefonoCliente,
-                fechaHoraAltaCliente: null, 
-                fechaHoraModificacionCliente: null, 
-                estadoCliente: "ALTA",
-                fechaHoraBajaCliente: null,  
-              };
-           
-              const newSolicitudVisita: SolicitarVisita = {
-                id: 0,
-                fechaHoraAltaSolicitarVisita: null,
-                fechaHoraBajaSolicitarVisita: null,
-                fechaHotaModificacionSolicitarVisita: null,
-                consultaSolicitarVisita: consultaPresupuesto,
-                mueble: null,
-                cliente: null,
-              }
-               
-                    // Después de un tiempo, ocultamos el mensaje de éxito
-                const newSolicitud = await SolicitarVisitaService.createSolicitarVisita(newSolicitudVisita, mueble, newCliente )
-                console.log("Se a creado la solicitud:", newSolicitud)
-                       
-                // Mostrar la alerta/modal de éxito
-                setShowSuccessMessage(true);
-             
-// Desplazar la página hacia donde se muestra el modal, si modalRef.current existe
-if (modalRef.current) {
-  modalRef.current.scrollIntoView({ behavior: 'smooth' });
-  
-}
-  
-                  
-                };
+      // Llamar al servicio pasando solo el id del mueble
+      const newSolicitud = await SolicitarVisitaService.createSolicitarVisita(newSolicitudVisita, { id: mueble.id } as any, newCliente);
+      console.log("Se a creado la solicitud:", newSolicitud)
+
+      // Mostrar la alerta/modal de éxito
+      setShowSuccessMessage(true);
+
+      // Desplazar la página hacia donde se muestra el modal, si modalRef.current existe
+      if (modalRef.current) {
+        modalRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
 
 
               
@@ -197,277 +268,369 @@ if (modalRef.current) {
  
 
                 return (
-    
-                  <>
-
-                
-                 <div className="container-fluid py-5 animate__animated animate__fadeInUp">
-                      <div className="container py-5 ">
-                          <div className="row">
-                              <div className="col-lg-8">
-                                  
-                                  <div className="pb-3 ">
-                                      <div className="blog-item ">
-                                      <div
-                                  className="position-relative n"
-                                  style={{ overflow: "hidden", position: "relative" }}
-                                >
-                                 <img
-                                    key={imagenPrincipal.id}
-                                    className="simg-fluid card-img-portada"
-                                    src={`data:image/png;base64, ${imagenPrincipal.imagenes}`}
-                                    alt={mueble.nombreMueble}
-                                    style={{ transform: `scale(${zoomLevel})`, transition: "transform 0.1s",margin:"0 auto" }}
-                                    onMouseEnter={handleMouseEnter}
-                                    onMouseLeave={handleMouseLeave}
-                                    onMouseMove={handleMouseMove}
-                                  />
-                                              
-                                             
-                                          </div>
-                                      </div>
-                                      <div className="bg-white mb-3" style={{padding: '30px'}}>
-                                      <div className="d-flex mb-3">
-                                      {mueble.imagenes.map((imagen: any, index: number) => (
+                  <div className="view-mueble">
+                    {/* Fullscreen Modal */}
+                    {showFullscreen && fullscreenImage && (
+                      <div className="fullscreen-modal" onClick={handleCloseFullscreen}>
+                        <div className="fullscreen-content">
+                          <button className="fullscreen-close" onClick={handleCloseFullscreen}>
+                            <i className="fas fa-times"></i>
+                          </button>
                           <img
-                          key={index}
-                          className='imagen-mueble card simg-fluid card-img-thumbnail'
-                          src={`data:image/png;base64, ${imagen.imagenes}`}
-                          alt={mueble.nombreMueble}
-                          onClick={() => handleClickImagen(imagen)}
-                          style={{ cursor: 'pointer', marginRight: '10px' }}
-                      />
-                        ))}
-                                            
-                                          </div>
-                                          <div className="bg-white mb-3 " style={{ padding: '30px', maxWidth: '600px' }}>
-                                          <div className="d-flex mb-3">
-                                              <a className="text-primary text-uppercase text-decoration-none" href="/">MDZ MUEBLES</a>
-                                            
-                                          </div>
-                                          <h2 className="mb-3"> {mueble.nombreMueble}</h2>
-                                         
-                                          <p style={{ wordWrap: 'break-word' }}>{mueble.descripcion}</p> 
-                                          
-                                          
-                                          <p>Tipo de madera: {mueble.tipoMadera}</p>
-                                          <p>Color: {mueble.colorMueble}</p>
-                                          <p>Tamaño: {mueble.dimension}</p>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  
-                  
-                                  
-                                  <div className="bg-white mb-3" style={{ padding: '30px' }}>
-                  <h4 className="text-uppercase mb-4" style={{ letterSpacing: '5px' }}>SOLICITAR MUEBLE</h4>
-              
-                  <form onSubmit={handleSubmit}>
-                  <div className="form-group">
-                      <label htmlFor="name">Nombre</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="name"
-                        value={nombreCliente}
-                        onChange={(e) => setNombreCliente(e.target.value)}
-                      />
-                    </div>
-              
-                    <div className="form-group">
-                      <label htmlFor="name">Apellido</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="name"
-                        value={apellidoCliente}
-                        onChange={(e) => setApellidoCliente(e.target.value)}
-                      />
-                    </div>
-              
-                  
-                    <div className="form-group">
-                      <label htmlFor="mail">Email *</label>
-                      <input
-                        type="email"
-                        className="form-control"
-                        id="mail"
-                        value={mailCliente}
-                        onChange={handleChangeMail}
-                      />
-                      {/* Mostrar un mensaje de error si el correo no es válido */}
-                      {!mailValido && <small className="text-danger">El correo electrónico no es válido</small>}
-                    </div>
-                    
-                 
-              
-                    
-                    <div className="form-group">
-                      <label htmlFor="number">Numero de contacto (opcional)</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="number"
-                        value={telefonoCliente}
-                        onChange={(e) => setTelefonoCliente(e.target.valueAsNumber)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="text">Solicita un presupuesto específico para el mueble que están visualizando, programando una visita para un diseño completamente nuevo o simplemente haciendo otras consultas sobre el mueble en cuestión </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="text"
-                        value={consultaPresupuesto}
-                        onChange={(e) => setConsultaPresupuesto(e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group mb-0">
-                      <input
-                        type="submit"
-                        value="Enviar"
-                        className="btn btn-primary font-weight-semi-bold py-2 px-3"
-                      />
-                    </div>
-                  </form>
-              </div>
-              
-                        
-                              </div>
-                  
-                              <div className="col-lg-4 mt-5 mt-lg-0">
-                                
-                                  <div className="d-flex flex-column text-center bg-white mb-5 py-5 px-4">
-                            
-                                      
-                                      <h3 className="text-primary mb-3">{mueble.nombreMueble}</h3>
-                                     
-                                      <div className='p-4'>
-                                  <div className='d-flex justify-content-between mb-3'>
-                                    <small className='m-0'><i className='fas fa-couch text-primary mr-2'></i>{mueble.tipoMadera}</small>
-                                  <div className='d-flex justify-content-between mb-3'>
-                                    <small className='m-0'><i className='fas fa-ruler text-primary mr-2'></i>{mueble.dimension}</small>
-                                    </div>
-                                  </div>
-                                 
-                                  <div className='border-top mt-4 pt-4'>
-                                    <div className='d-flex justify-content-between'>
-                                      <h6 className='m-0'><i className='fas fa-paint-brush text-primary mr-2'></i>{mueble.colorMueble}</h6>
-                                      <h6 className='m-0'><i className='fas fa-ruler text-primary mr-2'></i>{mueble.precio}</h6>
-              
-                                    </div>
-                                    
-              
-                                    </div>
-                                    
-                                    
-                                </div>
-                                      <div className="d-flex justify-content-center">
-                                          <a className="text-primary px-2" href="https://www.facebook.com/Esteban.Chaparro028">
-                                              <i className="fab fa-facebook-f"></i>
-                                          </a>
-                                  
-                                          <a className="text-primary px-2" href="">
-                                              <i className="fab fa-instagram"></i>
-                                          </a>
-                                         
-                                      </div>
-                                  </div>
-                  
-                        
-                                 
-
-
-                                             
-                                  <div className="mb-5">
-                                      <h4 className="text-uppercase mb-4" style={{letterSpacing: '5px'}}>Categories</h4>
-                                      <div className="bg-white" style={{padding: '30px'}}>
-                                          <ul className="list-inline m-0">
-                                              <li className="mb-3 d-flex justify-content-between align-items-center">
-                                                  <a className="text-dark" href="../catalogo"><i className="fa fa-angle-right text-primary mr-2"></i> {categorias.filter(categoria => categoria.id === 1).map(categoria => categoria.nombreCategoria)}</a>
-                                                  <span className="badge badge-primary badge-pill">150</span>
-                                              </li>
-                                              <li className="mb-3 d-flex justify-content-between align-items-center">
-                                              <a className="text-dark" href="../catalogo"><i className="fa fa-angle-right text-primary mr-2"></i> {categorias.filter(categoria => categoria.id === 2).map(categoria => categoria.nombreCategoria)}</a>
-                                                     
-                                                  <span className="badge badge-primary badge-pill">131</span>
-                                              </li>
-                                              <li className="mb-3 d-flex justify-content-between align-items-center">
-                                              <a className="text-dark" href="../catalogo"><i className="fa fa-angle-right text-primary mr-2"></i> {categorias.filter(categoria => categoria.id === 3).map(categoria => categoria.nombreCategoria)}</a>
-                                                  <span className="badge badge-primary badge-pill">78</span>
-                                              </li>
-                                              <li className="mb-3 d-flex justify-content-between align-items-center">
-                                              <a className="text-dark" href="../catalogo"><i className="fa fa-angle-right text-primary mr-2"></i> {categorias.filter(categoria => categoria.id === 4).map(categoria => categoria.nombreCategoria)}</a>
-                                                  <span className="badge badge-primary badge-pill">56</span>
-                                              </li>
-                                              <li className="d-flex justify-content-between align-items-center">
-                                              <a className="text-dark" href="../catalogo"><i className="fa fa-angle-right text-primary mr-2"></i> {categorias.filter(categoria => categoria.id === 5).map(categoria => categoria.nombreCategoria)}</a>
-                                                  <span className="badge badge-primary badge-pill">98</span>
-                                              </li>
-                                          </ul>
-                                      </div>
-                                  </div>
-                  
-                              
-                                  <div className="mb-2">
-                                      <h4 className="text-uppercase mb-5" style={{letterSpacing: '6px'}}>¿Cómo pedir solicitar una visita?</h4>
-                                      <a className="d-flex align-items-center text-decoration-none bg-white mb-3" href="/">
-                                          <img className="img-fluid" src="img/blog-100x100.jpg" alt=""/>
-                                          <div className="pl-3">
-                                              <h6 className="d-flex align-items-center text-decoration-none bg-white mb-3">Cada mueble visualizado en el catalogo son imagenes reales de trabajos realizados a medida para cada cliente, puedes consultar presupuesta para otras medidas, colores o incluso otros diseño. </h6>
-                                              <h6 className="text-dark bg-white mb-3">Se notificara el presupuesto por vía Cliente </h6>
-                                          </div>
-                                   </a>
-                                     
-                                  </div>
-                  
-                                 
-                                 
-                              </div>
-                          </div>
-                      </div>
-
-              
-                      {/* Alerta/modal de éxito */}
-                      {showSuccessMessage && (
-                        
-
-
-                      <div>
-                        <div className="row"> 
-                          <div className="col-lg-8">
-                            <div className="pb-3 ">
-                              <div className="modal fade show" style={{ display: 'block', backgroundColor: '#fff', padding: '20px', borderRadius: '5px' }} ref={modalRef}>
-                                <div className="modal-header">
-                                  <h5 className="modal-title">Solicitud enviada correctamente</h5>
-                                  <button type="button" className="close" onClick={() => setShowSuccessMessage(false)}>
-                                    <span>&times;</span>
-                                  </button>
-                          </div>
-                          <div className="bg-white mb-3 " style={{ padding: '30px', maxWidth: '600px' }}>
-                                          
-                                         
-                                         <p>
-                                          Gracias {nombreCliente} {apellidoCliente} por contactarte con nosotros, en breve nos comunicaremos contigo ya sea por telefono o vía mail para organizar una visita.
-                                         </p>
-                                          
-                                          
-                                          
-                                          <p>No dudes en visitar nuestro redes sociales</p>
-                                        
-                                          </div>
-                        </div>
-                        </div>
-                        </div>
+                            src={`data:image/png;base64, ${fullscreenImage.imagenes}`}
+                            alt={mueble.nombreMueble}
+                            className="fullscreen-image"
+                            onClick={(e) => e.stopPropagation()}
+                          />
                         </div>
                       </div>
                     )}
+
+                    {/* Main Content */}
+                    <div className="container-fluid py-5">
+                      <div className="container">
+                        <div className="row">
+                          {/* Gallery Section */}
+                          <div className="col-lg-8">
+                            <div className="product-gallery">
+                              {/* Main Image */}
+                              <div className="main-image-container">
+                                {imagenPrincipal && !loadingImages && (
+                                  <div className={`main-image-wrapper ${isZooming ? 'zooming' : ''}`} style={{
+                                    overflow: isZooming ? 'visible' : 'hidden',
+                                    zIndex: isZooming ? 1000 : 1
+                                  }}>
+                                    <div className={`zoom-container ${isZooming ? 'zooming' : ''}`} style={{
+                                      overflow: isZooming ? 'visible' : 'hidden',
+                                      zIndex: isZooming ? 1001 : 1
+                                    }}>
+                                      <img
+                                        key={imagenPrincipal.id}
+                                        className={`main-image ${isZooming ? 'zooming' : ''}`}
+                                        src={`data:image/png;base64, ${imagenPrincipal.imagenes}`}
+                                        alt={mueble.nombreMueble}
+                                        style={{
+                                          transition: 'transform 0.1s ease-out',
+                                          transformOrigin: 'center center',
+                                          cursor: isZooming ? 'zoom-out' : 'zoom-in',
+                                          position: 'relative',
+                                          zIndex: isZooming ? 9999 : 1
+                                        }}
+                                        onClick={() => handleFullscreenImage(imagenPrincipal)}
+                                        onMouseEnter={handleMouseEnter}
+                                        onMouseLeave={handleMouseLeave}
+                                        onMouseMove={handleMouseMove}
+                                      />
+                                    </div>
+                                    <div className="zoom-indicator">
+                                      <i className="fas fa-search-plus"></i>
+                                      <span>Pasa el mouse para hacer zoom</span>
+                                    </div>
+                                  </div>
+                                )}
+                                {loadingImages && (
+                                  <div className="loading-container">
+                                    <div className="spinner"></div>
+                                    <p>Cargando imágenes...</p>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Thumbnail Gallery */}
+                              <div className="thumbnail-gallery">
+                                {imagenesFromBackend.map((imagen: MuebleImagenes) => (
+                                  <div 
+                                    key={imagen.id}
+                                    className={`thumbnail-item ${imagenPrincipal?.id === imagen.id ? 'active' : ''}`}
+                                    onClick={() => handleClickImagen(imagen)}
+                                  >
+                                    <img
+                                      src={`data:image/png;base64, ${imagen.imagenes}`}
+                                      alt={mueble.nombreMueble}
+                                      className="thumbnail-image"
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Product Details */}
+                            <div className="product-details">
+                              <div className="details-card">
+                                <div className="card-header">
+                                  <h2 className="product-title">{mueble.nombreMueble}</h2>
+                                
+                                </div>
+                                
+                                <div className="card-body">
+                                  <p className="product-description">{mueble.descripcion}</p>
+                                  
+                                  <div className="product-specs">
+                                    <div className="spec-grid">
+                                      <div className="spec-item">
+                                        <div className="spec-icon">
+                                          <i className="fas fa-tree"></i>
+                                        </div>
+                                        <div className="spec-content">
+                                          <h4>Tipo de Madera</h4>
+                                          <p>{mueble.tipoMadera}</p>
+                                        </div>
+                                      </div>
+                                      
+                                      <div className="spec-item">
+                                        <div className="spec-icon">
+                                          <i className="fas fa-palette"></i>
+                                        </div>
+                                        <div className="spec-content">
+                                          <h4>Color</h4>
+                                          <p>{mueble.colorMueble}</p>
+                                        </div>
+                                      </div>
+                                      
+                                      <div className="spec-item">
+                                        <div className="spec-icon">
+                                          <i className="fas fa-ruler-combined"></i>
+                                        </div>
+                                        <div className="spec-content">
+                                          <h4>Dimensiones</h4>
+                                          <p>{mueble.dimension}</p>
+                                        </div>
+                                      </div>
+                                      
+                                      <div className="spec-item">
+                                        <div className="spec-icon">
+                                          <i className="fas fa-dollar-sign"></i>
+                                        </div>
+                                        <div className="spec-content">
+                                          <h4>Precio Referencial</h4>
+                                          <p className="price">{mueble.precio}</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Contact Form */}
+                            <div className="contact-form-section">
+                              <div className="form-card">
+                                <div className="form-header">
+                                  <h3>Solicitar Presupuesto</h3>
+                                  <p>Completa el formulario y nos pondremos en contacto contigo</p>
+                                </div>
+                                
+                                <form onSubmit={handleSubmit} className="contact-form">
+                                  <div className="form-row">
+                                    <div className="form-group">
+                                      <label htmlFor="nombre">Nombre</label>
+                                      <input
+                                        type="text"
+                                        className="form-control"
+                                        id="nombre"
+                                        value={nombreCliente}
+                                        onChange={(e) => setNombreCliente(e.target.value)}
+                                        required
+                                      />
+                                    </div>
+                                    
+                                    <div className="form-group">
+                                      <label htmlFor="apellido">Apellido</label>
+                                      <input
+                                        type="text"
+                                        className="form-control"
+                                        id="apellido"
+                                        value={apellidoCliente}
+                                        onChange={(e) => setApellidoCliente(e.target.value)}
+                                        required
+                                      />
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="form-row">
+                                    <div className="form-group">
+                                      <label htmlFor="email">Email *</label>
+                                      <input
+                                        type="email"
+                                        className="form-control"
+                                        id="email"
+                                        value={mailCliente}
+                                        onChange={handleChangeMail}
+                                        required
+                                      />
+                                      {!mailValido && (
+                                        <small className="error-message">El correo electrónico no es válido</small>
+                                      )}
+                                    </div>
+                                    
+                                    <div className="form-group">
+                                      <label htmlFor="telefono">Teléfono (opcional)</label>
+                                      <input
+                                        type="tel"
+                                        className="form-control"
+                                        id="telefono"
+                                        value={telefonoCliente || ''}
+                                        onChange={(e) => setTelefonoCliente(e.target.valueAsNumber || 0)}
+                                      />
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="form-group">
+                                    <label htmlFor="consulta">Consulta</label>
+                                    <textarea
+                                      className="form-control"
+                                      id="consulta"
+                                      rows={4}
+                                      value={consultaPresupuesto}
+                                      onChange={(e) => setConsultaPresupuesto(e.target.value)}
+                                      placeholder="Describe tu consulta: presupuesto específico, cambios de diseño, otras medidas, etc."
+                                    />
+                                  </div>
+                                  
+                                  <div className="form-actions">
+                                    <button type="submit" className="btn btn-primary btn-lg">
+                                      <i className="fas fa-paper-plane"></i>
+                                      Enviar Consulta
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Sidebar */}
+                          <div className="col-lg-4">
+                            <div className="sidebar">
+                              {/* Product Summary */}
+                              <div className="sidebar-card product-summary">
+                                <div className="summary-header">
+                                  <h3>{mueble.nombreMueble}</h3>
+                                  <div className="rating">
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <span>(Trabajo artesanal)</span>
+                                  </div>
+                                </div>
+                                
+                                <div className="summary-features">
+                                  <div className="feature-item">
+                                    <i className="fas fa-hammer"></i>
+                                    <span>Hecho a mano</span>
+                                  </div>
+                                  <div className="feature-item">
+                                    <i className="fas fa-leaf"></i>
+                                    <span>Materiales naturales</span>
+                                  </div>
+                                  <div className="feature-item">
+                                    <i className="fas fa-truck"></i>
+                                    <span>Entrega a domicilio</span>
+                                  </div>
+                                  <div className="feature-item">
+                                    <i className="fas fa-tools"></i>
+                                    <span>Instalación incluida</span>
+                                  </div>
+                                </div>
+                                
+                                <div className="social-share">
+                                  <h4>Síguenos en redes sociales</h4>
+                                  <div className="social-links">
+                                    <a href="https://www.facebook.com/Esteban.Chaparro028" target="_blank" rel="noopener noreferrer" className="social-link facebook">
+                                      <i className="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="https://www.instagram.com/mdz.muebles/" target="_blank" rel="noopener noreferrer" className="social-link instagram">
+                                      <i className="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="https://wa.me/542613663197" target="_blank" rel="noopener noreferrer" className="social-link whatsapp">
+                                      <i className="fab fa-whatsapp"></i>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Categories */}
+                              <div className="sidebar-card categories">
+                                <h4>Categorías</h4>
+                                <div className="category-list">
+                                  {categorias.map((categoria) => (
+                                    <a key={categoria.id} href="/catalogo" className="category-item">
+                                      <i className="fas fa-angle-right"></i>
+                                      <span>{categoria.nombreCategoria}</span>
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Process Info */}
+                              <div className="sidebar-card process-info">
+                                <h4>¿Cómo trabajamos?</h4>
+                                <div className="process-steps">
+                                  <div className="step">
+                                    <div className="step-number">1</div>
+                                    <div className="step-content">
+                                      <h5>Consulta</h5>
+                                      <p>Completas el formulario con tus requerimientos</p>
+                                    </div>
+                                  </div>
+                                  <div className="step">
+                                    <div className="step-number">2</div>
+                                    <div className="step-content">
+                                      <h5>Visita</h5>
+                                      <p>Visitamos tu hogar para tomar medidas exactas</p>
+                                    </div>
+                                  </div>
+                                  <div className="step">
+                                    <div className="step-number">3</div>
+                                    <div className="step-content">
+                                      <h5>Presupuesto</h5>
+                                      <p>Te enviamos un presupuesto detallado</p>
+                                    </div>
+                                  </div>
+                                  <div className="step">
+                                    <div className="step-number">4</div>
+                                    <div className="step-content">
+                                      <h5>Creación</h5>
+                                      <p>Fabricamos tu mueble con materiales de calidad</p>
+                                    </div>
+                                  </div>
+                                </div>
+                               
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Success Modal */}
+                      {showSuccessMessage && (
+                        <div className="success-modal-overlay">
+                          <div className="success-modal" ref={modalRef}>
+                            <div className="success-modal-header">
+                              <h3 style={{ color: '#FFD600' }}>¡Solicitud enviada correctamente!</h3>
+                              <button className="close-btn" onClick={() => setShowSuccessMessage(false)}>
+                                <i className="fas fa-times"></i>
+                              </button>
+                            </div>
+                            <div className="success-modal-body">
+                              <div className="success-icon">
+                                <i className="fas fa-check-circle"></i>
+                              </div>
+                              <p>
+                                Gracias <strong>{nombreCliente} {apellidoCliente}</strong> por contactarte con nosotros. 
+                                En breve nos comunicaremos contigo para coordinar una visita o brindarte un presupuesto personalizado.
+                              </p>
+                              <div className="contact-info">
+                                <p><i className="fas fa-envelope"></i> También puedes escribirnos a nuestro email</p>
+                                <p><i className="fas fa-phone"></i> O llamarnos directamente</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-              
-                
-                    
-                  </>
-                  
                 )
               
               }

@@ -35,7 +35,7 @@ const Header = () => {
       }
     };
 
-    // Agregar el listener de scroll
+    // Agregar los listeners
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     // Cleanup function
@@ -56,7 +56,18 @@ const Header = () => {
   const isActiveLink = (path: string) => {
     return location.pathname === path;
   };
+
+  const isLoggedIn = !!localStorage.getItem('token');
   
+  // Estado para controlar el menú desplegable en mobile
+  const [expanded, setExpanded] = useState(false);
+
+  // Cierra el menú cuando se navega a una página
+  const handleNavClick = (to: string) => {
+    navigate(to);
+    setExpanded(false);
+  };
+
   return (
     <>
       {/* Topbar Profesional */}
@@ -79,31 +90,59 @@ const Header = () => {
             </div>
             
             <div className="topbar-social">
-              <a href="#" className="social-link" aria-label="Facebook">
+              <a href="https://www.facebook.com/Esteban.Chaparro028" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Facebook">
                 <i className="fab fa-facebook-f"></i>
               </a>
-              <a href="#" className="social-link" aria-label="Instagram">
+              <a href="https://www.instagram.com/mdz.muebles/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Instagram">
                 <i className="fab fa-instagram"></i>
               </a>
-              <a href="#" className="social-link" aria-label="WhatsApp">
+              <a href="https://wa.me/542613663197" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="WhatsApp">
                 <i className="fab fa-whatsapp"></i>
               </a>
-              <a href="#" className="social-link" aria-label="LinkedIn">
-                <i className="fab fa-linkedin-in"></i>
-              </a>
-              <a href="#" className="social-link" aria-label="YouTube">
-                <i className="fab fa-youtube"></i>
-              </a>
-              
-              {!localStorage.getItem("token") && (
-                <Button 
-                  onClick={() => navigate("/login")} 
-                  className="login-btn"
-                >
-                  <i className="fas fa-sign-in-alt me-2"></i>
-                  Iniciar sesión
-                </Button>
-              )}
+
+              <div className="d-flex align-items-center">
+                {isLoggedIn ? (
+                  <>
+                    {/* Botón Mi Perfil - Amarillo dorado como el login */}
+                    <button
+                      onClick={() => navigate('/perfil')}
+                      style={{
+                        background: 'linear-gradient(45deg, #FFD700, #FFC600)',
+                        border: '2px solid #B8860B',
+                        color: '#2c3e50',
+                        padding: '8px 20px',
+                        borderRadius: '25px',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        marginRight: '15px',
+                        boxShadow: '0 4px 15px rgba(255, 215, 0, 0.3)',
+                        transition: 'all 0.3s ease',
+                        textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
+                        letterSpacing: '0.5px'
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.target as HTMLElement).style.transform = 'translateY(-2px) scale(1.05)';
+                        (e.target as HTMLElement).style.boxShadow = '0 6px 20px rgba(255, 215, 0, 0.5)';
+                        (e.target as HTMLElement).style.background = 'linear-gradient(45deg, #FFEF00, #FFD700)';
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.target as HTMLElement).style.transform = 'translateY(0) scale(1)';
+                        (e.target as HTMLElement).style.boxShadow = '0 4px 15px rgba(255, 215, 0, 0.3)';
+                        (e.target as HTMLElement).style.background = 'linear-gradient(45deg, #FFD700, #FFC600)';
+                      }}
+                    >
+                      <i className="fas fa-user-circle me-2"></i>
+                      Mi Perfil
+                    </button>
+                  </>
+                ) : (
+                  <Button onClick={() => navigate('/login')} className="login-btn">
+                    <i className="fas fa-sign-in-alt me-2"></i>
+                    Iniciar sesión
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </Container>
@@ -115,6 +154,8 @@ const Header = () => {
         expand="lg" 
         variant="dark" 
         className={`main-navbar ${isScrolled ? 'navbar-top' : ''}`}
+        expanded={expanded}
+        onToggle={setExpanded}
         style={{
           position: 'fixed',
           left: 0,
@@ -129,7 +170,7 @@ const Header = () => {
       >
         <Container className="navbar-container">
           {/* Logo y Marca */}
-          <Link to="/" className="brand-container">
+          <Link to="/" className="brand-container" onClick={() => handleNavClick('/') }>
             <img 
               src={logo}
               alt="MDZ MUEBLES Logo"
@@ -153,45 +194,40 @@ const Header = () => {
           {/* Navegación */}
           <Navbar.Collapse id="navbarSupportedContent">
             <Nav className="navbar-nav">
-              <Link 
-                to="/" 
-                className={`nav-link-modern ${isActiveLink('/') ? 'active' : ''}`}
-              >
+              <span onClick={() => handleNavClick('/')} className={`nav-link-modern ${isActiveLink('/') ? 'active' : ''}`} style={{cursor:'pointer'}}>
                 <i className="fas fa-home"></i>
                 Inicio
-              </Link>
+              </span>
               
-              <Link 
-                to="/catalogo" 
-                className={`nav-link-modern ${isActiveLink('/catalogo') ? 'active' : ''}`}
-              >
+              <span onClick={() => handleNavClick('/catalogo')} className={`nav-link-modern ${isActiveLink('/catalogo') ? 'active' : ''}`} style={{cursor:'pointer'}}>
                 <i className="fas fa-couch"></i>
                 Catálogo
-              </Link>
+              </span>
              
-              <Link 
-                to="/quienesSomos" 
-                className={`nav-link-modern ${isActiveLink('/quienesSomos') ? 'active' : ''}`}
-              >
+              <span onClick={() => handleNavClick('/quienesSomos')} className={`nav-link-modern ${isActiveLink('/quienesSomos') ? 'active' : ''}`} style={{cursor:'pointer'}}>
                 <i className="fas fa-users"></i>
                 Nosotros
-              </Link>
+              </span>
               
-              <Link 
-                to="/administrarCategorias" 
-                className={`nav-link-modern ${isActiveLink('/administrarCategorias') ? 'active' : ''}`}
-              >
-                <i className="fas fa-cogs"></i>
-                Admin Categorías
-              </Link>
-              
-              <Link 
-                to="/administrarSolicitud" 
-                className={`nav-link-modern ${isActiveLink('/administrarSolicitud') ? 'active' : ''}`}
-              >
-                <i className="fas fa-clipboard-list"></i>
-                Admin Solicitudes
-              </Link>
+              {/* Solo mostrar enlaces de admin si el usuario está logueado */}
+              {isLoggedIn && (
+                <>
+                  <span onClick={() => handleNavClick('/perfil')} className={`nav-link-modern ${isActiveLink('/perfil') ? 'active' : ''} d-lg-none`} style={{cursor:'pointer'}}>
+                    <i className="fas fa-user-cog"></i>
+                    Mi Perfil
+                  </span>
+                  
+                  <span onClick={() => handleNavClick('/administrarCategorias')} className={`nav-link-modern ${isActiveLink('/administrarCategorias') ? 'active' : ''}`} style={{cursor:'pointer'}}>
+                    <i className="fas fa-cogs"></i>
+                    Admin Categorías
+                  </span>
+                  
+                  <span onClick={() => handleNavClick('/administrarSolicitud')} className={`nav-link-modern ${isActiveLink('/administrarSolicitud') ? 'active' : ''}`} style={{cursor:'pointer'}}>
+                    <i className="fas fa-clipboard-list"></i>
+                    Admin Solicitudes
+                  </span>
+                </>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>

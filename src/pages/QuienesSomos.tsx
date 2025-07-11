@@ -6,7 +6,7 @@ import './QuienesSomos.css';
 
 const QuienesSomos = () => {
   const location = useLocation();
-  const [isVisible, setIsVisible] = useState(false);
+  const [, setIsVisible] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -14,25 +14,24 @@ const QuienesSomos = () => {
   }, [location]);
 
   return (
-    <div className="about-us-container">
+    <div className="catalog-main-container">
       {/* Hero Section */}
-      <section className="about-hero">
-        <div className="about-hero-overlay"></div>
-        <div className="about-container">
-          <div className={`about-hero-content ${isVisible ? 'about-fade-in' : ''}`}>
-            <div className="about-hero-title-wrapper">
-              <h1 className="about-hero-title about-title-yellow">
+        <div className="catalog-header fade-in-up">
+              <h1 className="catalog-title">
                 <i className="fas fa-users me-3"></i>
                 Quiénes Somos
               </h1>
-            </div>
-            <p className="about-hero-subtitle">
+               
+              <p className="catalog-subtitle">
               15 años creando muebles únicos en Mendoza
             </p>
+            <hr/>
             <div className="about-hero-divider"></div>
-          </div>
-        </div>
-      </section>
+         </div>          
+            
+           
+
+  
 
       {/* Nuestra Historia */}
       <section className="about-story-section">
@@ -50,7 +49,7 @@ const QuienesSomos = () => {
                 <div className="about-timeline-dot"></div>
               </div>
               <div className="about-timeline-content">
-                <div className="about-timeline-year">2009</div>
+                <div className="about-timeline-year">2020</div>
                 <h3 className="about-timeline-title">Los Comienzos</h3>
                 <p className="about-timeline-description">
                   MDZ Muebles nació con una visión clara: crear muebles de alta calidad 
@@ -71,17 +70,17 @@ const QuienesSomos = () => {
                 <div className="about-timeline-dot"></div>
               </div>
               <div className="about-timeline-content">
-                <div className="about-timeline-year">2015</div>
-                <h3 className="about-timeline-title">Crecimiento y Expansión</h3>
+                <div className="about-timeline-year">2023</div>
+                <h3 className="about-timeline-title">Crecimiento</h3>
                 <p className="about-timeline-description">
-                  Lo que comenzó como un pequeño taller familiar en Mendoza, se ha convertido en 
-                  una empresa líder en la fabricación de muebles personalizados.
+                  Lo que comenzó como un sueño, se ha convertido en 
+                  una empresa especializada en la fabricación de muebles personalizados.
                 </p>
               </div>
               <div className="about-timeline-visual">
                 <div className="about-visual-card">
                   <i className="fas fa-chart-line"></i>
-                  <span>Expansión</span>
+                  <span>Hoy</span>
                 </div>
               </div>
             </div>
@@ -91,7 +90,7 @@ const QuienesSomos = () => {
                 <div className="about-timeline-dot"></div>
               </div>
               <div className="about-timeline-content">
-                <div className="about-timeline-year">2024</div>
+                <div className="about-timeline-year">2025</div>
                 <h3 className="about-timeline-title">Líderes en el Mercado</h3>
                 <p className="about-timeline-description">
                   Nuestro compromiso con la excelencia y la satisfacción del cliente nos ha permitido 
@@ -112,13 +111,13 @@ const QuienesSomos = () => {
               <div className="about-col-lg-6">
                 <div className="about-story-content about-fade-in-left">
                   <p className="about-lead">
-                    MDZ Muebles nació en 2009 con una visión clara: crear muebles de alta calidad 
+                    MDZ Muebles nació en 2020 con una visión clara: crear muebles de alta calidad 
                     que combinen funcionalidad, diseño y durabilidad para transformar los espacios 
                     de nuestros clientes.
                   </p>
                   <p>
-                    Lo que comenzó como un pequeño taller familiar en Mendoza, se ha convertido en 
-                    una empresa líder en la fabricación de muebles personalizados. Nuestro compromiso 
+                    Lo que comenzó como un pequeño sueño, se ha convertido en 
+                    una empresa dedicada a la fabricación de muebles personalizados. Nuestro compromiso 
                     con la excelencia y la satisfacción del cliente nos ha permitido crecer y ganarnos 
                     la confianza de más de 500 familias y empresas.
                   </p>
@@ -232,7 +231,7 @@ const QuienesSomos = () => {
               <h3>Diseño Personalizado</h3>
               <p>Creamos muebles únicos adaptados a tus espacios, necesidades y estilo personal.</p>
               <ul>
-                <li>Diseño 3D personalizado</li>
+                <li>Diseño personalizado</li>
                 <li>Asesoramiento profesional</li>
                 <li>Medidas exactas</li>
                 <li>Materiales premium</li>
@@ -296,84 +295,88 @@ const QuienesSomos = () => {
             <p>Visítanos en nuestro taller en Mendoza</p>
           </div>
 
-          <div className="about-row">
-            <div className="about-col-lg-8">
-              <div className="about-map-container about-fade-in-left">
-                <div className="about-map-wrapper">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d428596.70681725315!2d-69.11357821524691!3d-32.89018113314251!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x967e093ec45179bf%3A0x205a78f6d20efa3a!2sMendoza%2C%20Argentina!5e0!3m2!1ses!2sar!4v1672847123456!5m2!1ses!2sar"
-                    width="100%"
-                    height="400"
-                    style={{ border: 0, borderRadius: '12px' }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Ubicación MDZ Muebles"
-                  ></iframe>
-                </div>
+          {/* Mapa grande y prominente */}
+          <div className="about-map-large-container about-fade-in">
+            <div className="about-map-wrapper-large">
+              <iframe
+                src="https://maps.google.com/maps?q=-32.907694,-68.827500&t=&z=17&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="700"
+                style={{ 
+                  border: 0, 
+                  borderRadius: '20px',
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.1)',
+                  filter: 'contrast(1.1) saturate(1.1)'
+                }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Ubicación MDZ Muebles - Dorrego, Mendoza, Argentina"
+              ></iframe>
+            </div>
+          </div>
+
+          {/* Información de contacto en cards separadas */}
+          <div className="about-contact-cards-grid">
+            <div className="about-contact-card about-fade-in-up">
+              <div className="about-contact-card-icon">
+                <i className="fas fa-map-marker-alt"></i>
+              </div>
+              <div className="about-contact-card-content">
+                <h4>Nuestra Ubicación</h4>
+                <p>Dorrego, Mendoza<br />Argentina<br />CP: 5500</p>
+                <a href="https://maps.app.goo.gl/dPh9qndhp3Nus4fdA" target="_blank" rel="noopener noreferrer" className="about-contact-link">
+                  <i className="fas fa-external-link-alt"></i>
+                  Ver en Google Maps
+                </a>
               </div>
             </div>
-            
-            <div className="about-col-lg-4">
-              <div className="about-contact-info-card about-fade-in-right">
-                <div className="about-contact-header">
-                  <i className="fas fa-store"></i>
-                  <h3>Información de Contacto</h3>
-                </div>
-                
-                <div className="about-contact-details">
-                  <div className="about-detail-item">
-                    <i className="fas fa-map-marker-alt"></i>
-                    <div>
-                      <h4>Dirección</h4>
-                      <p>Calle Principal 123<br />Mendoza, Argentina<br />CP: 5500</p>
-                    </div>
-                  </div>
-                  
-                  <div className="about-detail-item">
-                    <i className="fas fa-phone"></i>
-                    <div>
-                      <h4>Teléfono</h4>
-                      <p>+54 261 123 4567</p>
-                      <p>+54 261 765 4321</p>
-                    </div>
-                  </div>
-                  
-                  <div className="about-detail-item">
-                    <i className="fas fa-envelope"></i>
-                    <div>
-                      <h4>Email</h4>
-                      <p>info@mdzmuebles.com</p>
-                      <p>ventas@mdzmuebles.com</p>
-                    </div>
-                  </div>
-                  
-                  <div className="about-detail-item">
-                    <i className="fas fa-clock"></i>
-                    <div>
-                      <h4>Horarios de Atención</h4>
-                      <p><strong>Lunes a Viernes:</strong><br />9:00 AM - 7:00 PM</p>
-                      <p><strong>Sábados:</strong><br />9:00 AM - 1:00 PM</p>
-                      <p><strong>Domingos:</strong><br />Cerrado</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="about-social-links">
-                  <a href="#" className="about-social-link">
-                    <i className="fab fa-facebook-f"></i>
-                  </a>
-                  <a href="#" className="about-social-link">
-                    <i className="fab fa-instagram"></i>
-                  </a>
-                  <a href="#" className="about-social-link">
-                    <i className="fab fa-whatsapp"></i>
-                  </a>
-                  <a href="#" className="about-social-link">
-                    <i className="fab fa-linkedin-in"></i>
-                  </a>
-                </div>
+
+            <div className="about-contact-card about-fade-in-up">
+              <div className="about-contact-card-icon">
+                <i className="fas fa-phone"></i>
               </div>
+              <div className="about-contact-card-content">
+                <h4>Teléfonos</h4>
+                <p>+54 261 123 4567<br />+54 261 765 4321</p>
+                <a href="tel:+542611234567" className="about-contact-link">
+                  <i className="fas fa-phone"></i>
+                  Llamar ahora
+                </a>
+              </div>
+            </div>
+
+            <div className="about-contact-card about-fade-in-up">
+              <div className="about-contact-card-icon">
+                <i className="fas fa-envelope"></i>
+              </div>
+              <div className="about-contact-card-content">
+                <h4>Correo Electrónico</h4>
+                <p>info@mdzmuebles.com<br />ventas@mdzmuebles.com</p>
+                <a href="mailto:info@mdzmuebles.com" className="about-contact-link">
+                  <i className="fas fa-envelope"></i>
+                  Enviar email
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Redes sociales destacadas */}
+          <div className="about-social-section">
+            <h3>Síguenos en nuestras redes sociales</h3>
+            <div className="about-social-links-large">
+              <a href="https://www.facebook.com/Esteban.Chaparro028" target="_blank" rel="noopener noreferrer" className="about-social-link-large facebook">
+                <i className="fab fa-facebook-f"></i>
+                <span>Facebook</span>
+              </a>
+              <a href="https://www.instagram.com/mdz.muebles/" target="_blank" rel="noopener noreferrer" className="about-social-link-large instagram">
+                <i className="fab fa-instagram"></i>
+                <span>Instagram</span>
+              </a>
+              <a href="https://wa.me/542613663197" target="_blank" rel="noopener noreferrer" className="about-social-link-large whatsapp">
+                <i className="fab fa-whatsapp"></i>
+                <span>WhatsApp</span>
+              </a>
             </div>
           </div>
         </div>

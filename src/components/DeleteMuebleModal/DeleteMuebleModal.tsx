@@ -1,4 +1,4 @@
-import { Button, Form, Modal, Table } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
 //Dependencias para validar los formularios
 import { ModalType } from "../../types/ModalType";
@@ -14,7 +14,7 @@ type MuebleModalProps = {
     prod: Mueble;
   }
 
-  const MuebleModal = ({show, onHide , nombre, modalType, prod}:MuebleModalProps) =>{
+  const MuebleModal = ({show, onHide , nombre, modalType}:MuebleModalProps) =>{
     return(
         <>
         { modalType === ModalType.DELETE ? (
