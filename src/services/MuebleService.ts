@@ -1,6 +1,6 @@
 import { Mueble } from "../types/Mueble";
 
-const BASE_URL = 'http://localhost:8080'
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 const REQUEST_TIMEOUT = 30000; // 30 segundos timeout
 
 // Función helper para crear fetch con timeout

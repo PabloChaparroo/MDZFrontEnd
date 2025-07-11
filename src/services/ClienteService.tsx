@@ -1,7 +1,7 @@
 import { Cliente } from "../types/Cliente";
 import {ClienteDTO} from '../types/ClienteDTO';
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const ClienteService = {
     getAllClientes: async (): Promise<Cliente[]> => {
