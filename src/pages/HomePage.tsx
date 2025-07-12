@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import cocinaNegra from '../assets/images/cocinaNegra.jpg';
 import placar from '../assets/images/placar.jpg';
 import racks from '../assets/images/racks.jpg';
-import fotoAbout from '../assets/images/FotoAbout.jpg';
+import fotoAbout from '../assets/images/fotoAbout.jpg';
 import cocinaUno from '../assets/images/cocinaUno.jpeg';
 import cama1 from '../assets/images/cama1.jpg';
 import { useLocation } from "react-router-dom";
