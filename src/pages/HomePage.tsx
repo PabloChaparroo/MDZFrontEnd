@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+import cocinaNegra from '../assets/images/cocinaNegra.jpg';
+import placar from '../assets/images/placar.jpg';
+import racks from '../assets/images/racks.jpg';
+import fotoAbout from '../assets/images/FotoAbout.jpg';
+import cocinaUno from '../assets/images/cocinaUno.jpeg';
+import cama1 from '../assets/images/cama1.jpg';
 import { useLocation } from "react-router-dom";
 import { SolicitarVisitaService } from "../services/SolicitarVisitaService";
 import { Cliente } from "../types/Cliente";
@@ -23,9 +29,9 @@ const HomePage = () => {
 
   // Array de imágenes para el carrusel
   const heroImages = [
-    "src/assets/images/cocinaNegra.jpg",
-    "src/assets/images/placar.jpg",
-    "src/assets/images/racks.jpg"
+    cocinaNegra,
+    placar,
+    racks
   ];
 
   // Efectos para scroll y refresco de imágenes
@@ -275,7 +281,7 @@ const HomePage = () => {
               
               <div className="story-image">
                 <img 
-                  src={`src/assets/images/FotoAbout.jpg?timestamp=${timestamp}`} 
+                  src={fotoAbout} 
                   alt="Taller MDZ Muebles"
                   className="story-img"
                 />
@@ -378,7 +384,7 @@ const HomePage = () => {
               <div className="gallery-grid-new">
                 <div className="gallery-item-new gallery-large">
                   <img 
-                    src={`src/assets/images/placar.jpg?timestamp=${timestamp}`} 
+                    src={placar} 
                     alt="Placard a medida"
                   />
                   <div className="gallery-overlay-new">
@@ -388,7 +394,7 @@ const HomePage = () => {
                 </div>
                 <div className="gallery-item-new">
                   <img 
-                    src={`src/assets/images/racks.jpg?timestamp=${timestamp}`} 
+                    src={racks} 
                     alt="Mueble de TV"
                   />
                   <div className="gallery-overlay-new">
@@ -398,7 +404,7 @@ const HomePage = () => {
                 </div>
                 <div className="gallery-item-new">
                   <img 
-                    src="src/assets/images/cocinaUno.jpeg" 
+                    src={cocinaUno} 
                     alt="Cocina integral"
                   />
                   <div className="gallery-overlay-new">
@@ -408,7 +414,7 @@ const HomePage = () => {
                 </div>
                 <div className="gallery-item-new">
                   <img 
-                    src={`src/assets/images/cama1.jpg?timestamp=${timestamp}`} 
+                    src={cama1} 
                     alt="Dormitorio completo"
                   />
                   <div className="gallery-overlay-new">
