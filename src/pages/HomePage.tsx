@@ -12,7 +12,6 @@ import '../pages/Home.css';
 
 const HomePage = () => {
   const location = useLocation();
-  const [timestamp, setTimestamp] = useState(Date.now());
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -46,12 +45,6 @@ const HomePage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimestamp(Date.now());
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Efecto para cambiar las imágenes cada 5 segundos
   useEffect(() => {
