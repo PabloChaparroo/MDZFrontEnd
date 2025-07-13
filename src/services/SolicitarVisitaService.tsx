@@ -230,7 +230,7 @@ export const SolicitarVisitaService = {
             const resultado = await response.json();
             console.log('✅ [FRONTEND] Estado cambiado exitosamente:', resultado);
             return resultado;
-        } catch (error) {
+        } catch (error) {   
             console.error('❌ [FRONTEND] Error al cambiar estado de solicitud:', error);
             throw error;
         }

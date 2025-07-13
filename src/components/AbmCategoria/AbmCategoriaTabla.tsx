@@ -692,28 +692,40 @@ const CatalogoTabla = () => {
                       </td>
                       <td>
                         <div className="d-flex flex-column gap-1">
-                          <button 
-                            className="action-btn edit-btn"
-                            onClick={() => handleClickMueble(
-                              "Editar producto", 
-                              mueble, 
-                              ModalType.UPDATE
-                            )}
-                          >
-                            <i className="fas fa-edit me-1"></i>
-                            Editar
-                          </button>
-                          <button 
-                            className="action-btn warning-btn"
-                            onClick={() => handleClickMueble(
-                              "Dar de baja mueble", 
-                              mueble, 
-                              ModalType.BAJA_LOGICA
-                            )}
-                          >
-                            <i className="fas fa-ban me-1"></i>
-                            Dar de Baja
-                          </button>
+                          {/* Solo mostrar acciones si NO está activado el filtro de dados de baja */}
+                          {!mostrarMueblesDadosDeBaja && (
+                            <>
+                              <button 
+                                className="action-btn edit-btn"
+                                onClick={() => handleClickMueble(
+                                  "Editar producto", 
+                                  mueble, 
+                                  ModalType.UPDATE
+                                )}
+                              >
+                                <i className="fas fa-edit me-1"></i>
+                                Editar
+                              </button>
+                              <button 
+                                className="action-btn warning-btn"
+                                onClick={() => handleClickMueble(
+                                  "Dar de baja mueble", 
+                                  mueble, 
+                                  ModalType.BAJA_LOGICA
+                                )}
+                              >
+                                <i className="fas fa-ban me-1"></i>
+                                Dar de Baja
+                              </button>
+                            </>
+                          )}
+                          {/* Si está activado el filtro, mostrar solo texto informativo */}
+                          {mostrarMueblesDadosDeBaja && (
+                            <span className="text-muted font-italic">
+                              <i className="fas fa-lock me-1"></i>
+                              No editable
+                            </span>
+                          )}
                         </div>
                       </td>
                     </tr>
