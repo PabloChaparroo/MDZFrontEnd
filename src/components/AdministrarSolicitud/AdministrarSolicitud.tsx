@@ -23,13 +23,55 @@ const AdministrarSolicitud = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [updatingStates, setUpdatingStates] = useState<Set<number>>(new Set());
 
-   useEffect(() =>{
-    if (vistaActual === VistaActual.SOLICITUDES) {
-      fetchSolicitudes();
-    } else if (vistaActual === VistaActual.CONSULTAS) {
-      fetchConsultas();
-    }
-   },[vistaActual, currentPage]);
+
+   // Estado para búsqueda
+   const [busquedaNombre, setBusquedaNombre] = useState('');
+   const [isSearching, setIsSearching] = useState(false);
+   const [searchTimeout, setSearchTimeout] = useState<number | null>(null);
+
+   useEffect(() => {
+     if (busquedaNombre.trim() !== '') {
+       handleFiltrarPorNombre(busquedaNombre, currentPage - 1);
+     } else {
+       if (vistaActual === VistaActual.SOLICITUDES) {
+         fetchSolicitudes();
+       } else if (vistaActual === VistaActual.CONSULTAS) {
+         fetchConsultas();
+       }
+     }
+     // eslint-disable-next-line
+   }, [vistaActual, currentPage]);
+
+   // Búsqueda con debounce
+   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+     const valor = e.target.value;
+     setBusquedaNombre(valor);
+     if (searchTimeout) clearTimeout(searchTimeout);
+     if (!valor.trim()) {
+       setIsSearching(false);
+       setCurrentPage(1);
+       return;
+     }
+     setIsSearching(true);
+     const timeout = setTimeout(() => {
+       handleFiltrarPorNombre(valor, 0);
+     }, 400);
+     setSearchTimeout(timeout);
+   };
+
+   const handleFiltrarPorNombre = async (nombre: string, pagina = 0) => {
+     try {
+       setIsSearching(true);
+       const response = await SolicitarVisitaService.filtrarPorNombre(nombre, pagina);
+       setSolicitarVisita(response.content);
+       setTotalPages(response.totalPages);
+       setTotalElements(response.totalElements);
+     } catch (error) {
+       setSolicitarVisita([]);
+     } finally {
+       setIsSearching(false);
+     }
+   };
 
    const fetchSolicitudes = async () => {
     try {
@@ -207,6 +249,23 @@ const AdministrarSolicitud = () => {
         </div>
       )}
 
+      {/* Buscador por nombre */}
+      <div className="search-container fade-in-up" style={{ maxWidth: 400, margin: '0 auto 20px auto' }}>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Buscar por nombre de cliente..."
+          value={busquedaNombre}
+          onChange={handleSearchChange}
+          style={{ borderRadius: 8, border: '1px solid #ccc', padding: 8 }}
+        />
+        {isSearching && (
+          <div style={{ color: '#b8860b', marginTop: 5 }}>
+            <i className="fas fa-spinner fa-spin me-2"></i>Buscando...
+          </div>
+        )}
+      </div>
+
       {/* Tabla principal */}
       {!isLoading && (
         <div className="table-container fade-in">
@@ -223,6 +282,8 @@ const AdministrarSolicitud = () => {
                       <th>Consulta</th>
                       <th>Mueble</th>
                       <th>Precio</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -244,8 +305,8 @@ const AdministrarSolicitud = () => {
                         </td>
                         <td>
                           <div className="date-info">
-                            {solicitud.cliente?.fechaHoraAltaCliente ? 
-                              new Date(solicitud.cliente.fechaHoraAltaCliente).toLocaleDateString() : 
+                            {solicitud.fechaHoraAltaSolicitarVisita ? 
+                              new Date(solicitud.fechaHoraAltaSolicitarVisita).toLocaleDateString() : 
                               'N/A'
                             }
                           </div>
@@ -266,6 +327,41 @@ const AdministrarSolicitud = () => {
                               <span className="price-display">$ {solicitud.mueble.precio}</span>
                             ) : (
                               <span className="text-muted">Sin precio</span>
+                            )}
+                          </div>
+                        </td>
+                        <td>
+                          {getEstadoBadge(solicitud)}
+                        </td>
+                        <td>
+                          <div className="d-flex gap-2">
+                            {(solicitud.cliente?.estadoCliente || solicitud.estado)?.toLowerCase() !== 'finalizado' && (
+                              <button
+                                className="btn btn-sm btn-success"
+                                onClick={() => handleCambiarEstado(solicitud.id, 'FINALIZADO')}
+                                disabled={updatingStates.has(solicitud.id)}
+                                title="Marcar como finalizado"
+                              >
+                                {updatingStates.has(solicitud.id) ? (
+                                  <i className="fas fa-spinner fa-spin"></i>
+                                ) : (
+                                  <i className="fas fa-check"></i>
+                                )}
+                              </button>
+                            )}
+                            {(solicitud.cliente?.estadoCliente || solicitud.estado)?.toLowerCase() === 'finalizado' && (
+                              <button
+                                className="btn btn-sm btn-secondary"
+                                onClick={() => handleCambiarEstado(solicitud.id, 'PENDIENTE')}
+                                disabled={updatingStates.has(solicitud.id)}
+                                title="Marcar como pendiente"
+                              >
+                                {updatingStates.has(solicitud.id) ? (
+                                  <i className="fas fa-spinner fa-spin"></i>
+                                ) : (
+                                  <i className="fas fa-undo"></i>
+                                )}
+                              </button>
                             )}
                           </div>
                         </td>

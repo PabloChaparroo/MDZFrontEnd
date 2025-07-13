@@ -1,3 +1,4 @@
+
 import { Cliente } from "../types/Cliente";
 import { Mueble } from "../types/Mueble";
 import { SolicitarVisita } from "../types/SolicitarVisita";
@@ -20,6 +21,28 @@ export const SolicitarVisitaService = {
         if (!response.ok) throw new Error("Error al obtener solicitudes de visita");
         const data = await response.json();
         return data;
+    },
+        filtrarPorNombre: async (nombre: string, pagina = 0, tamanoPagina = 20) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No autenticado');
+            const params = new URLSearchParams({ nombre, pagina: String(pagina), tamanoPagina: String(tamanoPagina) });
+            const response = await fetch(`${BASE_URL}/api/v1/solicitarVisita/filtrar-por-nombre?${params.toString()}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            if (!response.ok) {
+                throw new Error(`Error al filtrar por nombre: ${response.status} ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error al filtrar solicitudes/consultas por nombre:', error);
+            throw error;
+        }
     },
 
     getSolicitarVisita: async (id: number): Promise<SolicitarVisita> => {

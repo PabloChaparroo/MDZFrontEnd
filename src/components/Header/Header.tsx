@@ -8,6 +8,7 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
+  // const isDesktop = useIsDesktop();
 
   useEffect(() => {
     // Cargar Font Awesome 6 y Google Fonts
@@ -71,7 +72,7 @@ const Header = () => {
   return (
     <>
       {/* Topbar Profesional */}
-      <div className={`header-topbar d-none d-lg-block ${isScrolled ? 'hidden' : ''}`}>
+      <div className={`header-topbar ${isScrolled ? 'hidden' : ''}`}>
         <Container>
           <div className="topbar-content">
             <div className="topbar-contact">
@@ -156,17 +157,7 @@ const Header = () => {
         className={`main-navbar ${isScrolled ? 'navbar-top' : ''}`}
         expanded={expanded}
         onToggle={setExpanded}
-        style={{
-          position: 'fixed',
-          left: 0,
-          right: 0,
-          width: '100%',
-          zIndex: 1000,
-          display: 'block',
-          visibility: 'visible',
-          opacity: 1,
-          top: isScrolled ? '0px' : '48px' // Dinámicamente ajustar la posición
-        }}
+        /* Sin style, todo lo maneja el CSS */
       >
         <Container className="navbar-container">
           {/* Logo y Marca */}

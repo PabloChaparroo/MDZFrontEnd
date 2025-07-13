@@ -23,7 +23,7 @@ const QuienesSomos = () => {
               </h1>
                
               <p className="catalog-subtitle">
-              15 años creando muebles únicos en Mendoza
+               5 años creando muebles únicos en Mendoza
             </p>
             <hr/>
             <div className="about-hero-divider"></div>

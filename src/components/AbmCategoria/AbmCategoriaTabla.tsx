@@ -651,10 +651,25 @@ const CatalogoTabla = () => {
                       </td>
                       <td>
                         <div className="imagen-portada-container">
-                          {(mueble.imagenes || [])
-                            .filter(imagen => imagen.esPortada)
-                            .map((imagen, index) => (
-                              <img 
+                          {mueble.imagenPortada && typeof mueble.imagenPortada === 'string' ? (
+                            <img
+                              className="image-preview clickable-image"
+                              src={`data:image/jpeg;base64,${mueble.imagenPortada}`}
+                              alt={mueble.nombreMueble}
+                              onClick={() => handleClickImagenPortada(mueble)}
+                              title="Click para gestionar imágenes"
+                            />
+                          ) : mueble.imagenPortada && typeof mueble.imagenPortada === 'object' && (mueble.imagenPortada as any).imagenes ? (
+                            <img
+                              className="image-preview clickable-image"
+                              src={`data:image/png;base64,${(mueble.imagenPortada as any).imagenes}`}
+                              alt={mueble.nombreMueble}
+                              onClick={() => handleClickImagenPortada(mueble)}
+                              title="Click para gestionar imágenes"
+                            />
+                          ) : (mueble.imagenes || []).filter(imagen => imagen.esPortada).length > 0 ? (
+                            (mueble.imagenes || []).filter(imagen => imagen.esPortada).map((imagen, index) => (
+                              <img
                                 key={index}
                                 className="image-preview clickable-image"
                                 src={`data:image/png;base64,${imagen.imagenes}`}
@@ -663,9 +678,8 @@ const CatalogoTabla = () => {
                                 title="Click para gestionar imágenes"
                               />
                             ))
-                          }
-                          {(mueble.imagenes || []).filter(imagen => imagen.esPortada).length === 0 && (
-                            <div 
+                          ) : (
+                            <div
                               className="no-image-placeholder clickable-image"
                               onClick={() => handleClickImagenPortada(mueble)}
                               title="Click para agregar imágenes"

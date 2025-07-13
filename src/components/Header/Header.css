@@ -1,3 +1,61 @@
+/* --- Contacto desplegable en mobile --- */
+@media (max-width: 991.98px) {
+  .header-topbar .topbar-contact {
+    display: none !important;
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+    background: #fffbe6;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .header-topbar .topbar-contact.open {
+    display: flex !important;
+    flex-direction: column;
+    align-items: flex-start;
+    max-height: 300px;
+  }
+  .header-topbar .contact-toggle {
+    display: inline-flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #b8860b;
+    font-size: 1.3rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    padding: 0.2rem 0.5rem;
+    transition: color 0.2s;
+  }
+  .header-topbar .contact-toggle:active,
+  .header-topbar .contact-toggle:focus {
+    color: #ffb700;
+    outline: none;
+  }
+}
+@media (max-width: 991.98px) {
+  .main-navbar {
+    position: static !important;
+    margin-top: 0 !important;
+    top: auto !important;
+  }
+}
+/* --- Ajuste para que el topbar no tape el navbar en mobile --- */
+@media (max-width: 991.98px) {
+  
+  .main-navbar {
+    margin-top: 56px !important; /* Ajusta este valor a la altura real del topbar */
+  }
+}
+/* Forzar visibilidad del header-topbar en mobile */
+@media (max-width: 991.98px) {
+  .header-topbar {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
 /* ========================================== */
 /* HEADER PROFESIONAL ULTRA MODERNO - MDZ MUEBLES */
 /* ========================================== */
@@ -28,6 +86,21 @@
   --border-radius: 12px;
 }
 
+/* Asegura que el hero-section nunca quede tapado por el header fijo */
+.hero-section {
+  padding-top: 113px;
+}
+body.topbar-hidden .hero-section {
+  padding-top: 65px;
+}
+@media (max-width: 991.98px) {
+  .hero-section {
+    padding-top: 113px;
+  }
+  body.topbar-hidden .hero-section {
+    padding-top: 65px;
+  }
+}
 /* Reset y configuración base */
 * {
   box-sizing: border-box;
@@ -104,6 +177,19 @@ body.topbar-hidden {
   top: 0 !important;
 }
 
+/* Hacer que el navbar suba y ocupe el lugar del topbar cuando el topbar está oculto (clase .hidden), tanto en desktop como en mobile */
+@media (min-width: 992px) {
+  .main-navbar.navbar-top {
+    top: 0 !important;
+    margin-top: 0 !important;
+  }
+}
+@media (max-width: 991.98px) {
+  .main-navbar.navbar-top {
+    margin-top: 0 !important;
+  }
+}
+
 .header-topbar::before {
   content: '';
   position: absolute;
@@ -123,7 +209,7 @@ body.topbar-hidden {
 .topbar-content {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+
   position: relative;
   z-index: 2;
   height: 100%; /* Usar toda la altura del contenedor */
@@ -134,7 +220,7 @@ body.topbar-hidden {
   display: flex;
   gap: 25px;
   align-items: center;
-  height: 100%; /* Usar toda la altura disponible */
+
 }
 
 .topbar-contact p {
@@ -344,7 +430,7 @@ button.login-btn {
 .brand-text {
   font-family: 'Playfair Display', serif; /* Cambiado a la misma fuente del home */
   font-weight: 900;
-  font-size: 22px; /* Reducido de 32px para estar más proporcionado */
+  
   color: var(--text-white);
   text-transform: uppercase;
   letter-spacing: 2px; /* Reducido el espaciado */
@@ -564,7 +650,7 @@ button.login-btn {
   
   .topbar-contact p {
     font-size: 13px;
-    padding: 6px 10px;
+    padding: 4px 0px;
   }
   
   .brand-text {
