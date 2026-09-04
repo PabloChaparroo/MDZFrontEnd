@@ -1,3 +1,6 @@
+/* Importar fuentes elegantes */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+
 /* --- Contacto desplegable en mobile --- */
 @media (max-width: 991.98px) {
   .header-topbar .topbar-contact {
@@ -59,9 +62,6 @@
 /* ========================================== */
 /* HEADER PROFESIONAL ULTRA MODERNO - MDZ MUEBLES */
 /* ========================================== */
-
-/* Importar fuentes elegantes */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
 
 /* Variables CSS para un diseño consistente */
 :root {
