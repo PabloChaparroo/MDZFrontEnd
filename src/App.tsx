@@ -4,7 +4,9 @@ import Header from "./components/Header/Header"
 import { BrowserRouter as Router } from "react-router-dom"
 
 import AppRoutes from "./routes/AppRoutes"
-import { Container, ToastContainer } from "react-bootstrap"
+import { Container } from "react-bootstrap"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import { Suspense } from "react"
 import Loader from "./components/Loader/Loader"
 

@@ -1,6 +1,7 @@
 import { Mueble } from "../types/Mueble";
+import { PaginaCatalogoMueble } from "../types/CatalogoMueble";
 
-const BASE_URL = 'http://localhost:8080'
+const BASE_URL = 'http://localhost:8081'
 
 export  const MuebleService = {
     //metodos
@@ -60,5 +61,14 @@ export  const MuebleService = {
         await fetch(`${BASE_URL}/api/v1/mueble/${id}`, {
             method: "DELETE"
         });
+    },
+
+    // Catálogo público: muebles activos con todas sus imágenes (sin precio/dimensión/madera)
+    getCatalogoCompleto: async (pageNumber: number): Promise<PaginaCatalogoMueble> => {
+        const response = await fetch(`${BASE_URL}/api/v1/mueble/catalogo-completo/${pageNumber}`);
+        if (!response.ok) {
+            throw new Error(`Error al obtener el catálogo: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
     }
 }

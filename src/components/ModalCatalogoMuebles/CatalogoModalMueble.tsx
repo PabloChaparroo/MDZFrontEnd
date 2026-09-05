@@ -69,9 +69,6 @@ const handleDelete = async () => {
             id: Yup.number().integer().min(0),
             nombreMueble: Yup.string().required('El titulo es requerido'),
             colorMueble: Yup.string().min(0).required('El color es requido'),
-            dimension: Yup.string().required('La dimencion es requerido'),
-            tipoMadera: Yup.string().required('El tipo madera es requerido'),
-            precio: Yup.number().positive('El precio tiene que ser positivo').required('El precio es requerido'),
             descripcion: Yup.string().min(0).required('La descripción es requerida'),
             imagen: Yup.string().required('La URL de la imagen es requerida'),
         });
@@ -159,73 +156,6 @@ const handleDelete = async () => {
                     </Form.Control.Feedback>
                     </Form.Group>
 
-                    
-                    <Form.Group controlId="formDimension">
-                    <FormLabel> Tamaño </FormLabel>
-                    <Form.Control
-                        name= "dimension"
-                        type="text"
-                        value={formik.values.dimension ||''}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange}
-                        isInvalid= {Boolean(formik.errors.dimension && formik.touched.dimension)}
-                        //isInvalid= {formik.touched.dimension && !!formik.errors.dimension}
-                        />
-                    <Form.Control.Feedback type="invalid">
-                        {formik.errors.dimension}
-                    </Form.Control.Feedback>
-                    </Form.Group>
-
-                    
-                    <Form.Group controlId="formTipoMadera">
-                    <FormLabel> Tipo de madera </FormLabel>
-                    <Form.Control
-                        as="select"
-                        name="tipoMadera"
-                        value={formik.values.tipoMadera || ''}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange}
-                        isInvalid={Boolean(formik.errors.tipoMadera && formik.touched.tipoMadera)}
-                    >
-                        <option value="">Selecciona un tipo de madera</option>
-                        <option value="DURA">DURA</option>
-                        <option value="HAYA">HAYA</option>
-                        <option value="BLANDA">BLANDA</option>
-                        <option value="PINO">PINO</option>
-                        <option value="ABETO">ABETO</option>
-                        <option value="OLIVO">OLIVO</option>
-                        <option value="NOGAL">NOGAL</option>
-                        <option value="ROBLE">ROBLE</option>
-                        <option value="ABEDUL">ABEDUL</option>
-                        <option value="ACACIA">ACACIA</option>
-                        {/* Agrega más opciones según tus necesidades */}
-                    </Form.Control>
-                    {formik.errors.tipoMadera && formik.touched.tipoMadera && (
-                        <Form.Control.Feedback type="invalid">
-                            {formik.errors.tipoMadera}
-                        </Form.Control.Feedback>
-                    )}
-                    </Form.Group>
-
-                   
-                    <Form.Group controlId="formPrecio">
-                    <FormLabel> Precio </FormLabel>
-                    <Form.Control
-                        name= "precio"
-                        type="number"
-                        value={formik.values.precio ||''}
-                        min="0"
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange}
-                        isInvalid= {Boolean(formik.errors.precio && !!formik.touched.precio)}
-                        //isInvalid= {formik.touched.precio && !!formik.errors.precio}
-                        />
-                    <Form.Control.Feedback type="invalid">
-                        {formik.errors.precio}
-                    </Form.Control.Feedback>
-                    </Form.Group>
-
-                    
                     <Form.Group controlId="formDescripcion">
                     <FormLabel> Descripción </FormLabel>
                     <Form.Control

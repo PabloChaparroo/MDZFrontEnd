@@ -108,9 +108,6 @@ const initializeNewMueble= (): Mueble => {
       id: 0,
       nombreMueble:'',
       colorMueble: '',
-      dimension: '',
-      tipoMadera:'',
-      precio: 0,
       descripcion: '',
       imagen: '',
   };
@@ -156,9 +153,6 @@ return(
             <th> ID </th>
             <th> NOMBRE </th>
             <th> COLOR </th>
-            <th> TAMAÑO </th>
-            <th> TIPO DE MADERA </th>
-            <th> PRECIO </th>
             <th> DESCRIPCIÓN </th>
             <th> IMAGEN </th>
             <th> EDITAR </th>
@@ -172,9 +166,6 @@ return(
         <td>{mueble.id}</td>
         <td>{mueble.nombreMueble}</td>
         <td>{mueble.colorMueble}</td>
-        <td>{mueble.dimension}</td>
-        <td>{mueble.tipoMadera}</td>
-        <td>{mueble.precio}</td>
         <td>{mueble.descripcion}</td>
         <td><img src={mueble.imagen} alt={mueble.nombreMueble} style={{width: '100px' }}/></td>
         <td><EditButton onClick={()=>handleClick("Editar producto", mueble,ModalType.UPDATE)}/></td>
