@@ -181,10 +181,9 @@ export const MuebleService = {
                 fechaModificacionMueble: mueble.fechaModificacionMueble,
                 fechaBajaMueble: mueble.fechaBajaMueble,
                 colorMueble: mueble.colorMueble,
-                dimension: mueble.dimension,
-                tipoMadera: mueble.tipoMadera,
-                precio: mueble.precio,
-                descripcion: mueble.descripcion
+                descripcion: mueble.descripcion,
+                linkInstagram: mueble.linkInstagram || null,
+                linkFacebook: mueble.linkFacebook || null
             };
             
             formData.append('mueble', JSON.stringify(muebleSinCategoria));

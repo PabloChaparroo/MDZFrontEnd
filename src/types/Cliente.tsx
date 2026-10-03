@@ -9,6 +9,5 @@ export interface Cliente {
     fechaHoraAltaCliente: string | null;
     fechaHoraModificacionCliente: string | null;
     fechaHoraBajaCliente: string | null;
-    estadoCliente: string | null;
 
  }

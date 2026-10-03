@@ -28,7 +28,9 @@ const CatalogoMueble = () => {
 
   // Estados de categorías
   const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Todos');
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(
+    () => (location.state as { categoria?: string } | null)?.categoria || 'Todos'
+  );
 
   // Estados de muebles
   const [muebles, setMuebles] = useState<Mueble[]>([]);
@@ -410,24 +412,13 @@ const CatalogoMueble = () => {
                       </div>
                       <div className='product-details'>
                         <div className='product-detail-item'>
-                          <i className='fas fa-tree'></i>
-                          <span>{mueble.tipoMadera}</span>
-                        </div>
-                        <div className='product-detail-item'>
-                          <i className='fas fa-ruler'></i>
-                          <span>{mueble.dimension}</span>
-                        </div>
-                        <div className='product-detail-item'>
                           <i className='fas fa-palette'></i>
                           <span>{mueble.colorMueble}</span>
                         </div>
                       </div>
-                      <div className='product-price'>
-                        {mueble.precio ? mueble.precio.toLocaleString('es-AR') : '-'}
-                      </div>
                       <div className='view-more-btn' style={{ pointerEvents: 'none', opacity: 0.7 }}>
                         <i className="fas fa-eye me-2"></i>
-                        Ver Detalles
+                        Ver Detalles y Consultar
                       </div>
                     </div>
                   </Link>

@@ -5,16 +5,16 @@ export interface Mueble {
     id: number;
     nombreMueble: string;
     colorMueble: string;
-    dimension: string | null;
-    tipoMadera: string;
-    precio: number | null;
     descripcion: string;
     fechaAltaMueble: string | null;
     fechaModificacionMueble: string | null,
     fechaBajaMueble: string | null
-  
 
-    //Relacion con categoria 
+    // Links a redes sociales (opcionales)
+    linkInstagram?: string | null;
+    linkFacebook?: string | null;
+
+    //Relacion con categoria
     categoria: Categoria | null ;
      //Relaciones con imagens
      imagenes: MuebleImagenes[];

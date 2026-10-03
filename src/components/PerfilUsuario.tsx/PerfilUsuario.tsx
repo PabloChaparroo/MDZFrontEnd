@@ -12,7 +12,6 @@ interface Cliente {
   fechaHoraAltaCliente: string | null;
   fechaHoraModificacionCliente: string | null;
   fechaHoraBajaCliente: string | null;
-  estadoCliente: string | null;
 }
 
 interface Usuario {
@@ -84,8 +83,7 @@ const PerfilUsuario: React.FC = () => {
                 mailCliente: localStorage.getItem('mailCliente') || '',
                 fechaHoraAltaCliente: null,
                 fechaHoraModificacionCliente: null,
-                fechaHoraBajaCliente: null,
-                estadoCliente: 'ACTIVO'
+                fechaHoraBajaCliente: null
               }
             };
             

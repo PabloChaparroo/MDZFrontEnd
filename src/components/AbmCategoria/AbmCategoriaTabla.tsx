@@ -77,10 +77,9 @@ const CatalogoTabla = () => {
       fechaModificacionMueble: null,
       fechaBajaMueble: null,
       colorMueble: '',
-      dimension: null,
-      tipoMadera: '',
-      precio: null,
       descripcion: '',
+      linkInstagram: '',
+      linkFacebook: '',
       imagenes: [],
       categoria: null,
       imagenPortada: null,
@@ -173,6 +172,19 @@ const CatalogoTabla = () => {
     fetchMuebles();
   }, [refreshData, currentPage, mostrarMueblesDadosDeBaja, categoriaSeleccionada, categorias]);
 
+
+  // Estado para feedback visual al copiar un link de red social
+  const [copiedLink, setCopiedLink] = useState<{ id: number; tipo: 'instagram' | 'facebook' } | null>(null);
+
+  const handleCopyLink = async (link: string, muebleId: number, tipo: 'instagram' | 'facebook') => {
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopiedLink({ id: muebleId, tipo });
+      setTimeout(() => setCopiedLink(null), 1500);
+    } catch (error) {
+      console.error('Error al copiar el link:', error);
+    }
+  };
 
   // Estado y lógica para el filtro de búsqueda por nombre de mueble
   const [busquedaMueble, setBusquedaMueble] = useState("");
@@ -591,8 +603,8 @@ const CatalogoTabla = () => {
                     <th>Nombre del Mueble</th>
                     <th>Categoría</th>
                     <th>Detalles del Producto</th>
-                    <th>Precio (ARS)</th>
                     <th>Descripción</th>
+                    <th>Redes</th>
                     <th>Imagen Principal</th>
                     <th>Acciones Disponibles</th>
                   </tr>
@@ -622,31 +634,43 @@ const CatalogoTabla = () => {
                             <span>{mueble.colorMueble}</span>
                           </div>
                           <div className="detail-row">
-                            <i className="fas fa-ruler me-1"></i>
-                            <span>{mueble.dimension || 'N/A'}</span>
-                          </div>
-                          <div className="detail-row">
-                            <i className="fas fa-tree me-1"></i>
-                            <span>{mueble.tipoMadera}</span>
-                          </div>
-                          <div className="detail-row">
                             <i className="fas fa-calendar-plus me-1"></i>
                             <span>{mueble.fechaAltaMueble ? new Date(mueble.fechaAltaMueble).toLocaleDateString() : 'N/A'}</span>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <div className="price-compact">
-                          {mueble.precio ? (
-                            <span className="price-display">${mueble.precio.toLocaleString()}</span>
-                          ) : (
-                            <span className="price-na">Sin precio</span>
-                          )}
+                        <div className="description-compact">
+                          {mueble.descripcion}
                         </div>
                       </td>
                       <td>
-                        <div className="description-compact">
-                          {mueble.descripcion}
+                        <div className="d-flex gap-2">
+                          {mueble.linkInstagram ? (
+                            <button
+                              type="button"
+                              className="action-btn"
+                              title="Copiar link de Instagram"
+                              onClick={() => handleCopyLink(mueble.linkInstagram!, mueble.id, 'instagram')}
+                              style={{ background: 'transparent', border: 'none', fontSize: '1.1rem', color: copiedLink?.id === mueble.id && copiedLink.tipo === 'instagram' ? '#28a745' : '#E1306C' }}
+                            >
+                              <i className={copiedLink?.id === mueble.id && copiedLink.tipo === 'instagram' ? 'fas fa-check' : 'fab fa-instagram'}></i>
+                            </button>
+                          ) : null}
+                          {mueble.linkFacebook ? (
+                            <button
+                              type="button"
+                              className="action-btn"
+                              title="Copiar link de Facebook"
+                              onClick={() => handleCopyLink(mueble.linkFacebook!, mueble.id, 'facebook')}
+                              style={{ background: 'transparent', border: 'none', fontSize: '1.1rem', color: copiedLink?.id === mueble.id && copiedLink.tipo === 'facebook' ? '#28a745' : '#1877F2' }}
+                            >
+                              <i className={copiedLink?.id === mueble.id && copiedLink.tipo === 'facebook' ? 'fas fa-check' : 'fab fa-facebook'}></i>
+                            </button>
+                          ) : null}
+                          {!mueble.linkInstagram && !mueble.linkFacebook && (
+                            <span className="text-muted">-</span>
+                          )}
                         </div>
                       </td>
                       <td>

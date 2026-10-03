@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import cocinaNegra from '../assets/images/cocinaNegra.jpg';
 import placar from '../assets/images/placar.jpg';
 import racks from '../assets/images/racks.jpg';
@@ -6,7 +6,7 @@ import fotoAbout from '../assets/images/fotoAbout.jpg';
 import cocinaUno from '../assets/images/cocinaUno.jpeg';
 import cama1 from '../assets/images/cama1.jpg';
 import { useLocation } from "react-router-dom";
-import { SolicitarVisitaService } from "../services/SolicitarVisitaService";
+import { ConsultaService } from "../services/ConsultaService";
 import { Cliente } from "../types/Cliente";
 import '../pages/Home.css';
 
@@ -14,6 +14,7 @@ const HomePage = () => {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const heroImgRef = useRef<HTMLImageElement | null>(null);
 
   // Estados del formulario
   const [formData, setFormData] = useState({
@@ -57,6 +58,18 @@ const HomePage = () => {
     return () => clearInterval(imageInterval);
   }, [heroImages.length]);
 
+  // Reinicia la animación de fade sin recrear el <img> (antes se usaba
+  // key={currentImageIndex}, que destruye y crea el nodo de imagen cada 5s
+  // para siempre mientras la pestaña esté abierta; con el tiempo eso termina
+  // haciendo que el navegador falle en mostrarla).
+  useEffect(() => {
+    const el = heroImgRef.current;
+    if (!el) return;
+    el.classList.remove('hero-image-fade');
+    void el.offsetWidth; // fuerza reflow para poder reiniciar la animación CSS
+    el.classList.add('hero-image-fade');
+  }, [currentImageIndex]);
+
   // Funciones del formulario
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -86,21 +99,14 @@ const HomePage = () => {
         telefonoCliente: formData.telefono ? parseInt(formData.telefono) : 0,
         fechaHoraAltaCliente: null,
         fechaHoraModificacionCliente: null,
-        estadoCliente: "PENDIENTE",
         fechaHoraBajaCliente: null
       };
 
-      // Crear consulta completa
-      const consultaTexto = formData.consulta;
-
-      // Crear objeto para enviar
-      const crearConsultaDTO = {
+      // Enviar consulta general (sin mueble asociado)
+      await ConsultaService.crearConsulta({
         cliente: cliente,
-        consultaSolicitarVisita: consultaTexto
-      };
-
-      // Enviar consulta
-      await SolicitarVisitaService.crearConsulta(crearConsultaDTO);
+        mensajeConsulta: formData.consulta
+      });
 
       // Mostrar mensaje de éxito
       setShowSuccessMessage(true);
@@ -173,11 +179,11 @@ const HomePage = () => {
           </div>
           <div className="hero-right">
             <div className="hero-image-container">
-              <img 
-                src={heroImages[currentImageIndex]} 
-                alt={`Mueble MDZ ${currentImageIndex + 1}`} 
-                className="hero-image" 
-                key={currentImageIndex}
+              <img
+                ref={heroImgRef}
+                src={heroImages[currentImageIndex]}
+                alt={`Mueble MDZ ${currentImageIndex + 1}`}
+                className="hero-image hero-image-fade"
               />
               <div className="hero-floating-card">
                 <div className="card-icon">

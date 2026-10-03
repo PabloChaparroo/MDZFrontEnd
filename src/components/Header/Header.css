@@ -19,6 +19,11 @@
     align-items: flex-start;
     max-height: 300px;
   }
+  /* Con .topbar-contact oculto, .topbar-social queda como único hijo del
+     flex y "justify-content: space-between" ya no lo empuja a la derecha. */
+  .topbar-social {
+    margin-left: auto;
+  }
   .header-topbar .contact-toggle {
     display: inline-flex;
     align-items: center;
@@ -398,19 +403,12 @@ button.login-btn {
   transition: var(--transition-smooth);
   position: relative;
   padding: 8px 12px; /* Ajustado el padding */
-  border-radius: var(--border-radius);
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 179, 71, 0.3);
   height: 45px; /* Altura fija igual a los enlaces */
 }
 
 .brand-container:hover {
   text-decoration: none;
   transform: scale(1.02);
-  background: rgba(255, 179, 71, 0.1);
-  border-color: var(--primary-gold);
-  box-shadow: var(--shadow-primary);
 }
 
 .brand-logo {
@@ -885,13 +883,15 @@ body {
 
 @media (max-width: 991.98px) {
   body {
-    padding-top: 100px;
+    /* topbar (48px) + navbar (margin-top 56px + ~72px alto real) = ~128px */
+    padding-top: 130px;
   }
 }
 
 @media (max-width: 767.98px) {
   body {
-    padding-top: 80px;
+    /* topbar (48px) + navbar (72px aprox en mobile) = 120px reales */
+    padding-top: 130px;
   }
 }
 

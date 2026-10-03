@@ -215,7 +215,7 @@ const Header = () => {
                   
                   <span onClick={() => handleNavClick('/administrarSolicitud')} className={`nav-link-modern ${isActiveLink('/administrarSolicitud') ? 'active' : ''}`} style={{cursor:'pointer'}}>
                     <i className="fas fa-clipboard-list"></i>
-                    Admin Solicitudes
+                    Admin Consultas
                   </span>
                 </>
               )}

@@ -1,13 +1,12 @@
 
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { MuebleImagenes } from "../../types/MuebleImagenes";
 import { useEffect, useRef, useState } from "react";
 import { CategoriaService } from "../../services/CategoriaService";
 import { Categoria } from "../../types/Categoria";
 import "./ViewMueble.css"
 import { Cliente } from "../../types/Cliente";
-import { SolicitarVisitaService } from "../../services/SolicitarVisitaService";
-import { SolicitarVisita } from "../../types/SolicitarVisita";
+import { ConsultaService } from "../../services/ConsultaService";
 import { MuebleService } from "../../services/MuebleService";
 
 
@@ -215,14 +214,6 @@ useEffect(() => {
   
     // Método al que se llama cuando se envía el formulario
     const crearClienteYVisita = async (nombreCliente: string, apellidoCliente: string, mailCliente: string, telefonoCliente: number, consultaPresupuesto: string) => {
-      // Haz lo que necesites con los datos del formulario
-      console.log('Nombre y apellido:', nombreCliente);
-      console.log('Email:', apellidoCliente);
-      console.log("Email:", mailCliente)
-      console.log("Telefono:" , telefonoCliente);
-      console.log('Número de contacto:', telefonoCliente);
-      console.log('Consulta:', consultaPresupuesto);
-
       // Crear el cliente (solo datos, sin imágenes ni objetos anidados)
       const newCliente: Cliente = {
         id: 0, // O cualquier valor predeterminado que tu backend acepte
@@ -230,26 +221,18 @@ useEffect(() => {
         apellidoCliente: apellidoCliente,
         mailCliente: mailCliente,
         telefonoCliente: telefonoCliente,
-        fechaHoraAltaCliente: null, 
-        fechaHoraModificacionCliente: null, 
-        estadoCliente: "PENDIENTE",
-        fechaHoraBajaCliente: null,  
+        fechaHoraAltaCliente: null,
+        fechaHoraModificacionCliente: null,
+        fechaHoraBajaCliente: null,
       };
 
-      // Crear la solicitud de visita (sin mueble ni cliente anidados)
-      const newSolicitudVisita: SolicitarVisita = {
-        id: 0,
-        fechaHoraAltaSolicitarVisita: null,
-        fechaHoraBajaSolicitarVisita: null,
-        fechaHotaModificacionSolicitarVisita: null,
-        consultaSolicitarVisita: consultaPresupuesto,
-        mueble: null, // No enviar objeto mueble
-        cliente: null, // No enviar objeto cliente
-      }
-
-      // Llamar al servicio pasando solo el id del mueble
-      const newSolicitud = await SolicitarVisitaService.createSolicitarVisita(newSolicitudVisita, { id: mueble.id } as any, newCliente);
-      console.log("Se a creado la solicitud:", newSolicitud)
+      // Crear la consulta asociada a este mueble puntual
+      const nuevaConsulta = await ConsultaService.crearConsulta({
+        cliente: newCliente,
+        muebleId: mueble.id,
+        mensajeConsulta: consultaPresupuesto,
+      });
+      console.log("Se ha creado la consulta:", nuevaConsulta)
 
       // Mostrar la alerta/modal de éxito
       setShowSuccessMessage(true);
@@ -369,16 +352,6 @@ useEffect(() => {
                                     <div className="spec-grid">
                                       <div className="spec-item">
                                         <div className="spec-icon">
-                                          <i className="fas fa-tree"></i>
-                                        </div>
-                                        <div className="spec-content">
-                                          <h4>Tipo de Madera</h4>
-                                          <p>{mueble.tipoMadera}</p>
-                                        </div>
-                                      </div>
-                                      
-                                      <div className="spec-item">
-                                        <div className="spec-icon">
                                           <i className="fas fa-palette"></i>
                                         </div>
                                         <div className="spec-content">
@@ -386,27 +359,10 @@ useEffect(() => {
                                           <p>{mueble.colorMueble}</p>
                                         </div>
                                       </div>
-                                      
-                                      <div className="spec-item">
-                                        <div className="spec-icon">
-                                          <i className="fas fa-ruler-combined"></i>
-                                        </div>
-                                        <div className="spec-content">
-                                          <h4>Dimensiones</h4>
-                                          <p>{mueble.dimension}</p>
-                                        </div>
-                                      </div>
-                                      
-                                      <div className="spec-item">
-                                        <div className="spec-icon">
-                                          <i className="fas fa-dollar-sign"></i>
-                                        </div>
-                                        <div className="spec-content">
-                                          <h4>Precio Referencial</h4>
-                                          <p className="price">{mueble.precio}</p>
-                                        </div>
-                                      </div>
                                     </div>
+                                    <p className="text-muted small mt-2 mb-0">
+                                      Este es un mueble a medida: las dimensiones, terminaciones y precio se definen a partir de tu consulta.
+                                    </p>
                                   </div>
                                 </div>
                               </div>
@@ -416,7 +372,7 @@ useEffect(() => {
                             <div className="contact-form-section">
                               <div className="form-card">
                                 <div className="form-header">
-                                  <h3>Solicitar Presupuesto</h3>
+                                  <h3>Consultar por este mueble</h3>
                                   <p>Completa el formulario y nos pondremos en contacto contigo</p>
                                 </div>
                                 
@@ -555,10 +511,15 @@ useEffect(() => {
                                 <h4>Categorías</h4>
                                 <div className="category-list">
                                   {categorias.map((categoria) => (
-                                    <a key={categoria.id} href="/catalogo" className="category-item">
+                                    <Link
+                                      key={categoria.id}
+                                      to="/catalogo"
+                                      state={{ categoria: categoria.nombreCategoria }}
+                                      className="category-item"
+                                    >
                                       <i className="fas fa-angle-right"></i>
                                       <span>{categoria.nombreCategoria}</span>
-                                    </a>
+                                    </Link>
                                   ))}
                                 </div>
                               </div>
@@ -608,7 +569,7 @@ useEffect(() => {
                         <div className="success-modal-overlay">
                           <div className="success-modal" ref={modalRef}>
                             <div className="success-modal-header">
-                              <h3 style={{ color: '#FFD600' }}>¡Solicitud enviada correctamente!</h3>
+                              <h3 style={{ color: '#FFD600' }}>¡Consulta enviada correctamente!</h3>
                               <button className="close-btn" onClick={() => setShowSuccessMessage(false)}>
                                 <i className="fas fa-times"></i>
                               </button>
@@ -618,8 +579,8 @@ useEffect(() => {
                                 <i className="fas fa-check-circle"></i>
                               </div>
                               <p>
-                                Gracias <strong>{nombreCliente} {apellidoCliente}</strong> por contactarte con nosotros. 
-                                En breve nos comunicaremos contigo para coordinar una visita o brindarte un presupuesto personalizado.
+                                Gracias <strong>{nombreCliente} {apellidoCliente}</strong> por contactarte con nosotros.
+                                En breve nos comunicaremos contigo para responder tu consulta.
                               </p>
                               <div className="contact-info">
                                 <p><i className="fas fa-envelope"></i> También puedes escribirnos a nuestro email</p>

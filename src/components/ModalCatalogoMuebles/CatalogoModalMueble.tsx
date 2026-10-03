@@ -221,12 +221,9 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
             id: Yup.number().integer().min(0),
             nombreMueble: Yup.string().required('El titulo es requerido'),
             colorMueble: Yup.string().min(0).required('El color es requido'),
-            dimension: Yup.string().nullable().optional(), // Campo opcional
-            tipoMadera: Yup.string().required('El tipo madera es requerido'),
-            precio: Yup.number().nullable().optional().test('positive', 'El precio tiene que ser positivo', value => {
-                return value === null || value === undefined || value > 0;
-            }), // Campo opcional
             descripcion: Yup.string().min(0).required('La descripción es requerida'),
+            linkInstagram: Yup.string().url('Debe ser una URL válida').nullable(),
+            linkFacebook: Yup.string().url('Debe ser una URL válida').nullable(),
         });
     };
 
@@ -337,59 +334,6 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group controlId="formDimension">
-                        <FormLabel> Tamaño <small className="text-muted">(opcional)</small></FormLabel>
-                        <Form.Control
-                            name= "dimension"
-                            type="text"
-                            placeholder="Ej: 200cm x 100cm x 50cm"
-                            value={formik.values.dimension ||''}
-                            onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
-                            isInvalid= {Boolean(formik.errors.dimension && formik.touched.dimension)}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            {formik.errors.dimension}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group controlId="formTipoMadera">
-                        <FormLabel> Tipo de madera </FormLabel>
-                        <Form.Control
-                            as="select"
-                            name="tipoMadera"
-                            value={formik.values.tipoMadera || ''}
-                            onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
-                            isInvalid={Boolean(formik.errors.tipoMadera && formik.touched.tipoMadera)}
-                        >
-                            <option value="">Selecciona un tipo de madera</option>
-                            <option value="MELAMINA">MELAMINA</option>
-                        </Form.Control>
-                        {formik.errors.tipoMadera && formik.touched.tipoMadera && (
-                            <Form.Control.Feedback type="invalid">
-                                {formik.errors.tipoMadera}
-                            </Form.Control.Feedback>
-                        )}
-                    </Form.Group>
-
-                    <Form.Group controlId="formPrecio">
-                        <FormLabel> Precio <small className="text-muted">(opcional)</small></FormLabel>
-                        <Form.Control
-                            name= "precio"
-                            type="number"
-                            placeholder="Ingrese el precio"
-                            value={formik.values.precio ||''}
-                            min="0"
-                            onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
-                            isInvalid= {Boolean(formik.errors.precio && !!formik.touched.precio)}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            {formik.errors.precio}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
                     <Form.Group controlId="formDescripcion">
                         <FormLabel> Descripción </FormLabel>
                         <Form.Control
@@ -402,6 +346,38 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                         />
                         <Form.Control.Feedback type="invalid">
                             {formik.errors.descripcion}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group controlId="formLinkInstagram">
+                        <FormLabel> <i className="fab fa-instagram me-1"></i> Link de Instagram (opcional) </FormLabel>
+                        <Form.Control
+                            name="linkInstagram"
+                            type="text"
+                            placeholder="https://www.instagram.com/p/..."
+                            value={formik.values.linkInstagram || ''}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            isInvalid={Boolean(formik.errors.linkInstagram && formik.touched.linkInstagram)}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {formik.errors.linkInstagram}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group controlId="formLinkFacebook">
+                        <FormLabel> <i className="fab fa-facebook me-1"></i> Link de Facebook (opcional) </FormLabel>
+                        <Form.Control
+                            name="linkFacebook"
+                            type="text"
+                            placeholder="https://www.facebook.com/..."
+                            value={formik.values.linkFacebook || ''}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            isInvalid={Boolean(formik.errors.linkFacebook && formik.touched.linkFacebook)}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {formik.errors.linkFacebook}
                         </Form.Control.Feedback>
                     </Form.Group>
 
