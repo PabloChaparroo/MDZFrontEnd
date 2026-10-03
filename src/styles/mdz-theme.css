@@ -1,0 +1,38 @@
+/* Tema visual MDZ Muebles — tokens de color/tipografía compartidos por
+   Header, Footer y Home. Basado en el diseño de referencia (Lovable).
+   Modo oscuro por defecto; se activa modo claro agregando la clase
+   "mdz-light" al elemento <html>. */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  --mdz-background: oklch(0.159 0 0);
+  --mdz-foreground: oklch(0.96 0.002 90);
+  --mdz-primary: oklch(0.78 0.156 75);
+  --mdz-primary-foreground: oklch(0.159 0 0);
+  --mdz-secondary: oklch(0.205 0 0);
+  --mdz-muted-foreground: oklch(0.66 0.003 90);
+  --mdz-accent: oklch(0.27 0 0);
+  --mdz-border: oklch(0.3 0 0);
+  --mdz-hero-ink: oklch(0.98 0 0);
+  --mdz-hero-muted: oklch(0.8 0 0);
+  --mdz-hero-shade: oklch(0.11 0 0);
+  --mdz-font-sans: 'DM Sans', sans-serif;
+  --mdz-font-display: 'Space Grotesk', sans-serif;
+}
+
+html.mdz-light {
+  --mdz-background: oklch(0.98 0.002 90);
+  --mdz-foreground: oklch(0.2 0 0);
+  --mdz-secondary: oklch(0.94 0.002 90);
+  --mdz-muted-foreground: oklch(0.48 0 0);
+  --mdz-accent: oklch(0.9 0.006 85);
+  --mdz-border: oklch(0.84 0 0);
+}
+
+/* Aplicado globalmente: todo el sitio comparte fondo/tipografía del tema */
+body {
+  background: var(--mdz-background);
+  color: var(--mdz-foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

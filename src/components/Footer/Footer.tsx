@@ -1,34 +1,21 @@
-
-import { Container, Row, Col } from 'react-bootstrap';
-import './Footer.css'; // Archivo de estilos CSS para personalizar el footer
+import { Link } from 'react-router-dom';
+import logo from '../../assets/images/logoMZD.png';
+import '../../styles/mdz-theme.css';
+import '../../styles/mdz-site.css';
 
 function Footer() {
   return (
-    <footer className="footer">
-      <Container>
-        <Row className="border-top justify-content-between p-3 footer-content">
-          <Col className="p-0 info-column  " md={4} sm={12}>
-         
-            <h4 className='text-primary-consulta'>Contacto</h4>  
-          
-            
-            <div className="d-flex align-items-center">
-              
-              <div>
-                <p>Dirección: Calle de los Muebles, 123</p>
-                <p>Teléfono: +123 456 789</p>
-                <p>Email: info@mueblescarpinteria.com</p>
-              </div>
-            </div>
-          </Col>
-          <Col className="p-0 d-flex justify-content-center" md={4}>
-         
-          </Col>
-          <Col className="p-0 d-flex justify-content-center" md={4}>
-            <p>&copy; {new Date().getFullYear()} Muebles Carpintería</p>
-          </Col>
-        </Row>
-      </Container>
+    <footer className="mdz-footer">
+      <div className="mdz-container mdz-footer-inner">
+        <Link to="/" className="mdz-brand" aria-label="MDZ Muebles, inicio">
+          <img src={logo} alt="MDZ Muebles" />
+          <span>MDZ MUEBLES<small>Diseño &amp; carpintería a medida</small></span>
+        </Link>
+        <p>&copy; {new Date().getFullYear()} MDZ Muebles · Hecho con oficio, pensado para vos.</p>
+        <Link className="mdz-footer-link" to="/catalogo">
+          Ver catálogo <i className="fas fa-arrow-right"></i>
+        </Link>
+      </div>
     </footer>
   );
 }

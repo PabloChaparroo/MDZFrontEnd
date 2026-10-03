@@ -1,0 +1,218 @@
+/* Header, Footer y Home — diseño nuevo (ver styles/mdz-theme.css para los
+   tokens de color). Todas las clases usan el prefijo "mdz-" para no chocar
+   con el CSS existente del resto del sitio (Catálogo/Admin/Perfil). */
+
+.mdz-container {
+  max-width: 1280px;
+  padding-inline: 48px;
+  margin-inline: auto;
+}
+
+.mdz-site-header a,
+.mdz-footer a,
+.mdz-mobile-nav a,
+.mdz-brand,
+.mdz-hero-label,
+.mdz-product,
+.mdz-contact-links a {
+  text-decoration: none;
+}
+
+/* --- Botones --- */
+.mdz-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  border-radius: 6px;
+  font-family: var(--mdz-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
+  height: 36px;
+  padding: 0 16px;
+  text-decoration: none;
+}
+.mdz-btn svg, .mdz-btn i { font-size: 14px; }
+.mdz-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.mdz-btn-brand { background: var(--mdz-primary); color: var(--mdz-primary-foreground); font-weight: 600; }
+.mdz-btn-brand:hover { opacity: 0.9; }
+.mdz-btn-nav { background: transparent; color: var(--mdz-muted-foreground); }
+.mdz-btn-nav:hover { color: var(--mdz-foreground); background: var(--mdz-accent); }
+.mdz-btn-filter { background: transparent; color: var(--mdz-muted-foreground); border: 1px solid var(--mdz-border); }
+.mdz-btn-filter:hover { color: var(--mdz-foreground); }
+.mdz-btn-filter.is-active { background: var(--mdz-primary); color: var(--mdz-primary-foreground); border-color: var(--mdz-primary); font-weight: 600; }
+.mdz-btn-icon { width: 36px; height: 36px; padding: 0; border-radius: 6px; }
+.mdz-btn-sm { height: 30px; padding: 0 12px; font-size: 12px; }
+.mdz-btn-lg { height: 48px; padding: 0 26px; font-size: 14px; }
+
+/* --- Header --- */
+.mdz-site-header {
+  background: var(--mdz-background);
+  border-bottom: 1px solid var(--mdz-border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.mdz-site-header .mdz-container {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.mdz-brand { display: flex; align-items: center; gap: 12px; font-family: var(--mdz-font-display); font-size: 18px; font-weight: 700; color: var(--mdz-foreground); }
+.mdz-brand img { height: 36px; width: auto; }
+.mdz-brand small { display: block; font-family: var(--mdz-font-sans); font-size: 9px; font-weight: 400; color: var(--mdz-muted-foreground); margin-top: 2px; }
+.mdz-nav { display: flex; gap: 30px; font-size: 13px; color: var(--mdz-muted-foreground); }
+.mdz-nav span, .mdz-nav a { cursor: pointer; color: inherit; text-decoration: none; }
+.mdz-nav span:hover, .mdz-nav a:hover { color: var(--mdz-foreground); }
+.mdz-nav .mdz-nav-active { color: var(--mdz-foreground); }
+.mdz-header-actions { display: flex; align-items: center; gap: 14px; }
+.mdz-mobile-toggle { display: none; }
+.mdz-mobile-nav { display: none; }
+
+@media (max-width: 860px) {
+  .mdz-nav, .mdz-header-cta { display: none; }
+  .mdz-mobile-toggle { display: inline-flex; }
+  .mdz-mobile-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 22px 20px;
+    gap: 16px;
+    border-top: 1px solid var(--mdz-border);
+    font-size: 14px;
+    color: var(--mdz-muted-foreground);
+    background: var(--mdz-background);
+  }
+  .mdz-mobile-nav span, .mdz-mobile-nav a { color: inherit; text-decoration: none; cursor: pointer; }
+  .mdz-mobile-nav span:hover, .mdz-mobile-nav a:hover { color: var(--mdz-foreground); }
+}
+
+/* --- Hero --- */
+.mdz-hero { position: relative; min-height: 560px; height: min(76vh, 740px); display: flex; align-items: center; color: var(--mdz-hero-ink); overflow: hidden; isolation: isolate; }
+.mdz-hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: -2; opacity: 0; }
+.mdz-hero-photo-fade { animation: mdz-hero-fade-in 1.2s ease forwards; }
+@keyframes mdz-hero-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.mdz-hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, color-mix(in oklch, var(--mdz-hero-shade) 94%, transparent) 0%, color-mix(in oklch, var(--mdz-hero-shade) 70%, transparent) 32%, transparent 72%),
+    linear-gradient(0deg, color-mix(in oklch, var(--mdz-hero-shade) 50%, transparent), transparent 30%);
+  z-index: -1;
+}
+.mdz-hero .mdz-container { width: 100%; }
+.mdz-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; display: flex; align-items: center; gap: 10px; color: var(--mdz-primary); margin: 0 0 20px; }
+.mdz-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--mdz-primary); }
+.mdz-hero h1, .mdz-h2, .mdz-h3 { font-family: var(--mdz-font-display); font-weight: 500; margin: 0; }
+.mdz-hero h1 { font-size: 58px; line-height: 1.1; max-width: 560px; margin-bottom: 20px; }
+.mdz-hero h1 span { color: var(--mdz-primary); }
+.mdz-hero-description { max-width: 360px; font-size: 15px; line-height: 1.8; color: var(--mdz-hero-muted); margin-bottom: 28px; }
+.mdz-hero-bottom { position: absolute; bottom: 26px; left: 0; width: 100%; }
+.mdz-hero-bottom .mdz-container { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--mdz-hero-muted); }
+.mdz-hero-label { display: flex; gap: 12px; align-items: center; text-decoration: none; color: inherit; }
+.mdz-hero-label span { width: 20px; height: 1px; background: var(--mdz-primary); }
+
+/* --- Beneficios --- */
+.mdz-benefits { background: var(--mdz-background); border-bottom: 1px solid var(--mdz-border); }
+.mdz-benefits-inner { min-height: 86px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.mdz-benefit { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--mdz-foreground); }
+.mdz-benefit i { color: var(--mdz-primary); font-size: 16px; width: 20px; text-align: center; }
+
+/* --- Secciones genéricas --- */
+.mdz-section { background: var(--mdz-background); padding-block: 84px; }
+.mdz-section-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 34px; flex-wrap: wrap; }
+.mdz-section-heading h2 { font-size: 34px; line-height: 1.2; color: var(--mdz-foreground); }
+.mdz-section-heading .mdz-eyebrow { margin-bottom: 10px; }
+.mdz-section-copy { color: var(--mdz-muted-foreground); font-size: 14px; line-height: 1.8; }
+.mdz-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* --- Catálogo destacado --- */
+.mdz-product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.mdz-product { display: block; text-decoration: none; color: inherit; }
+.mdz-product-image { position: relative; overflow: hidden; border-radius: 6px; aspect-ratio: 1.18; background: var(--mdz-secondary); }
+.mdz-product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.mdz-product:hover .mdz-product-image img { transform: scale(1.04); }
+.mdz-badge { position: absolute; top: 14px; left: 14px; background: var(--mdz-background); color: var(--mdz-foreground); padding: 6px 9px; font-size: 9px; display: flex; gap: 5px; align-items: center; border-radius: 4px; }
+.mdz-badge i { font-size: 9px; color: var(--mdz-primary); }
+.mdz-product-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; }
+.mdz-product h3 { font-size: 18px; margin: 0 0 4px; color: var(--mdz-foreground); font-family: var(--mdz-font-display); font-weight: 500; }
+.mdz-product p { color: var(--mdz-muted-foreground); font-size: 12px; margin: 0; }
+.mdz-product-arrow { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--mdz-border); border-radius: 6px; color: var(--mdz-foreground); transition: all 0.2s; flex-shrink: 0; }
+.mdz-product:hover .mdz-product-arrow { background: var(--mdz-primary); color: var(--mdz-primary-foreground); border-color: var(--mdz-primary); }
+
+/* --- Nosotros / About --- */
+.mdz-about { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; border-top: 1px solid var(--mdz-border); }
+.mdz-about-image { aspect-ratio: 1.15; width: 100%; object-fit: cover; border-radius: 6px; }
+.mdz-about h2 { max-width: 390px; margin-bottom: 18px; }
+.mdz-about .mdz-section-copy { max-width: 400px; margin-bottom: 12px; }
+.mdz-about-signature { margin-top: 24px; display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--mdz-foreground); }
+.mdz-about-signature i { color: var(--mdz-primary); }
+
+/* --- Proceso --- */
+.mdz-process { background: var(--mdz-secondary); }
+.mdz-process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 40px; }
+.mdz-step-number { display: flex; align-items: center; gap: 18px; font-family: var(--mdz-font-display); font-size: 34px; color: var(--mdz-primary); margin-bottom: 20px; }
+.mdz-step-number::after { content: ''; height: 1px; background: var(--mdz-border); flex: 1; }
+.mdz-process h3 { font-size: 17px; color: var(--mdz-foreground); font-family: var(--mdz-font-display); font-weight: 500; margin: 0 0 8px; }
+.mdz-process p { color: var(--mdz-muted-foreground); font-size: 13px; line-height: 1.8; margin: 0; }
+
+/* --- Contacto --- */
+.mdz-contact { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; }
+.mdz-contact h2 { max-width: 430px; margin-bottom: 18px; font-size: 40px; }
+.mdz-contact-links { margin-top: 28px; display: flex; flex-direction: column; gap: 16px; font-size: 13px; }
+.mdz-contact-links a, .mdz-contact-links span { display: flex; gap: 12px; align-items: center; color: var(--mdz-foreground); text-decoration: none; }
+.mdz-contact-links i { width: 16px; color: var(--mdz-primary); }
+.mdz-contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 18px; }
+.mdz-contact-form label { font-size: 12px; display: flex; flex-direction: column; gap: 8px; color: var(--mdz-foreground); }
+.mdz-contact-form input, .mdz-contact-form textarea {
+  width: 100%; background: transparent; border: 0; border-bottom: 1px solid var(--mdz-border);
+  padding: 10px 0; border-radius: 0; color: var(--mdz-foreground); font: inherit; font-size: 13px; outline: none;
+}
+.mdz-contact-form input:focus, .mdz-contact-form textarea:focus { border-color: var(--mdz-primary); }
+.mdz-contact-form textarea { resize: vertical; min-height: 100px; }
+.mdz-full-field { grid-column: 1 / -1; }
+.mdz-form-feedback { font-size: 13px; }
+.mdz-form-feedback.is-error { color: oklch(0.62 0.2 25); }
+
+/* --- Footer --- */
+.mdz-footer { border-top: 1px solid var(--mdz-border); padding-block: 26px; background: var(--mdz-background); }
+.mdz-footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+.mdz-footer p { color: var(--mdz-muted-foreground); font-size: 11px; margin: 0; }
+.mdz-footer-link { font-size: 13px; color: var(--mdz-muted-foreground); display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.mdz-footer-link:hover { color: var(--mdz-foreground); }
+
+@media (max-width: 900px) {
+  .mdz-container { padding-inline: 28px; }
+  .mdz-hero h1 { font-size: 46px; }
+  .mdz-about { gap: 40px; }
+  .mdz-contact { gap: 45px; }
+  .mdz-process-grid { gap: 20px; }
+}
+
+@media (max-width: 640px) {
+  .mdz-container { padding-inline: 20px; }
+  .mdz-site-header .mdz-container { height: 68px; }
+  .mdz-brand { font-size: 16px; gap: 9px; }
+  .mdz-brand img { height: 30px; }
+  .mdz-hero { min-height: 520px; height: calc(85svh - 68px); max-height: 700px; }
+  .mdz-hero h1 { font-size: 38px; max-width: 320px; }
+  .mdz-hero-description { max-width: 280px; font-size: 14px; }
+  .mdz-benefits-inner { display: grid; grid-template-columns: 1fr 1fr; padding-block: 20px; gap: 18px 12px; }
+  .mdz-section { padding-block: 54px; }
+  .mdz-section-heading { align-items: start; flex-direction: column; margin-bottom: 24px; }
+  .mdz-section-heading h2 { font-size: 27px; }
+  .mdz-product-grid { grid-template-columns: 1fr; gap: 30px; }
+  .mdz-about { grid-template-columns: 1fr; gap: 28px; }
+  .mdz-about-image { order: 2; }
+  .mdz-process-grid { grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 28px; }
+  .mdz-step-number { font-size: 28px; margin-bottom: 14px; }
+  .mdz-contact { grid-template-columns: 1fr; gap: 36px; }
+  .mdz-contact-form { grid-template-columns: 1fr; }
+  .mdz-contact h2 { font-size: 30px; }
+  .mdz-footer-inner { align-items: start; flex-direction: column; gap: 12px; }
+}
