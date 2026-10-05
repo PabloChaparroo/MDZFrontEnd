@@ -351,6 +351,52 @@ html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale
   .mdz-profile-avatar-row { flex-direction: column; align-items: flex-start; }
 }
 
+/* --- Ficha de producto (ViewMueble) --- */
+.mdz-detail-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 48px; align-items: start; }
+.mdz-gallery-main { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--mdz-border); aspect-ratio: 1.2; background: var(--mdz-secondary); }
+.mdz-gallery-main img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; }
+.mdz-gallery-thumbs { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.mdz-gallery-thumb { width: 64px; height: 64px; border-radius: 6px; overflow: hidden; border: 2px solid transparent; cursor: pointer; opacity: 0.6; transition: all 0.15s; background: var(--mdz-secondary); padding: 0; }
+.mdz-gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.mdz-gallery-thumb.is-active, .mdz-gallery-thumb:hover { opacity: 1; border-color: var(--mdz-primary); }
+
+.mdz-detail-title { font-family: var(--mdz-font-display); font-size: clamp(26px, 3vw, 36px); font-weight: 600; margin: 0 0 14px; color: var(--mdz-foreground); }
+.mdz-detail-desc { color: var(--mdz-muted-foreground); font-size: 14px; line-height: 1.8; margin-bottom: 20px; }
+.mdz-spec-row { display: flex; align-items: center; gap: 14px; padding: 16px; border: 1px solid var(--mdz-border); border-radius: 8px; margin-bottom: 10px; }
+.mdz-spec-row h4 { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--mdz-muted-foreground); font-weight: 600; }
+.mdz-spec-row p { margin: 2px 0 0; font-size: 14px; color: var(--mdz-foreground); }
+.mdz-detail-note { font-size: 12.5px; color: var(--mdz-muted-foreground); margin-top: 4px; }
+
+.mdz-sidebar { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 100px; }
+.mdz-sidebar-card { border: 1px solid var(--mdz-border); border-radius: 8px; padding: 22px; background: var(--mdz-background); }
+.mdz-sidebar-card h3 { font-family: var(--mdz-font-display); font-weight: 500; font-size: 18px; margin: 0 0 6px; color: var(--mdz-foreground); }
+.mdz-sidebar-card h4 { font-family: var(--mdz-font-display); font-weight: 500; font-size: 13px; margin: 0 0 12px; color: var(--mdz-foreground); }
+.mdz-rating { display: flex; align-items: center; gap: 3px; color: var(--mdz-primary); font-size: 12px; margin-bottom: 18px; }
+.mdz-rating span { color: var(--mdz-muted-foreground); margin-left: 6px; }
+.mdz-feature-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+.mdz-feature-list .mdz-feature-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--mdz-foreground); }
+.mdz-feature-list i { color: var(--mdz-primary); width: 16px; text-align: center; }
+.mdz-category-list { display: flex; flex-direction: column; gap: 8px; }
+.mdz-category-list a { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 14px; border: 1px solid var(--mdz-border); border-radius: 6px; font-size: 13px; color: var(--mdz-foreground); text-decoration: none; }
+.mdz-category-list a:hover { border-color: var(--mdz-primary); color: var(--mdz-primary); }
+.mdz-process-list { display: flex; flex-direction: column; gap: 16px; }
+.mdz-process-list .step { display: flex; gap: 14px; }
+.mdz-process-list .step-number { width: 26px; height: 26px; border-radius: 50%; background: var(--mdz-primary); color: var(--mdz-primary-foreground); display: grid; place-items: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.mdz-process-list h5 { margin: 0 0 4px; font-size: 13px; color: var(--mdz-foreground); font-weight: 600; }
+.mdz-process-list p { margin: 0; font-size: 12.5px; color: var(--mdz-muted-foreground); line-height: 1.6; }
+
+.mdz-fullscreen-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 30px; }
+.mdz-fullscreen-overlay img { max-width: 100%; max-height: 100%; border-radius: 6px; }
+.mdz-fullscreen-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.12); color: #fff; border: none; display: grid; place-items: center; cursor: pointer; font-size: 16px; }
+
+.mdz-back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--mdz-muted-foreground); text-decoration: none; margin-bottom: 24px; }
+.mdz-back-link:hover { color: var(--mdz-primary); }
+
+@media (max-width: 992px) {
+  .mdz-detail-grid { grid-template-columns: 1fr; gap: 32px; }
+  .mdz-sidebar { position: static; }
+}
+
 /* --- Redes sociales (pill row) --- */
 .mdz-social-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .mdz-social-row a { display: flex; align-items: center; gap: 8px; border: 1px solid var(--mdz-border); border-radius: 999px; padding: 10px 20px; font-size: 13px; color: var(--mdz-foreground); }
