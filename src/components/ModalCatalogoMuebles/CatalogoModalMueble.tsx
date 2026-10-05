@@ -1,4 +1,4 @@
-import { Button, Form, Modal, FormLabel, Table } from "react-bootstrap";
+import { Form, Modal, FormLabel } from "react-bootstrap";
 import './CatalogoModalMueble.css';
 import '../../styles/mdz-theme.css';
 import '../../styles/mdz-site.css';
@@ -270,27 +270,28 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
             </Modal.Body>
 
             <Modal.Footer>
-                <Button variant="secondary" onClick={onHide} disabled={isLoading}>
+                <button type="button" className="mdz-btn mdz-btn-filter" onClick={onHide} disabled={isLoading}>
                     Cancelar
-                </Button>
+                </button>
 
-                <Button 
-                    variant={modalType === ModalType.DELETE ? "danger" : "warning"} 
-                    onClick={modalType === ModalType.DELETE ? handleDelete : handleBajaLogica} 
+                <button
+                    type="button"
+                    className="mdz-btn mdz-btn-brand"
+                    onClick={modalType === ModalType.DELETE ? handleDelete : handleBajaLogica}
                     disabled={isLoading}
                 >
                     {isLoading ? (
                         <>
-                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             {modalType === ModalType.DELETE ? "Eliminando..." : "Dando de baja..."}
                         </>
                     ) : (
                         <>
-                            <i className={`fas ${modalType === ModalType.DELETE ? 'fa-trash' : 'fa-ban'} me-2`}></i>
+                            <i className={`fas ${modalType === ModalType.DELETE ? 'fa-trash' : 'fa-ban'}`}></i>
                             {modalType === ModalType.DELETE ? "Eliminar" : "Dar de Baja"}
                         </>
                     )}
-                </Button>
+                </button>
             </Modal.Footer>
         </Modal>
         </>     
@@ -398,18 +399,18 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                                 
                                 {/* Botón para abrir el modal de imágenes */}
                                 <div className="d-flex justify-content-between align-items-center mb-3">
-                                    <Button 
-                                        variant="outline-primary" 
+                                    <button
+                                        type="button"
+                                        className="mdz-btn mdz-btn-filter"
                                         onClick={handleOpenImagenesModal}
-                                        className="me-2"
                                         disabled={isLoading}
                                     >
-                                        <i className="fas fa-plus me-2"></i>
+                                        <i className="fas fa-plus"></i>
                                         {selectedFiles.length > 0 ? 'Editar Imágenes' : 'Agregar Imágenes'}
-                                    </Button>
+                                    </button>
                                     
                                     {selectedFiles.length > 0 && (
-                                        <span className="badge bg-success">
+                                        <span className="mdz-pill mdz-pill-success">
                                             {selectedFiles.length} imagen(es) seleccionada(s)
                                         </span>
                                     )}
@@ -422,8 +423,9 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                                             <i className="fas fa-list me-2"></i>
                                             Imágenes Seleccionadas
                                         </h6>
-                                        <Table striped bordered hover size="sm" className="mb-0">
-                                            <thead className="table-light">
+                                        <div className="mdz-table-wrap">
+                                        <table className="mdz-table">
+                                            <thead>
                                                 <tr>
                                                     <th style={{ width: '60px' }}>Orden</th>
                                                     <th style={{ width: '80px' }}>Miniatura</th>
@@ -435,20 +437,20 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                                                 {selectedFiles.map((file, index) => (
                                                     <tr key={file.id}>
                                                         <td className="text-center">
-                                                            <span className="badge bg-secondary">
+                                                            <span className="mdz-pill mdz-pill-muted">
                                                                 {index + 1}
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <img 
-                                                                src={file.url} 
+                                                            <img
+                                                                src={file.url}
                                                                 alt={`Imagen ${index + 1}`}
-                                                                style={{ 
-                                                                    width: '50px', 
-                                                                    height: '40px', 
+                                                                style={{
+                                                                    width: '50px',
+                                                                    height: '40px',
                                                                     objectFit: 'cover',
                                                                     borderRadius: '4px',
-                                                                    border: file.esPortada ? '2px solid #28a745' : '1px solid #dee2e6'
+                                                                    border: file.esPortada ? '2px solid var(--mdz-primary)' : '1px solid var(--mdz-border)'
                                                                 }}
                                                             />
                                                         </td>
@@ -456,28 +458,29 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                                                             <div className="text-truncate" style={{ maxWidth: '150px' }}>
                                                                 {file.file.name}
                                                             </div>
-                                                            <small className="text-muted">
+                                                            <small style={{ color: 'var(--mdz-muted-foreground)' }}>
                                                                 {(file.file.size / 1024 / 1024).toFixed(2)} MB
                                                             </small>
                                                         </td>
                                                         <td className="text-center">
                                                             {file.esPortada && (
-                                                                <i className="fas fa-check-circle text-success" title="Imagen portada"></i>
+                                                                <i className="fas fa-check-circle" style={{ color: 'var(--mdz-primary)' }} title="Imagen portada"></i>
                                                             )}
                                                         </td>
                                                     </tr>
                                                 ))}
                                             </tbody>
-                                        </Table>
+                                        </table>
+                                        </div>
                                     </div>
                                 )}
 
                                 {/* Mensaje cuando no hay imágenes seleccionadas */}
                                 {selectedFiles.length === 0 && (
-                                    <div className="text-center py-3 bg-light rounded">
-                                        <i className="fas fa-image fa-2x text-muted mb-2"></i>
-                                        <p className="text-muted mb-0">No hay imágenes seleccionadas</p>
-                                        <small className="text-muted">Haga clic en "Agregar Imágenes" para seleccionar</small>
+                                    <div className="text-center py-3 rounded" style={{ background: 'var(--mdz-secondary)' }}>
+                                        <i className="fas fa-image fa-2x mb-2" style={{ color: 'var(--mdz-muted-foreground)' }}></i>
+                                        <p className="mb-0" style={{ color: 'var(--mdz-muted-foreground)' }}>No hay imágenes seleccionadas</p>
+                                        <small style={{ color: 'var(--mdz-muted-foreground)' }}>Haga clic en "Agregar Imágenes" para seleccionar</small>
                                     </div>
                                 )}
                             </Form.Group>
@@ -489,12 +492,12 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                 </Form>
 
                 <Modal.Footer className="mt-4">
-                    <Button variant="secondary" onClick={onHide} disabled={isLoading}>
+                    <button type="button" className="mdz-btn mdz-btn-filter" onClick={onHide} disabled={isLoading}>
                         Cancelar
-                    </Button>
-                    <Button 
-                        variant="primary" 
-                        type="submit" 
+                    </button>
+                    <button
+                        type="submit"
+                        className="mdz-btn mdz-btn-brand"
                         disabled={!formik.isValid || isLoading}
                         onClick={(e) => {
                             e.preventDefault();
@@ -503,16 +506,16 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                     >
                         {isLoading ? (
                             <>
-                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 Guardando...
                             </>
                         ) : (
                             <>
-                                <i className="fas fa-save me-2"></i>
+                                <i className="fas fa-save"></i>
                                 Guardar
                             </>
                         )}
-                    </Button>
+                    </button>
                 </Modal.Footer>
             </Modal.Body>
         </Modal>

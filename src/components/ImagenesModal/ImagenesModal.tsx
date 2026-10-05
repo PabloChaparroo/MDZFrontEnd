@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Modal, Table } from "react-bootstrap";
+import { Form, Modal, Table } from "react-bootstrap";
 import { toast } from "react-toastify";
 import '../../styles/mdz-theme.css';
 import '../../styles/mdz-site.css';
@@ -199,20 +199,20 @@ const ImagenesModal = ({ show, onHide, onSave, imagenesExistentes = [] }: Imagen
                                 {selectedFiles.map((file, index) => (
                                     <tr key={file.id}>
                                         <td className="text-center">
-                                            <span className="badge bg-primary">
+                                            <span className="mdz-pill mdz-pill-warning">
                                                 Imagen {index + 1}
                                             </span>
                                         </td>
                                         <td>
-                                            <img 
-                                                src={file.url} 
+                                            <img
+                                                src={file.url}
                                                 alt={`Imagen ${index + 1}`}
-                                                style={{ 
-                                                    width: '80px', 
-                                                    height: '60px', 
+                                                style={{
+                                                    width: '80px',
+                                                    height: '60px',
                                                     objectFit: 'cover',
                                                     borderRadius: '4px',
-                                                    border: file.esPortada ? '3px solid #28a745' : '1px solid #dee2e6'
+                                                    border: file.esPortada ? '3px solid var(--mdz-primary)' : '1px solid var(--mdz-border)'
                                                 }}
                                             />
                                         </td>
@@ -237,14 +237,13 @@ const ImagenesModal = ({ show, onHide, onSave, imagenesExistentes = [] }: Imagen
                                             />
                                         </td>
                                         <td className="text-center">
-                                            <Button 
-                                                variant="outline-danger" 
-                                                size="sm"
+                                            <button
+                                                className="mdz-icon-btn"
                                                 onClick={() => handleDeleteImage(file.id)}
                                                 title="Eliminar imagen"
                                             >
                                                 <i className="fas fa-trash"></i>
-                                            </Button>
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
@@ -274,18 +273,19 @@ const ImagenesModal = ({ show, onHide, onSave, imagenesExistentes = [] }: Imagen
             </Modal.Body>
 
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleCancel}>
-                    <i className="fas fa-times me-2"></i>
+                <button type="button" className="mdz-btn mdz-btn-filter" onClick={handleCancel}>
+                    <i className="fas fa-times"></i>
                     Cancelar
-                </Button>
-                <Button 
-                    variant="primary" 
+                </button>
+                <button
+                    type="button"
+                    className="mdz-btn mdz-btn-brand"
                     onClick={handleSave}
                     disabled={selectedFiles.length === 0}
                 >
-                    <i className="fas fa-save me-2"></i>
+                    <i className="fas fa-save"></i>
                     Guardar Imágenes ({selectedFiles.length})
-                </Button>
+                </button>
             </Modal.Footer>
         </Modal>
     );

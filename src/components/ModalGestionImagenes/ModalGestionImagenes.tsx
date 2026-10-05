@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Table, Form, Alert, Spinner } from 'react-bootstrap';
+import { Modal, Table, Form, Alert, Spinner } from 'react-bootstrap';
 import { MuebleService } from '../../services/MuebleService';
 import { MuebleImagenes } from '../../types/MuebleImagenes';
 import { Mueble } from '../../types/Mueble';
@@ -284,7 +284,7 @@ const ModalGestionImagenes: React.FC<ModalGestionImagenesProps> = ({
                           />
                         </td>
                         <td>
-                          <span className="badge bg-primary">#{imagen.id}</span>
+                          <span className="mdz-pill mdz-pill-warning">#{imagen.id}</span>
                         </td>
                         <td>
                           <div className="portada-control">
@@ -315,15 +315,14 @@ const ModalGestionImagenes: React.FC<ModalGestionImagenesProps> = ({
                           </div>
                         </td>
                         <td>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
+                          <button
+                            className="mdz-icon-btn"
                             onClick={() => handleEliminarImagen(imagen.id)}
                             disabled={saving || imagenes.length === 1}
                             title={imagenes.length === 1 ? "No se puede eliminar la única imagen" : "Eliminar imagen"}
                           >
                             <i className="fas fa-trash"></i>
-                          </Button>
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -336,36 +335,37 @@ const ModalGestionImagenes: React.FC<ModalGestionImagenesProps> = ({
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose} disabled={saving}>
-          <i className="fas fa-times me-2"></i>
+        <button type="button" className="mdz-btn mdz-btn-filter" onClick={handleClose} disabled={saving}>
+          <i className="fas fa-times"></i>
           Cancelar
-        </Button>
-        <Button 
-          variant="primary" 
+        </button>
+        <button
+          type="button"
+          className="mdz-btn mdz-btn-brand"
           onClick={handleGuardar}
           disabled={
-            saving || 
+            saving ||
             (
-              (!nuevasImagenes || nuevasImagenes.length === 0) && 
+              (!nuevasImagenes || nuevasImagenes.length === 0) &&
               (imagenPortadaSeleccionada === imagenes.find(img => img.esPortada)?.id || imagenPortadaSeleccionada === null)
             )
           }
         >
           {saving ? (
             <>
-              <Spinner animation="border" size="sm" className="me-2" />
+              <Spinner animation="border" size="sm" />
               Guardando...
             </>
           ) : (
             <>
-              <i className="fas fa-save me-2"></i>
+              <i className="fas fa-save"></i>
               Guardar Cambios
               {(nuevasImagenes && nuevasImagenes.length > 0) && (
                 <span className="ms-1">({nuevasImagenes.length} imagen{nuevasImagenes.length > 1 ? 'es' : ''})</span>
               )}
             </>
           )}
-        </Button>
+        </button>
       </Modal.Footer>
     </Modal>
   );

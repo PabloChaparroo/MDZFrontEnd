@@ -541,6 +541,93 @@
   z-index: 1;
 }
 
+/* ===== TEMA MDZ (claro/oscuro) =====
+   Este archivo fue escrito originalmente solo para fondo claro. En vez de
+   reescribirlo entero, se sobreescriben acá los colores clave para que
+   funcione también dentro de .mdz-modal-content (oscuro por defecto,
+   claro con la clase mdz-light en <html>). */
+
+.mdz-modal-content .modal-header {
+  background: var(--mdz-secondary);
+  color: var(--mdz-foreground);
+}
+.mdz-modal-content .seccion-agregar-imagenes {
+  background: var(--mdz-secondary);
+  border-color: var(--mdz-border);
+}
+.mdz-modal-content .seccion-agregar-imagenes:hover {
+  border-color: var(--mdz-primary);
+  background: var(--mdz-secondary);
+}
+.mdz-modal-content .seccion-agregar-imagenes h5,
+.mdz-modal-content .preview-container h6,
+.mdz-modal-content .seccion-imagenes-existentes h5 {
+  color: var(--mdz-foreground);
+}
+.mdz-modal-content .preview-grid {
+  background: var(--mdz-background);
+  border-color: var(--mdz-border);
+}
+.mdz-modal-content .preview-label {
+  color: var(--mdz-muted-foreground);
+}
+.mdz-modal-content .seccion-imagenes-existentes {
+  background: var(--mdz-background);
+  border-color: var(--mdz-border);
+}
+.mdz-modal-content .seccion-imagenes-existentes .table thead th {
+  background: var(--mdz-secondary);
+  color: var(--mdz-foreground);
+}
+.mdz-modal-content .seccion-imagenes-existentes .table,
+.mdz-modal-content .seccion-imagenes-existentes .table tbody td {
+  background: var(--mdz-background);
+  border-color: var(--mdz-border);
+  color: var(--mdz-foreground);
+}
+.mdz-modal-content .seccion-imagenes-existentes .table tbody tr:hover {
+  background-color: var(--mdz-secondary);
+}
+.mdz-modal-content .badge.bg-primary {
+  background: var(--mdz-primary) !important;
+  color: var(--mdz-primary-foreground) !important;
+}
+.mdz-modal-content .portada-control input[type="radio"] {
+  background-color: var(--mdz-secondary) !important;
+  border-color: var(--mdz-border) !important;
+}
+.mdz-modal-content .portada-control input[type="radio"]:checked {
+  background-color: var(--mdz-primary) !important;
+  border-color: var(--mdz-primary) !important;
+}
+.mdz-modal-content .portada-control input[type="radio"]:checked::after {
+  background: var(--mdz-primary-foreground) !important;
+}
+.mdz-modal-content .portada-label {
+  color: var(--mdz-muted-foreground) !important;
+}
+.mdz-modal-content .portada-label:hover {
+  background: var(--mdz-secondary) !important;
+  color: var(--mdz-primary) !important;
+  border-color: var(--mdz-primary) !important;
+}
+.mdz-modal-content .portada-label.current-portada {
+  background: var(--mdz-primary) !important;
+  color: var(--mdz-primary-foreground) !important;
+  border-color: var(--mdz-primary) !important;
+}
+.mdz-modal-content .portada-label.current-portada:hover {
+  background: var(--mdz-primary) !important;
+  color: var(--mdz-primary-foreground) !important;
+}
+.mdz-modal-content .modal-footer {
+  border-color: var(--mdz-border) !important;
+  background: var(--mdz-background) !important;
+}
+.mdz-modal-content .fa-info-circle {
+  color: var(--mdz-muted-foreground);
+}
+
 /* ===== ANIMACIONES ===== */
 
 @keyframes pulse {
