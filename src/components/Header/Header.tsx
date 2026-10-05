@@ -27,6 +27,11 @@ const Header = () => {
     setMenuOpen(false);
   }, [location]);
 
+  useEffect(() => {
+    document.body.classList.toggle('mdz-no-scroll', menuOpen);
+    return () => document.body.classList.remove('mdz-no-scroll');
+  }, [menuOpen]);
+
   const isLoggedIn = !!localStorage.getItem('token');
   const isActive = (path: string) => location.pathname === path;
 
@@ -87,22 +92,39 @@ const Header = () => {
         </div>
       </div>
 
-      {menuOpen && (
-        <nav className="mdz-mobile-nav" aria-label="Navegación móvil">
-          <span onClick={() => go('/')}>Inicio</span>
-          <span onClick={() => go('/catalogo')}>Catálogo</span>
-          <span onClick={() => go('/quienesSomos')}>El taller</span>
-          {isLoggedIn ? (
-            <>
-              <span onClick={() => go('/perfil')}>Mi perfil</span>
-              <span onClick={() => go('/administrarCategorias')}>Admin categorías</span>
-              <span onClick={() => go('/administrarSolicitud')}>Admin consultas</span>
-            </>
-          ) : (
-            <span onClick={() => go('/login')}>Iniciar sesión</span>
-          )}
-        </nav>
-      )}
+      <div
+        className={`mdz-mobile-backdrop ${menuOpen ? 'is-open' : ''}`}
+        onClick={() => setMenuOpen(false)}
+        aria-hidden="true"
+      ></div>
+
+      <nav className={`mdz-mobile-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Navegación móvil">
+        <div className="mdz-mobile-nav-header">
+          <Link to="/" className="mdz-brand" onClick={() => setMenuOpen(false)}>
+            <img src={logo} alt="MDZ Muebles" />
+            <span>MDZ MUEBLES<small>Diseño &amp; carpintería a medida</small></span>
+          </Link>
+          <button
+            className="mdz-btn mdz-btn-nav mdz-btn-icon"
+            aria-label="Cerrar menú"
+            onClick={() => setMenuOpen(false)}
+          >
+            <i className="fas fa-xmark"></i>
+          </button>
+        </div>
+        <span onClick={() => go('/')}>Inicio</span>
+        <span onClick={() => go('/catalogo')}>Catálogo</span>
+        <span onClick={() => go('/quienesSomos')}>El taller</span>
+        {isLoggedIn ? (
+          <>
+            <span onClick={() => go('/perfil')}>Mi perfil</span>
+            <span onClick={() => go('/administrarCategorias')}>Admin categorías</span>
+            <span onClick={() => go('/administrarSolicitud')}>Admin consultas</span>
+          </>
+        ) : (
+          <span onClick={() => go('/login')}>Iniciar sesión</span>
+        )}
+      </nav>
     </header>
   );
 };
