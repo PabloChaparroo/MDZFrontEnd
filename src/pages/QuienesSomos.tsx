@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import fotoAbout from '../assets/images/fotoAbout.jpg';
 import '../styles/mdz-theme.css';
 import '../styles/mdz-site.css';
 
@@ -68,17 +69,18 @@ const QuienesSomos = () => {
               MDZ Muebles nació en 2020 con una visión clara: crear muebles de alta calidad que combinen
               funcionalidad, diseño y durabilidad para transformar los espacios de nuestros clientes.
             </p>
-            <p className="mdz-section-copy">
+            <p className="mdz-section-copy" style={{ marginBottom: 28 }}>
               Lo que comenzó como un pequeño sueño, se ha convertido en una empresa dedicada a la fabricación
               de muebles personalizados. Nuestro compromiso con la excelencia y la satisfacción del cliente
               nos ha permitido crecer y ganarnos la confianza de más de 500 familias y empresas.
             </p>
+            <div className="mdz-stat-row">
+              <div className="mdz-stat"><strong>15+</strong><span>Años de experiencia</span></div>
+              <div className="mdz-stat"><strong>500+</strong><span>Proyectos completados</span></div>
+              <div className="mdz-stat"><strong>100%</strong><span>Satisfacción garantizada</span></div>
+            </div>
           </div>
-          <div className="mdz-stat-row">
-            <div className="mdz-stat"><strong>15+</strong><span>Años de experiencia</span></div>
-            <div className="mdz-stat"><strong>500+</strong><span>Proyectos completados</span></div>
-            <div className="mdz-stat"><strong>100%</strong><span>Satisfacción garantizada</span></div>
-          </div>
+          <img className="mdz-about-image" src={fotoAbout} alt="Taller MDZ Muebles" loading="lazy" />
         </div>
       </section>
 
