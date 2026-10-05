@@ -225,6 +225,137 @@
   .mdz-select { display: block; }
 }
 
+/* --- Tarjetas genéricas (servicios, valores, contacto) --- */
+.mdz-card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.mdz-card {
+  border: 1px solid var(--mdz-border); border-radius: 8px; padding: 26px;
+  background: var(--mdz-background); transition: border-color 0.2s;
+}
+.mdz-card:hover { border-color: var(--mdz-primary); }
+.mdz-card-icon {
+  width: 42px; height: 42px; border-radius: 8px; display: grid; place-items: center;
+  background: var(--mdz-secondary); color: var(--mdz-primary); font-size: 17px; margin-bottom: 16px;
+}
+.mdz-card h3 { font-family: var(--mdz-font-display); font-weight: 500; font-size: 16px; margin: 0 0 10px; color: var(--mdz-foreground); }
+.mdz-card p { color: var(--mdz-muted-foreground); font-size: 13px; line-height: 1.7; margin: 0 0 12px; }
+.mdz-card ul { margin: 0; padding-left: 18px; color: var(--mdz-muted-foreground); font-size: 12.5px; line-height: 1.9; }
+.mdz-card ul li::marker { color: var(--mdz-primary); }
+
+.mdz-value-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.mdz-value-card { text-align: center; }
+.mdz-value-card .mdz-card-icon { margin-inline: auto; }
+.mdz-value-card p { margin: 0; }
+
+.mdz-contact-card-icon {
+  width: 42px; height: 42px; border-radius: 8px; display: grid; place-items: center;
+  background: var(--mdz-secondary); color: var(--mdz-primary); font-size: 16px; margin-bottom: 14px;
+}
+
+/* --- Estadísticas --- */
+.mdz-about-text-stats { display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: center; }
+.mdz-stat-row { display: flex; gap: 36px; flex-wrap: wrap; }
+.mdz-stat strong { display: block; font-family: var(--mdz-font-display); font-size: 32px; color: var(--mdz-primary); font-weight: 600; line-height: 1.1; }
+.mdz-stat span { font-size: 12px; color: var(--mdz-muted-foreground); }
+
+/* --- Timeline --- */
+.mdz-timeline { position: relative; padding-left: 30px; display: flex; flex-direction: column; gap: 32px; }
+.mdz-timeline::before { content: ''; position: absolute; left: 4px; top: 6px; bottom: 6px; width: 1px; background: var(--mdz-border); }
+.mdz-timeline-item { position: relative; }
+.mdz-timeline-item::before {
+  content: ''; position: absolute; left: -30px; top: 5px; width: 9px; height: 9px;
+  border-radius: 50%; background: var(--mdz-primary);
+}
+.mdz-timeline-year { color: var(--mdz-primary); font-family: var(--mdz-font-display); font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.mdz-timeline-item h3 { font-family: var(--mdz-font-display); font-weight: 500; font-size: 18px; margin: 0 0 8px; color: var(--mdz-foreground); }
+.mdz-timeline-item p { color: var(--mdz-muted-foreground); font-size: 13px; line-height: 1.8; margin: 0; max-width: 540px; }
+
+/* --- CTA --- */
+.mdz-cta { background: var(--mdz-secondary); text-align: center; }
+.mdz-cta h2 { font-size: 30px; margin-bottom: 12px; }
+.mdz-cta .mdz-section-copy { max-width: 480px; margin-inline: auto; margin-bottom: 26px; }
+.mdz-cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+/* --- Mapa --- */
+.mdz-map { border-radius: 8px; overflow: hidden; border: 1px solid var(--mdz-border); margin-bottom: 40px; line-height: 0; }
+
+/* --- Tablas de administración --- */
+.mdz-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.mdz-tabs { display: flex; gap: 10px; flex-wrap: wrap; }
+.mdz-table-wrap { border: 1px solid var(--mdz-border); border-radius: 8px; overflow-x: auto; background: var(--mdz-background); }
+.mdz-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.mdz-table thead { background: var(--mdz-secondary); }
+.mdz-table th { text-align: left; padding: 14px 16px; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--mdz-muted-foreground); font-weight: 600; white-space: nowrap; }
+.mdz-table td { padding: 14px 16px; border-top: 1px solid var(--mdz-border); color: var(--mdz-foreground); vertical-align: middle; }
+.mdz-table tbody tr:hover { background: var(--mdz-secondary); }
+.mdz-table-thumb { width: 44px; height: 44px; border-radius: 6px; object-fit: cover; background: var(--mdz-secondary); display: block; }
+
+.mdz-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.mdz-pill-success { background: color-mix(in oklch, oklch(0.72 0.19 150) 18%, transparent); color: oklch(0.6 0.17 150); }
+.mdz-pill-warning { background: color-mix(in oklch, var(--mdz-primary) 20%, transparent); color: var(--mdz-primary); }
+.mdz-pill-muted { background: var(--mdz-secondary); color: var(--mdz-muted-foreground); }
+
+.mdz-icon-btn {
+  width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--mdz-border);
+  background: transparent; color: var(--mdz-foreground); display: inline-flex; align-items: center;
+  justify-content: center; cursor: pointer; transition: border-color 0.15s, color 0.15s; font-size: 13px;
+}
+.mdz-icon-btn:hover { border-color: var(--mdz-primary); color: var(--mdz-primary); }
+.mdz-icon-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.mdz-row-actions { display: flex; gap: 8px; }
+
+.mdz-empty-table { text-align: center; padding: 60px 20px; color: var(--mdz-muted-foreground); }
+.mdz-empty-table i { font-size: 28px; color: var(--mdz-border); margin-bottom: 14px; display: block; }
+.mdz-empty-table h3 { color: var(--mdz-foreground); font-family: var(--mdz-font-display); font-weight: 500; font-size: 17px; margin: 0 0 6px; }
+.mdz-empty-table p { margin: 0; font-size: 13px; }
+
+.mdz-checkbox-field { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--mdz-muted-foreground); margin-bottom: 18px; }
+
+/* --- Tema para modales (react-bootstrap) --- */
+.mdz-modal-content { background: var(--mdz-background) !important; color: var(--mdz-foreground) !important; border: 1px solid var(--mdz-border) !important; border-radius: 10px !important; }
+.mdz-modal-content .modal-header, .mdz-modal-content .modal-footer { border-color: var(--mdz-border) !important; }
+.mdz-modal-content .form-label, .mdz-modal-content label, .mdz-modal-content h1, .mdz-modal-content h2, .mdz-modal-content h3, .mdz-modal-content h4, .mdz-modal-content h5, .mdz-modal-content h6 { color: var(--mdz-foreground); }
+.mdz-modal-content .form-control, .mdz-modal-content .form-select {
+  background: var(--mdz-secondary) !important; color: var(--mdz-foreground) !important;
+  border: 1px solid var(--mdz-border) !important;
+}
+.mdz-modal-content .form-control:focus, .mdz-modal-content .form-select:focus { border-color: var(--mdz-primary) !important; box-shadow: none !important; }
+.mdz-modal-content .text-muted { color: var(--mdz-muted-foreground) !important; }
+.mdz-modal-content .btn-close { filter: var(--mdz-close-filter, none); }
+html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale(1); }
+
+/* --- Perfil de usuario --- */
+.mdz-profile-card { border: 1px solid var(--mdz-border); border-radius: 10px; overflow: hidden; background: var(--mdz-background); max-width: 760px; margin-inline: auto; }
+.mdz-profile-banner { height: 110px; background: linear-gradient(135deg, var(--mdz-secondary), var(--mdz-accent)); }
+.mdz-profile-avatar-row { display: flex; align-items: flex-end; gap: 20px; padding: 0 28px; margin-top: -44px; }
+.mdz-profile-avatar { width: 88px; height: 88px; border-radius: 50%; background: var(--mdz-primary); color: var(--mdz-primary-foreground); display: grid; place-items: center; font-size: 30px; font-weight: 700; font-family: var(--mdz-font-display); border: 4px solid var(--mdz-background); flex-shrink: 0; }
+.mdz-profile-name { font-family: var(--mdz-font-display); font-size: 21px; font-weight: 600; margin: 0; color: var(--mdz-foreground); }
+.mdz-profile-username { color: var(--mdz-muted-foreground); font-size: 13px; margin: 2px 0 6px; }
+.mdz-profile-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: oklch(0.6 0.17 150); }
+.mdz-profile-status .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.mdz-profile-body { padding: 28px; }
+.mdz-profile-section-title { font-family: var(--mdz-font-display); font-weight: 500; font-size: 15px; margin: 0 0 18px; display: flex; align-items: center; gap: 8px; color: var(--mdz-foreground); }
+.mdz-profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 32px; }
+.mdz-profile-field label { display: flex; align-items: center; gap: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--mdz-muted-foreground); margin-bottom: 6px; }
+.mdz-profile-field .mdz-profile-value { font-size: 14px; color: var(--mdz-foreground); }
+.mdz-profile-actions { display: flex; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--mdz-border); padding-top: 24px; }
+
+/* --- Confirmación (overlay simple) --- */
+.mdz-confirm-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+.mdz-confirm-card { max-width: 380px; width: 100%; padding: 24px; }
+.mdz-confirm-card h3 { font-family: var(--mdz-font-display); font-weight: 500; font-size: 17px; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+.mdz-confirm-card p { color: var(--mdz-muted-foreground); font-size: 14px; margin: 0 0 20px; }
+.mdz-confirm-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+@media (max-width: 640px) {
+  .mdz-profile-grid { grid-template-columns: 1fr; }
+  .mdz-profile-avatar-row { flex-direction: column; align-items: flex-start; }
+}
+
+/* --- Redes sociales (pill row) --- */
+.mdz-social-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.mdz-social-row a { display: flex; align-items: center; gap: 8px; border: 1px solid var(--mdz-border); border-radius: 999px; padding: 10px 20px; font-size: 13px; color: var(--mdz-foreground); }
+.mdz-social-row a:hover { border-color: var(--mdz-primary); color: var(--mdz-primary); }
+
 @media (max-width: 900px) {
   .mdz-container { padding-inline: 28px; }
   .mdz-hero h1 { font-size: 46px; }
@@ -254,4 +385,13 @@
   .mdz-contact-form { grid-template-columns: 1fr; }
   .mdz-contact h2 { font-size: 30px; }
   .mdz-footer-inner { align-items: start; flex-direction: column; gap: 12px; }
+  .mdz-card-grid { grid-template-columns: 1fr; }
+  .mdz-value-grid { grid-template-columns: 1fr 1fr; }
+  .mdz-page-header h1 { font-size: 30px; }
+  .mdz-about-text-stats { grid-template-columns: 1fr; gap: 28px; }
+  .mdz-stat-row { gap: 28px; }
+}
+
+@media (max-width: 900px) {
+  .mdz-value-grid { grid-template-columns: repeat(2, 1fr); }
 }

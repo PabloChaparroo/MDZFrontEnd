@@ -4,6 +4,8 @@ import { MuebleService } from '../../services/MuebleService';
 import { MuebleImagenes } from '../../types/MuebleImagenes';
 import { Mueble } from '../../types/Mueble';
 import './ModalGestionImagenes.css';
+import '../../styles/mdz-theme.css';
+import '../../styles/mdz-site.css';
 
 interface ModalGestionImagenesProps {
   show: boolean;
@@ -171,9 +173,10 @@ const ModalGestionImagenes: React.FC<ModalGestionImagenesProps> = ({
     <Modal 
       show={show} 
       onHide={handleClose} 
-      size="lg" 
+      size="lg"
       centered
       className="modal-gestion-imagenes"
+      contentClassName="mdz-modal-content"
     >
       <Modal.Header closeButton>
         <Modal.Title>

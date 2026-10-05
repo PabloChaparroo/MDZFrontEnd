@@ -1,5 +1,7 @@
 import { Modal } from "react-bootstrap";
 import { Mueble } from "../../types/Mueble";
+import '../../styles/mdz-theme.css';
+import '../../styles/mdz-site.css';
 
 type VerMuebleModalProps = {
     show: boolean;
@@ -12,7 +14,7 @@ const VerMuebleModal = ({ show, onHide, mueble }: VerMuebleModalProps) => {
     const portada = imagenes.find((img) => img.esPortada) || imagenes[0] || null;
 
     return (
-        <Modal show={show} onHide={onHide} centered>
+        <Modal show={show} onHide={onHide} centered contentClassName="mdz-modal-content">
             <Modal.Header closeButton>
                 <Modal.Title>{mueble.nombreMueble}</Modal.Title>
             </Modal.Header>
@@ -24,7 +26,7 @@ const VerMuebleModal = ({ show, onHide, mueble }: VerMuebleModalProps) => {
                         style={{ width: "100%", maxHeight: 300, objectFit: "cover", borderRadius: 8, marginBottom: 16 }}
                     />
                 ) : (
-                    <div className="text-center text-muted py-4 mb-3" style={{ background: "#f5f5f5", borderRadius: 8 }}>
+                    <div className="text-center text-muted py-4 mb-3" style={{ background: "var(--mdz-secondary)", borderRadius: 8 }}>
                         Sin imagen
                     </div>
                 )}

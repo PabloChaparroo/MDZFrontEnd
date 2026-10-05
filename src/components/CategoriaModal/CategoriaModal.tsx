@@ -5,8 +5,10 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from "react-toastify";
-import { Button, FormLabel, Modal, Form } from "react-bootstrap";
+import { FormLabel, Modal, Form } from "react-bootstrap";
 import { useState } from "react";
+import '../../styles/mdz-theme.css';
+import '../../styles/mdz-site.css';
 
 type CategoriaModalProps = {
     show: boolean;
@@ -183,7 +185,7 @@ const ModalABMCategoria = ({
         <>
             {modalType === ModalType.BAJA_LOGICA ? (
                 <>
-                    <Modal show={show} onHide={onHide} centered backdrop="static">
+                    <Modal show={show} onHide={onHide} centered backdrop="static" contentClassName="mdz-modal-content">
                         <Modal.Header closeButton>
                             <Modal.Title>
                                 {isLoading && <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>}
@@ -197,33 +199,33 @@ const ModalABMCategoria = ({
                             </p>
                             <div className="alert alert-warning mt-3">
                                 <i className="fas fa-exclamation-triangle me-2"></i>
-                                <strong>Nota:</strong> Esta acción realizará una baja lógica. 
+                                <strong>Nota:</strong> Esta acción realizará una baja lógica.
                                 La categoría no será eliminada permanentemente, solo será deshabilitada.
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={onHide} disabled={isLoading}>
+                            <button className="mdz-btn mdz-btn-filter" onClick={onHide} disabled={isLoading}>
                                 Cancelar
-                            </Button>
-                            <Button variant="warning" onClick={handleBajaLogica} disabled={isLoading}>
+                            </button>
+                            <button className="mdz-btn mdz-btn-brand" onClick={handleBajaLogica} disabled={isLoading}>
                                 {isLoading ? (
                                     <>
-                                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                         Procesando...
                                     </>
                                 ) : (
                                     <>
-                                        <i className="fas fa-ban me-2"></i>
-                                        Dar de Baja
+                                        <i className="fas fa-ban"></i>
+                                        Dar de baja
                                     </>
                                 )}
-                            </Button>
+                            </button>
                         </Modal.Footer>
                     </Modal>
                 </>
             ) : (
                 <>
-                    <Modal show={show} onHide={onHide} centered backdrop="static">
+                    <Modal show={show} onHide={onHide} centered backdrop="static" contentClassName="mdz-modal-content">
                         <Modal.Header closeButton>
                             <Modal.Title>
                                 {isLoading && <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>}
@@ -250,22 +252,22 @@ const ModalABMCategoria = ({
                                 </fieldset>
 
                                 <Modal.Footer className="mt-4">
-                                    <Button variant="secondary" onClick={onHide} disabled={isLoading}>
+                                    <button type="button" className="mdz-btn mdz-btn-filter" onClick={onHide} disabled={isLoading}>
                                         Cancelar
-                                    </Button>
-                                    <Button variant="primary" type="submit" disabled={!formik.isValid || isLoading}>
+                                    </button>
+                                    <button className="mdz-btn mdz-btn-brand" type="submit" disabled={!formik.isValid || isLoading}>
                                         {isLoading ? (
                                             <>
-                                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                                 Guardando...
                                             </>
                                         ) : (
                                             <>
-                                                <i className="fas fa-save me-2"></i>
+                                                <i className="fas fa-save"></i>
                                                 Guardar
                                             </>
                                         )}
-                                    </Button>
+                                    </button>
                                 </Modal.Footer>
                             </Form>
                         </Modal.Body>

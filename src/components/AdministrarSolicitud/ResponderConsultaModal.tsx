@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Form, Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { ConsultaService } from "../../services/ConsultaService";
 import { Consulta } from "../../types/Consulta";
+import '../../styles/mdz-theme.css';
+import '../../styles/mdz-site.css';
 
 type ResponderConsultaModalProps = {
     show: boolean;
@@ -34,7 +36,7 @@ const ResponderConsultaModal = ({ show, onHide, consulta, onRespondida }: Respon
     };
 
     return (
-        <Modal show={show} onHide={onHide} centered backdrop="static">
+        <Modal show={show} onHide={onHide} centered backdrop="static" contentClassName="mdz-modal-content">
             <Modal.Header closeButton>
                 <Modal.Title>Responder consulta #{consulta.id}</Modal.Title>
             </Modal.Header>
@@ -63,22 +65,22 @@ const ResponderConsultaModal = ({ show, onHide, consulta, onRespondida }: Respon
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onHide} disabled={isSending}>
+                    <button type="button" className="mdz-btn mdz-btn-filter" onClick={onHide} disabled={isSending}>
                         Cancelar
-                    </Button>
-                    <Button variant="primary" type="submit" disabled={isSending || !respuesta.trim()}>
+                    </button>
+                    <button className="mdz-btn mdz-btn-brand" type="submit" disabled={isSending || !respuesta.trim()}>
                         {isSending ? (
                             <>
-                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 Enviando...
                             </>
                         ) : (
                             <>
-                                <i className="fas fa-paper-plane me-2"></i>
+                                <i className="fas fa-paper-plane"></i>
                                 Enviar respuesta
                             </>
                         )}
-                    </Button>
+                    </button>
                 </Modal.Footer>
             </Form>
         </Modal>

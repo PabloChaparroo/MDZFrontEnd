@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './PerfilUsuario_new.css';
 import { AuthService } from "../../services/AuthService";
+import Loader from "../Loader/Loader";
+import '../../styles/mdz-theme.css';
+import '../../styles/mdz-site.css';
 
 interface Cliente {
   id: number;
@@ -21,7 +23,6 @@ interface Usuario {
   fechaModificacionUsuario: string;
   fechaBajaUsuario: string;
   cliente?: Cliente;
-  // Para compatibilidad con DTO plano
   clienteId?: number;
   nombreCliente?: string;
   apellidoCliente?: string;
@@ -30,45 +31,32 @@ interface Usuario {
 }
 
 const PerfilUsuario: React.FC = () => {
-  // console.log('PerfilUsuario component rendered'); // Debug temporal
-  
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isEditing ] = useState(false);
-  const [formData, setFormData] = useState<Cliente | null>(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    
+
     if (!token) {
-      console.log('PerfilUsuario - No token, redirecting to login');
       navigate("/login");
       return;
     }
-    
+
     const fetchUsuario = async () => {
       try {
         setIsLoading(true);
-        
-        // Intentar obtener datos del backend
+
         try {
           const userData = await AuthService.getPerfil();
           setUsuario(userData);
-          setFormData(userData.cliente);
         } catch (error) {
-          console.log('Error al obtener perfil del backend:', error);
-          
-          // Fallback: usar datos del localStorage si existen
           const localUserData = localStorage.getItem('usuario');
           if (localUserData) {
             const parsedUser = JSON.parse(localUserData);
-            console.log('PerfilUsuario - Using localStorage user data:', parsedUser);
             setUsuario(parsedUser);
-            setFormData(parsedUser.cliente);
           } else {
-            // Último fallback con datos básicos
             const basicUserData: Usuario = {
               id: parseInt(localStorage.getItem('id') || '0'),
               username: localStorage.getItem('username') || 'usuario',
@@ -86,10 +74,7 @@ const PerfilUsuario: React.FC = () => {
                 fechaHoraBajaCliente: null
               }
             };
-            
-            console.log('PerfilUsuario - Using basic user data:', basicUserData);
             setUsuario(basicUserData);
-            setFormData(basicUserData.cliente || null);
           }
         }
       } catch (error) {
@@ -99,17 +84,9 @@ const PerfilUsuario: React.FC = () => {
         setIsLoading(false);
       }
     };
-    
+
     fetchUsuario();
   }, [navigate]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => {
-      if (!prev) return null;
-      return { ...prev, [name]: value };
-    });
-  };
 
   const handleLogout = () => {
     AuthService.logout();
@@ -117,184 +94,90 @@ const PerfilUsuario: React.FC = () => {
     window.location.reload();
   };
 
-  const confirmLogout = () => {
-    setShowLogoutModal(true);
-  };
-
   if (isLoading) {
-    return (
-      <div className="profile-loading">
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Cargando perfil...</p>
-        </div>
-      </div>
-    );
+    return <div className="mdz-loading-state"><Loader /></div>;
   }
-
 
   if (!usuario) return null;
 
-  // Adaptar para DTO plano o con cliente anidado
   const nombreCliente = usuario.cliente?.nombreCliente ?? usuario.nombreCliente ?? '';
   const apellidoCliente = usuario.cliente?.apellidoCliente ?? usuario.apellidoCliente ?? '';
   const mailCliente = usuario.cliente?.mailCliente ?? usuario.mailCliente ?? '';
   const nombreCompleto = `${nombreCliente} ${apellidoCliente}`.trim() || usuario.username;
   const iniciales = nombreCliente?.charAt(0)?.toUpperCase() || usuario.username.charAt(0).toUpperCase();
+
   return (
-    <div className="perfilusuario-container">
-      <div className="perfilusuario-card">
-        <div className="perfilusuario-header">
-          <div className="perfilusuario-banner"></div>
-          <div className="perfilusuario-avatar-section">
-            <div className="perfilusuario-avatar">
-              <span>{iniciales}</span>
-            </div>
-            <div className="perfilusuario-info">
-              <h1 className="perfilusuario-nombre">{nombreCompleto || usuario.username}</h1>
-              <p className="perfilusuario-username">@{usuario.username}</p>
-              <div className="perfilusuario-status">
-                <span className="perfilusuario-status-indicator perfilusuario-active"></span>
-                <span>Cuenta Activa</span>
-              </div>
-            </div>
-          </div>
+    <>
+      <div className="mdz-page-header">
+        <div className="mdz-container">
+          <p className="mdz-eyebrow">Cuenta</p>
+          <h1>Mi perfil.</h1>
+          <p className="mdz-section-copy">Revisá tus datos de cuenta.</p>
         </div>
+      </div>
 
-        <div className="perfilusuario-content">
-          <div className="perfilusuario-info-card">
-            <div className="perfilusuario-info-header">
-              <h2>
-                <i className="fas fa-user"></i>
-                Información Personal
-              </h2>
-              
-            
-            </div>
-
-            <div className="perfilusuario-details">
-              <div className="perfilusuario-detail-row">
-                <div className="perfilusuario-detail-item">
-                  <label>
-                    <i className="fas fa-user"></i>
-                    Nombre
-                  </label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      name="nombreCliente"
-                      value={formData?.nombreCliente || ''}
-                      onChange={handleInputChange}
-                      className="perfilusuario-edit-input"
-                    />
-                  ) : (
-                    <span className="perfilusuario-detail-value">{nombreCliente}</span>
-                  )}
-                </div>
-
-                <div className="perfilusuario-detail-item">
-                  <label>
-                    <i className="fas fa-user"></i>
-                    Apellido
-                  </label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      name="apellidoCliente"
-                      value={formData?.apellidoCliente || ''}
-                      onChange={handleInputChange}
-                      className="perfilusuario-edit-input"
-                    />
-                  ) : (
-                    <span className="perfilusuario-detail-value">{apellidoCliente}</span>
-                  )}
-                </div>
-              </div>
-
-              <div className="perfilusuario-detail-row">
-                <div className="perfilusuario-detail-item">
-                  <label>
-                    <i className="fas fa-envelope"></i>
-                    Email
-                  </label>
-                  {isEditing ? (
-                    <input
-                      type="email"
-                      name="mailCliente"
-                      value={formData?.mailCliente || ''}
-                      onChange={handleInputChange}
-                      className="perfilusuario-edit-input"
-                    />
-                  ) : (
-                    <span className="perfilusuario-detail-value">{mailCliente}</span>
-                  )}
-                </div>
-              </div>
-
-              <div className="perfilusuario-detail-row">
-                <div className="perfilusuario-detail-item">
-                  <label>
-                    <i className="fas fa-at"></i>
-                    Usuario
-                  </label>
-                  <span className="perfilusuario-detail-value">{usuario.username}</span>
-                </div>
-
-                <div className="perfilusuario-detail-item">
-                  <label>
-                    <i className="fas fa-key"></i>
-                    ID de Usuario
-                  </label>
-                  <span className="perfilusuario-detail-value">#{usuario.id}</span>
-                </div>
-              </div>
+      <div className="mdz-container mdz-section">
+        <div className="mdz-profile-card">
+          <div className="mdz-profile-banner"></div>
+          <div className="mdz-profile-avatar-row">
+            <div className="mdz-profile-avatar"><span>{iniciales}</span></div>
+            <div style={{ paddingBottom: 10 }}>
+              <h2 className="mdz-profile-name">{nombreCompleto || usuario.username}</h2>
+              <p className="mdz-profile-username">@{usuario.username}</p>
+              <div className="mdz-profile-status"><span className="dot"></span> Cuenta activa</div>
             </div>
           </div>
 
-          <div className="perfilusuario-actions-card">
-            <h3>
-              <i className="fas fa-cog"></i>
-              Configuración de Cuenta
-            </h3>
-            <div className="perfilusuario-action-buttons">
-              <button className="perfilusuario-action-btn secondary" onClick={() => navigate('/')}> 
-                <i className="fas fa-home"></i>
-                <span>Ir al Inicio</span>
+          <div className="mdz-profile-body">
+            <h3 className="mdz-profile-section-title"><i className="fas fa-user"></i> Información personal</h3>
+            <div className="mdz-profile-grid">
+              <div className="mdz-profile-field">
+                <label><i className="fas fa-user"></i> Nombre</label>
+                <div className="mdz-profile-value">{nombreCliente || '-'}</div>
+              </div>
+              <div className="mdz-profile-field">
+                <label><i className="fas fa-user"></i> Apellido</label>
+                <div className="mdz-profile-value">{apellidoCliente || '-'}</div>
+              </div>
+              <div className="mdz-profile-field">
+                <label><i className="fas fa-envelope"></i> Email</label>
+                <div className="mdz-profile-value">{mailCliente || '-'}</div>
+              </div>
+              <div className="mdz-profile-field">
+                <label><i className="fas fa-at"></i> Usuario</label>
+                <div className="mdz-profile-value">{usuario.username}</div>
+              </div>
+              <div className="mdz-profile-field">
+                <label><i className="fas fa-key"></i> ID de usuario</label>
+                <div className="mdz-profile-value">#{usuario.id}</div>
+              </div>
+            </div>
+
+            <div className="mdz-profile-actions">
+              <button className="mdz-btn mdz-btn-filter" onClick={() => navigate('/')}>
+                <i className="fas fa-home"></i> Ir al inicio
               </button>
-              <button className="perfilusuario-action-btn danger" onClick={confirmLogout}>
-                <i className="fas fa-sign-out-alt"></i>
-                <span>Cerrar Sesión</span>
+              <button className="mdz-btn mdz-btn-filter" onClick={() => setShowLogoutModal(true)} style={{ color: 'oklch(0.62 0.2 25)', borderColor: 'oklch(0.62 0.2 25)' }}>
+                <i className="fas fa-sign-out-alt"></i> Cerrar sesión
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Modal de confirmación de logout */}
       {showLogoutModal && (
-        <div className="perfilusuario-modal-overlay">
-          <div className="perfilusuario-logout-modal">
-            <div className="perfilusuario-modal-header">
-              <h3>
-                <i className="fas fa-sign-out-alt"></i>
-                Cerrar Sesión
-              </h3>
-            </div>
-            <div className="perfilusuario-modal-body">
-              <p>¿Estás seguro de que deseas cerrar sesión?</p>
-            </div>
-            <div className="perfilusuario-modal-actions">
-              <button className="perfilusuario-modal-btn cancel" onClick={() => setShowLogoutModal(false)}>
-                Cancelar
-              </button>
-              <button className="perfilusuario-modal-btn confirm" onClick={handleLogout}>
-                Cerrar Sesión
-              </button>
+        <div className="mdz-confirm-overlay" onClick={() => setShowLogoutModal(false)}>
+          <div className="mdz-modal-content mdz-confirm-card" onClick={(e) => e.stopPropagation()}>
+            <h3><i className="fas fa-sign-out-alt"></i> Cerrar sesión</h3>
+            <p>¿Estás seguro de que querés cerrar sesión?</p>
+            <div className="mdz-confirm-actions">
+              <button className="mdz-btn mdz-btn-filter" onClick={() => setShowLogoutModal(false)}>Cancelar</button>
+              <button className="mdz-btn mdz-btn-brand" onClick={handleLogout}>Cerrar sesión</button>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

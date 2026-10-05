@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal, Table } from "react-bootstrap";
 import { toast } from "react-toastify";
+import '../../styles/mdz-theme.css';
+import '../../styles/mdz-site.css';
 
 // Definir tipo de archivo
 export type SelectedFile = {
@@ -146,7 +148,7 @@ const ImagenesModal = ({ show, onHide, onSave, imagenesExistentes = [] }: Imagen
     };
 
     return (
-        <Modal show={show} onHide={handleCancel} centered backdrop="static" size="lg">
+        <Modal show={show} onHide={handleCancel} centered backdrop="static" size="lg" contentClassName="mdz-modal-content">
             <Modal.Header closeButton>
                 <Modal.Title>
                     <i className="fas fa-images me-2"></i>

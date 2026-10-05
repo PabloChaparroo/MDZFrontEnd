@@ -1,5 +1,7 @@
 import { Button, Form, Modal, FormLabel, Table } from "react-bootstrap";
 import './CatalogoModalMueble.css';
+import '../../styles/mdz-theme.css';
+import '../../styles/mdz-site.css';
 import { ModalType } from "../../types/ModalType";
 import { Mueble } from "../../types/Mueble";
 
@@ -246,7 +248,7 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
     <>
     {modalType === ModalType.DELETE || modalType === ModalType.BAJA_LOGICA ?( 
         <> 
-         <Modal show={show} onHide={onHide} centered backdrop="static" dialogClassName="responsive-scrollable-modal">
+         <Modal show={show} onHide={onHide} centered backdrop="static" dialogClassName="responsive-scrollable-modal" contentClassName="mdz-modal-content">
             <Modal.Header closeButton>
                 <Modal.Title>{getModalTitle()}</Modal.Title>
             </Modal.Header>
@@ -294,7 +296,7 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
         </>     
     ) : (
         <>
-        <Modal show={show} onHide={onHide} centered backdrop="static" dialogClassName="responsive-scrollable-modal">
+        <Modal show={show} onHide={onHide} centered backdrop="static" dialogClassName="responsive-scrollable-modal" contentClassName="mdz-modal-content">
             <Modal.Header closeButton>
                 <Modal.Title>
                     {isLoading && <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>}
