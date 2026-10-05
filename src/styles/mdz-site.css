@@ -397,6 +397,21 @@ html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale
   .mdz-sidebar { position: static; }
 }
 
+/* --- Paginación --- */
+.mdz-pagination { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.mdz-pagination-info { font-size: 13px; color: var(--mdz-muted-foreground); }
+.mdz-pagination-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.mdz-pagination-btn {
+  min-width: 36px; height: 36px; padding: 0 8px; border-radius: 6px; border: 1px solid var(--mdz-border);
+  background: transparent; color: var(--mdz-foreground); font-size: 13px; font-weight: 500;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s;
+}
+.mdz-pagination-btn:hover:not(:disabled) { border-color: var(--mdz-primary); color: var(--mdz-primary); }
+.mdz-pagination-btn.is-active { background: var(--mdz-primary); border-color: var(--mdz-primary); color: var(--mdz-primary-foreground); font-weight: 600; }
+.mdz-pagination-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.mdz-pagination-dots { color: var(--mdz-muted-foreground); padding: 0 4px; font-size: 13px; }
+.mdz-pagination-loading { color: var(--mdz-muted-foreground); }
+
 /* --- Redes sociales (pill row) --- */
 .mdz-social-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .mdz-social-row a { display: flex; align-items: center; gap: 8px; border: 1px solid var(--mdz-border); border-radius: 999px; padding: 10px 20px; font-size: 13px; color: var(--mdz-foreground); }
