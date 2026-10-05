@@ -36,7 +36,7 @@ const QuienesSomos = () => {
   return (
     <>
       {/* Header de página */}
-      <div className="mdz-page-header">
+      <div className="mdz-page-header mdz-diagonal-detail">
         <div className="mdz-container">
           <p className="mdz-eyebrow">El taller</p>
           <h1>Quiénes somos.</h1>

@@ -300,7 +300,7 @@ const CatalogoTabla = () => {
 
   return (
     <>
-      <div className="mdz-page-header">
+      <div className="mdz-page-header mdz-diagonal-detail">
         <div className="mdz-container">
           <p className="mdz-eyebrow">Administración</p>
           <h1>Categorías y muebles.</h1>

@@ -108,7 +108,7 @@ const PerfilUsuario: React.FC = () => {
 
   return (
     <>
-      <div className="mdz-page-header">
+      <div className="mdz-page-header mdz-diagonal-detail">
         <div className="mdz-container">
           <p className="mdz-eyebrow">Cuenta</p>
           <h1>Mi perfil.</h1>
@@ -118,7 +118,7 @@ const PerfilUsuario: React.FC = () => {
 
       <div className="mdz-container mdz-section">
         <div className="mdz-profile-card">
-          <div className="mdz-profile-banner"></div>
+          <div className="mdz-profile-banner mdz-diagonal-detail"></div>
           <div className="mdz-profile-avatar-row">
             <div className="mdz-profile-avatar"><span>{iniciales}</span></div>
             <div style={{ paddingBottom: 10 }}>

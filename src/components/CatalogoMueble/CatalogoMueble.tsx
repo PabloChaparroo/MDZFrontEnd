@@ -203,7 +203,7 @@ const CatalogoMueble = () => {
   return (
     <>
       {/* Header de página */}
-      <div className="mdz-page-header">
+      <div className="mdz-page-header mdz-diagonal-detail">
         <div className="mdz-container">
           <p className="mdz-eyebrow">Catálogo</p>
           <h1>Nuestro catálogo.</h1>

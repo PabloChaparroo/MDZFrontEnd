@@ -105,7 +105,7 @@ const AdministrarSolicitud = () => {
 
   return (
     <>
-      <div className="mdz-page-header">
+      <div className="mdz-page-header mdz-diagonal-detail">
         <div className="mdz-container">
           <p className="mdz-eyebrow">Administración</p>
           <h1>Consultas de clientes.</h1>

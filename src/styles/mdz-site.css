@@ -242,10 +242,52 @@ body.mdz-no-scroll { overflow: hidden; }
 .mdz-footer-link { font-size: 13px; color: var(--mdz-muted-foreground); display: flex; align-items: center; gap: 8px; text-decoration: none; }
 .mdz-footer-link:hover { color: var(--mdz-foreground); }
 
+/* --- Detalle diagonal reutilizable (banner de perfil, headers de página y de modal) --- */
+.mdz-diagonal-detail {
+  position: relative;
+  background: linear-gradient(135deg, var(--mdz-secondary), var(--mdz-accent));
+  overflow: hidden;
+}
+.mdz-diagonal-detail::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 13px
+  );
+  pointer-events: none;
+}
+.mdz-diagonal-detail > * { position: relative; z-index: 1; }
+
 /* --- Encabezado de página interna (Catálogo, etc.) --- */
-.mdz-page-header { border-bottom: 1px solid var(--mdz-border); padding-block: 56px 40px; background: var(--mdz-background); }
+.mdz-page-header { border-bottom: 1px solid var(--mdz-border); padding-block: 56px 40px; }
 .mdz-page-header h1 { font-size: 38px; }
 .mdz-page-header .mdz-section-copy { max-width: 520px; }
+
+/* --- Header de modales (react-bootstrap .modal-header dentro de .mdz-modal-content) --- */
+.mdz-modal-content .modal-header {
+  position: relative;
+  background: linear-gradient(135deg, var(--mdz-secondary), var(--mdz-accent));
+  overflow: hidden;
+}
+.mdz-modal-content .modal-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 13px
+  );
+  pointer-events: none;
+}
+.mdz-modal-content .modal-header > * { position: relative; z-index: 1; }
 
 /* --- Buscador --- */
 .mdz-search {
