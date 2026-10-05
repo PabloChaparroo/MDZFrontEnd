@@ -186,6 +186,45 @@
 .mdz-footer-link { font-size: 13px; color: var(--mdz-muted-foreground); display: flex; align-items: center; gap: 8px; text-decoration: none; }
 .mdz-footer-link:hover { color: var(--mdz-foreground); }
 
+/* --- Encabezado de página interna (Catálogo, etc.) --- */
+.mdz-page-header { border-bottom: 1px solid var(--mdz-border); padding-block: 56px 40px; background: var(--mdz-background); }
+.mdz-page-header h1 { font-size: 38px; }
+.mdz-page-header .mdz-section-copy { max-width: 520px; }
+
+/* --- Buscador --- */
+.mdz-search {
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid var(--mdz-border); border-radius: 8px;
+  padding: 0 16px; height: 48px; max-width: 480px;
+  color: var(--mdz-muted-foreground); background: var(--mdz-background);
+  transition: border-color 0.2s;
+}
+.mdz-search:focus-within { border-color: var(--mdz-primary); }
+.mdz-search i { font-size: 14px; }
+.mdz-search input { flex: 1; background: transparent; border: 0; outline: 0; color: var(--mdz-foreground); font: inherit; font-size: 14px; }
+.mdz-search button { background: transparent; border: 0; color: var(--mdz-muted-foreground); cursor: pointer; display: flex; align-items: center; padding: 4px; }
+.mdz-search button:hover { color: var(--mdz-foreground); }
+.mdz-search-meta { margin-top: 12px; font-size: 13px; color: var(--mdz-muted-foreground); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mdz-search-meta button { background: none; border: none; color: var(--mdz-primary); cursor: pointer; font-size: 13px; padding: 0; }
+
+/* --- Estado vacío / carga --- */
+.mdz-empty-state { text-align: center; padding: 80px 20px; color: var(--mdz-muted-foreground); }
+.mdz-empty-state i { font-size: 32px; color: var(--mdz-border); margin-bottom: 16px; display: block; }
+.mdz-empty-state h3 { color: var(--mdz-foreground); font-family: var(--mdz-font-display); font-weight: 500; font-size: 20px; margin: 0 0 8px; }
+.mdz-empty-state p { margin: 0; font-size: 14px; }
+.mdz-loading-state { display: flex; justify-content: center; padding: 100px 0; }
+
+/* --- Select de categoría (mobile) --- */
+.mdz-select {
+  display: none;
+  width: 100%; height: 46px; border-radius: 8px; border: 1px solid var(--mdz-border);
+  background: var(--mdz-background); color: var(--mdz-foreground); padding: 0 14px; font-size: 14px;
+}
+@media (max-width: 640px) {
+  .mdz-filters { display: none; }
+  .mdz-select { display: block; }
+}
+
 @media (max-width: 900px) {
   .mdz-container { padding-inline: 28px; }
   .mdz-hero h1 { font-size: 46px; }
