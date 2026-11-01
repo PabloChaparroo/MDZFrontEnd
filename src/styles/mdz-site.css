@@ -596,8 +596,7 @@ html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale
 
 .mdz-home .mdz-about { border-top: 0; }
 .mdz-home-about-media { position: relative; }
-.mdz-home-about-media::before { content: ''; position: absolute; inset: 24px -24px -24px 24px; border: 1px solid var(--mdz-primary); border-radius: 12px; }
-.mdz-home-about-media .mdz-about-image { position: relative; border-radius: 12px; display: block; }
+.mdz-home-about-media .mdz-about-image { border-radius: 12px; display: block; box-shadow: 0 24px 60px rgb(0 0 0 / 0.35); }
 .mdz-home .mdz-about h2, .mdz-home .mdz-about .mdz-section-copy { max-width: 520px; }
 
 .mdz-home .mdz-process-grid > div { padding: 28px; border: 1px solid var(--mdz-border); border-radius: 12px; background: var(--mdz-background); }
@@ -619,7 +618,6 @@ html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale
   .mdz-home-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 220px; }
   .mdz-home-tile:nth-child(1) { grid-row: span 1; }
   .mdz-home-tile:nth-child(6) { grid-column: span 1; }
-  .mdz-home-about-media::before { inset: 14px -10px -14px 10px; }
   .mdz-home .mdz-process-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) {
@@ -664,8 +662,6 @@ html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale
 .mdz-home .mdz-process-grid > :nth-child(4) { transition-delay: 0.3s; }
 .mdz-home-tile-text { transition: transform 0.35s ease; }
 .mdz-home-tile:hover .mdz-home-tile-text { transform: translateY(-6px); }
-.mdz-home-about-media::before { transition: transform 0.4s ease; }
-.mdz-home-about-media:hover::before { transform: translate(-8px, -8px); }
 .mdz-nav a { position: relative; }
 .mdz-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: var(--mdz-primary); transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease; }
 .mdz-nav a:hover::after, .mdz-nav a.mdz-nav-active::after { transform: scaleX(1); }
