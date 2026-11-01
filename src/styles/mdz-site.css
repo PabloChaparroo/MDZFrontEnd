@@ -701,3 +701,6 @@ html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale
 .mdz-post-body { padding: 16px 18px 20px; }
 .mdz-post-body h2 { font-family: var(--mdz-font-display); font-size: 22px; font-weight: 500; margin: 0 0 4px; color: var(--mdz-foreground); }
 .mdz-post-body p { margin: 0; font-size: 14px; color: var(--mdz-muted-foreground); }
+
+/* El logo tiene fondo negro: en modo oscuro se funde con el fondo del header y del footer */
+html:not(.mdz-light) .mdz-brand img { mix-blend-mode: lighten; }
