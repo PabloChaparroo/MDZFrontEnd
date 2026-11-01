@@ -3,6 +3,7 @@ import { Modal, Table, Form, Alert, Spinner } from 'react-bootstrap';
 import { MuebleService } from '../../services/MuebleService';
 import { MuebleImagenes } from '../../types/MuebleImagenes';
 import { Mueble } from '../../types/Mueble';
+import { comprimirImagen, PESO_MAXIMO_SUBIDA } from '../../utils/comprimirImagen';
 import './ModalGestionImagenes.css';
 import '../../styles/mdz-theme.css';
 import '../../styles/mdz-site.css';
@@ -121,7 +122,13 @@ const ModalGestionImagenes: React.FC<ModalGestionImagenesProps> = ({
 
       // 1. Agregar nuevas imágenes si las hay
       if (nuevasImagenes && nuevasImagenes.length > 0) {
-        await MuebleService.agregarImagenesMueble(mueble.id, nuevasImagenes);
+        const comprimidas = await Promise.all(Array.from(nuevasImagenes).map(comprimirImagen));
+        const demasiadoGrande = comprimidas.find((file) => file.size > PESO_MAXIMO_SUBIDA);
+        if (demasiadoGrande) {
+          setError(`La imagen ${demasiadoGrande.name} es demasiado grande. Máximo 10MB.`);
+          return;
+        }
+        await MuebleService.agregarImagenesMueble(mueble.id, comprimidas);
         cambiosRealizados = true;
       }
 
@@ -228,7 +235,7 @@ const ModalGestionImagenes: React.FC<ModalGestionImagenesProps> = ({
             <Form.Text className="text-muted">
               <i className="fas fa-info-circle me-1"></i>
               Puede seleccionar múltiples imágenes a la vez manteniendo presionado Ctrl (o Cmd en Mac). 
-              Formatos permitidos: JPG, PNG, GIF (máx. 5MB cada una)
+              Las de más de 1 MB se optimizan automáticamente. Formatos permitidos: JPG, PNG, GIF
             </Form.Text>
           </Form.Group>
 

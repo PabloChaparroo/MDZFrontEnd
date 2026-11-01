@@ -272,7 +272,7 @@ export const MuebleService = {
         }
     },
 
-    agregarImagenesMueble: async (id: number, files: FileList, portadaIndex?: number): Promise<void> => {
+    agregarImagenesMueble: async (id: number, files: File[], portadaIndex?: number): Promise<void> => {
         checkAuth();
 
         try {
@@ -289,9 +289,9 @@ export const MuebleService = {
                     throw new Error(`El archivo ${file.name} no es una imagen válida`);
                 }
                 
-                const maxSize = 5 * 1024 * 1024; // 5MB
+                const maxSize = 10 * 1024 * 1024; // 10MB, igual que el backend
                 if (file.size > maxSize) {
-                    throw new Error(`El archivo ${file.name} es demasiado grande. Tamaño máximo: 5MB`);
+                    throw new Error(`El archivo ${file.name} es demasiado grande. Tamaño máximo: 10MB`);
                 }
                 
                 formData.append('files', file);
