@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import cocinaNegra from '../assets/images/cocinaUno.jpg';
-import placar from '../assets/mdz-design/home-interior.jpg';
-import racks from '../assets/images/racks.jpg';
+import cocinaNegra from '../assets/images/cocina-portada.jpg';
+import placar from '../assets/images/placar-portada.jpg';
+import racks from '../assets/images/rack-Portada.jpg';
 import fotoAbout from '../assets/images/fotoAbout.jpg';
 import { ConsultaService } from "../services/ConsultaService";
 import { MuebleService } from "../services/MuebleService";
