@@ -670,3 +670,17 @@ html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale
   .mdz-home .mdz-hero-label i, .mdz-home-dots button.is-active::before { animation: none; }
   .mdz-home-tile, .mdz-home .mdz-process-grid > * { transition-delay: 0s !important; }
 }
+
+/* === Encabezado de páginas internas: resplandor cálido en vez del gris diagonal === */
+.mdz-page-header.mdz-diagonal-detail {
+  position: relative;
+  background:
+    radial-gradient(60% 150% at 88% 0%, color-mix(in oklch, var(--mdz-primary) 24%, transparent), transparent 70%),
+    var(--mdz-background);
+  border-bottom: 0;
+}
+.mdz-page-header.mdz-diagonal-detail::before { display: none; }
+.mdz-page-header.mdz-diagonal-detail::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, var(--mdz-primary), transparent 75%);
+}
