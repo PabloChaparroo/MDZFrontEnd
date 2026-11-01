@@ -131,7 +131,7 @@ const HomePage = () => {
         nombreCliente: nombre,
         apellidoCliente: apellido,
         mailCliente: formData.email,
-        telefonoCliente: formData.telefono ? parseInt(formData.telefono) : 0,
+        telefonoCliente: formData.telefono.trim() || null,
         fechaHoraAltaCliente: null,
         fechaHoraModificacionCliente: null,
         fechaHoraBajaCliente: null
@@ -166,7 +166,7 @@ const HomePage = () => {
         />
         <div className="mdz-container mdz-home-hero-content">
           <p className="mdz-eyebrow">Hecho a mano en Mendoza</p>
-          <h1>MDZ Muebles.<br />Tu espacio,<br /><span>con tu esencia.</span></h1>
+          <h1>MDZ Muebles.<br />Muebles,<br /><span>A Medida</span></h1>
           <p className="mdz-hero-description">
             Muebles a medida que unen diseño, madera y oficio. Pensados para tu casa. Hechos para vivirlos.
           </p>

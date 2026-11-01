@@ -9,7 +9,7 @@ interface Cliente {
   id: number;
   nombreCliente: string;
   apellidoCliente: string;
-  telefonoCliente: number | null;
+  telefonoCliente: string | null;
   mailCliente: string;
   fechaHoraAltaCliente: string | null;
   fechaHoraModificacionCliente: string | null;
@@ -67,7 +67,7 @@ const PerfilUsuario: React.FC = () => {
                 id: 0,
                 nombreCliente: localStorage.getItem('nombreCliente') || '',
                 apellidoCliente: localStorage.getItem('apellidoCliente') || '',
-                telefonoCliente: parseInt(localStorage.getItem('telefonoCliente') || '0') || null,
+                telefonoCliente: localStorage.getItem('telefonoCliente'),
                 mailCliente: localStorage.getItem('mailCliente') || '',
                 fechaHoraAltaCliente: null,
                 fechaHoraModificacionCliente: null,

@@ -92,7 +92,7 @@ const ViewMueble = () => {
 
   const [nombreCliente, setNombreCliente] = useState('');
   const [apellidoCliente, setApellidoCliente] = useState('');
-  const [telefonoCliente, setTelefonoCliente] = useState(0);
+  const [telefonoCliente, setTelefonoCliente] = useState('');
   const [consultaPresupuesto, setConsultaPresupuesto] = useState('');
 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -109,7 +109,7 @@ const ViewMueble = () => {
     crearClienteYVisita(nombreCliente, apellidoCliente, mailCliente, telefonoCliente, consultaPresupuesto);
   };
 
-  const crearClienteYVisita = async (nombreCliente: string, apellidoCliente: string, mailCliente: string, telefonoCliente: number, consultaPresupuesto: string) => {
+  const crearClienteYVisita = async (nombreCliente: string, apellidoCliente: string, mailCliente: string, telefonoCliente: string, consultaPresupuesto: string) => {
     const newCliente: Cliente = {
       id: 0,
       nombreCliente,
@@ -231,7 +231,7 @@ const ViewMueble = () => {
                 </label>
                 <label>
                   Teléfono (opcional)
-                  <input type="tel" value={telefonoCliente || ''} onChange={(e) => setTelefonoCliente(e.target.valueAsNumber || 0)} />
+                  <input type="tel" value={telefonoCliente} onChange={(e) => setTelefonoCliente(e.target.value)} />
                 </label>
                 <label className="mdz-full-field">
                   Consulta

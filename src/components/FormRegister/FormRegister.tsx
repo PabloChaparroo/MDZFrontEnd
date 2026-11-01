@@ -18,11 +18,7 @@ const FormRegister: React.FC = () => {
     password: yup.string().required("Este campo es obligatorio"),
     nombreCliente: yup.string().required("El nombre es obligatorio"),
     apellidoCliente: yup.string().required("El apellido es obligatorio"),
-    telefonoCliente:  yup
-    .number()
-    .required("El nro del telefono es obligatorio")
-    .integer("Debe ser un número entero")
-    .positive("Debe ser mayor a 0"),
+    telefonoCliente: yup.string().trim().required("El nro del telefono es obligatorio"),
     mailCliente: yup.string().email("Formato de correo electrónico inválido").required("Este campo es obligatorio"),
     
   });
@@ -33,7 +29,7 @@ const FormRegister: React.FC = () => {
       password: "",
       nombreCliente: "",
       apellidoCliente: "",
-      telefonoCliente: 0,
+      telefonoCliente: '',
       mailCliente: "",
       
      
@@ -139,7 +135,7 @@ const FormRegister: React.FC = () => {
             <Form.Label>Telefono</Form.Label>
             <Form.Control
               name="telefonoCliente"
-              type="number"
+              type="tel"
               value={formik.values.telefonoCliente}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
