@@ -681,6 +681,6 @@ html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale
 }
 .mdz-page-header.mdz-diagonal-detail::before { display: none; }
 .mdz-page-header.mdz-diagonal-detail::after {
-  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
   background: linear-gradient(90deg, var(--mdz-primary), transparent 75%);
 }
