@@ -419,7 +419,7 @@ body.mdz-no-scroll { overflow: hidden; }
 .mdz-modal-content .form-control:focus, .mdz-modal-content .form-select:focus { border-color: var(--mdz-primary) !important; box-shadow: none !important; }
 .mdz-modal-content .text-muted { color: var(--mdz-muted-foreground) !important; }
 .mdz-modal-content .btn-close { filter: var(--mdz-close-filter, none); }
-html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale(1); }
+.mdz-modal-content .btn-close { filter: invert(1) grayscale(1); }
 
 /* --- Perfil de usuario --- */
 .mdz-profile-card { border: 1px solid var(--mdz-border); border-radius: 10px; overflow: hidden; background: var(--mdz-background); max-width: 760px; margin-inline: auto; }
@@ -703,7 +703,7 @@ html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale
 .mdz-post-body p { margin: 0; font-size: 14px; color: var(--mdz-muted-foreground); }
 
 /* El logo tiene fondo negro: en modo oscuro se funde con el fondo del header y del footer */
-html:not(.mdz-light) .mdz-brand img { mix-blend-mode: lighten; }
+.mdz-brand img { mix-blend-mode: lighten; }
 
 /* Sección activa del menú en el color de marca */
 .mdz-nav .mdz-nav-active { color: var(--mdz-primary); font-weight: 600; }

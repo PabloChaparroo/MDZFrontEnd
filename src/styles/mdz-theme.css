@@ -1,7 +1,6 @@
 /* Tema visual MDZ Muebles — tokens de color/tipografía compartidos por
    Header, Footer y Home. Basado en el diseño de referencia (Lovable).
-   Modo oscuro por defecto; se activa modo claro agregando la clase
-   "mdz-light" al elemento <html>. */
+   El sitio usa solo modo oscuro. */
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
@@ -19,15 +18,6 @@
   --mdz-hero-shade: oklch(0.11 0 0);
   --mdz-font-sans: 'DM Sans', sans-serif;
   --mdz-font-display: 'Space Grotesk', sans-serif;
-}
-
-html.mdz-light {
-  --mdz-background: oklch(0.98 0.002 90);
-  --mdz-foreground: oklch(0.2 0 0);
-  --mdz-secondary: oklch(0.94 0.002 90);
-  --mdz-muted-foreground: oklch(0.48 0 0);
-  --mdz-accent: oklch(0.9 0.006 85);
-  --mdz-border: oklch(0.84 0 0);
 }
 
 /* Aplicado globalmente: todo el sitio comparte fondo/tipografía del tema */

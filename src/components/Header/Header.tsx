@@ -1,14 +1,12 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import logo from '../../assets/images/logo-sm.webp';
-import { useMdzTheme } from '../../hooks/useMdzTheme';
 import '../../styles/mdz-theme.css';
 import '../../styles/mdz-site.css';
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { light, toggleTheme } = useMdzTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -62,15 +60,6 @@ const Header = () => {
         </nav>
 
         <div className="mdz-header-actions">
-          <button
-            className="mdz-btn mdz-btn-nav mdz-btn-icon"
-            onClick={toggleTheme}
-            aria-label={light ? 'Activar modo oscuro' : 'Activar modo claro'}
-            title={light ? 'Modo oscuro' : 'Modo claro'}
-          >
-            <i className={`fas ${light ? 'fa-moon' : 'fa-sun'}`}></i>
-          </button>
-
           {isLoggedIn ? (
             <button className="mdz-btn mdz-btn-brand mdz-header-cta" onClick={() => go('/perfil')}>
               <i className="fas fa-user-circle"></i> Mi perfil

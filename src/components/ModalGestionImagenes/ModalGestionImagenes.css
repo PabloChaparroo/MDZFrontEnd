@@ -545,7 +545,7 @@
    Este archivo fue escrito originalmente solo para fondo claro. En vez de
    reescribirlo entero, se sobreescriben acá los colores clave para que
    funcione también dentro de .mdz-modal-content (oscuro por defecto,
-   claro con la clase mdz-light en <html>). */
+   del tema oscuro. */
 
 .mdz-modal-content .modal-header {
   background: var(--mdz-secondary);
