@@ -297,7 +297,7 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
         </>     
     ) : (
         <>
-        <Modal show={show} onHide={onHide} centered backdrop="static" dialogClassName="responsive-scrollable-modal" contentClassName="mdz-modal-content">
+        <Modal show={show} onHide={onHide} centered backdrop="static" dialogClassName={`responsive-scrollable-modal ${modalType === ModalType.CREATE ? 'mdz-mueble-create' : ''}`} contentClassName="mdz-modal-content">
             <Modal.Header closeButton>
                 <Modal.Title>
                     {isLoading && <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>}

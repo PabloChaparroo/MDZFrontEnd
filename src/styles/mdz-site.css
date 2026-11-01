@@ -732,3 +732,47 @@ body.mdz-no-scroll { overflow: hidden; }
 @media (min-width: 861px) and (max-width: 1000px) {
   .mdz-brand span { display: none; }
 }
+
+/* === Modales: encabezado cálido y controles del tema === */
+.mdz-modal-content .modal-header { background: radial-gradient(70% 180% at 90% 0%, color-mix(in oklch, var(--mdz-primary) 22%, transparent), transparent 72%), var(--mdz-background); }
+.mdz-modal-content .modal-header::before { display: none; }
+.mdz-modal-content .modal-body { scrollbar-width: thin; scrollbar-color: var(--mdz-border) transparent; }
+.mdz-modal-content .form-check-input { width: 20px; height: 20px; margin-top: 0; background-color: var(--mdz-secondary); border-color: var(--mdz-border); cursor: pointer; }
+.mdz-modal-content .form-check-input:checked { background-color: var(--mdz-primary); border-color: var(--mdz-primary); }
+.mdz-modal-content .form-check-input:focus { box-shadow: 0 0 0 3px color-mix(in oklch, var(--mdz-primary) 30%, transparent); }
+.mdz-modal-content .form-check { display: flex; align-items: center; gap: 10px; padding-left: 0; margin: 0; }
+.mdz-modal-content .form-check-input { float: none; margin-left: 0; flex-shrink: 0; }
+
+/* Alta de mueble: datos a la izquierda, imágenes a la derecha */
+.modal-dialog.mdz-mueble-create { max-width: min(980px, calc(100vw - 32px)); max-height: none; }
+.mdz-mueble-create .modal-content { max-height: calc(100vh - 32px); }
+.mdz-mueble-create .modal-body.modal-body-scrollable { max-height: calc(100vh - 110px); padding: 20px 24px; }
+.mdz-mueble-create fieldset { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; row-gap: 12px; }
+.mdz-mueble-create fieldset > * { grid-column: 1; min-width: 0; margin: 0 !important; }
+.mdz-mueble-create fieldset > hr { display: none; }
+.mdz-mueble-create fieldset > :last-child { grid-column: 2; grid-row: 1 / span 6; display: flex; flex-direction: column; }
+.mdz-mueble-create fieldset > :last-child > .text-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.mdz-mueble-create .form-label { margin-bottom: 5px; font-size: 14px; }
+.mdz-mueble-create .form-control { height: 40px; }
+.mdz-mueble-create .modal-footer { margin-top: 16px !important; padding: 14px 0 0; }
+@media (max-width: 760px) {
+  .mdz-mueble-create fieldset { grid-template-columns: 1fr; }
+  .mdz-mueble-create fieldset > :last-child { grid-column: 1; grid-row: auto; }
+  .mdz-mueble-create fieldset > :last-child > .text-center { min-height: 130px; }
+}
+
+/* Todos los modales: mismo espaciado y siempre visibles completos */
+.modal-dialog:has(.mdz-modal-content) { max-height: none; }
+.mdz-modal-content { max-height: calc(100vh - 32px); }
+.mdz-modal-content .modal-body, .mdz-modal-content .modal-body.modal-body-scrollable { max-height: calc(100vh - 110px); min-height: 0; overflow-y: auto; padding: 20px 24px; }
+.mdz-modal-content .form-label { margin-bottom: 5px; font-size: 14px; }
+.mdz-modal-content input.form-control { height: 40px; }
+.mdz-modal-content fieldset > .mb-3, .mdz-modal-content fieldset > div { margin-bottom: 14px; }
+.mdz-modal-content .modal-body > .modal-footer { padding: 14px 0 0; margin-top: 16px !important; }
+.modal-dialog.responsive-scrollable-modal:not(.mdz-mueble-create) { max-width: min(640px, calc(100vw - 32px)); }
+@media (max-height: 700px) {
+  .mdz-modal-content input.form-control { height: 36px; }
+  .mdz-mueble-create fieldset { row-gap: 7px; }
+  .mdz-modal-content .modal-body, .mdz-modal-content .modal-body.modal-body-scrollable { padding-block: 14px; }
+  .mdz-modal-content .modal-header { padding-block: 10px; }
+}
