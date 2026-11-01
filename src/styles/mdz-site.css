@@ -641,3 +641,36 @@ html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale
   .mdz-home-hero-content > * { animation: none; }
 }
 .mdz-home .mdz-contact h2 { max-width: 560px; }
+
+/* === Home: animaciones === */
+.mdz-home .mdz-hero-photo-fade { animation: mdz-hero-fade-in 1.2s ease forwards, mdz-home-zoom 7s ease-out forwards; }
+@keyframes mdz-home-zoom { from { transform: scale(1.09); } to { transform: scale(1); } }
+.mdz-home-dots button { overflow: hidden; }
+.mdz-home-dots button.is-active::after { background: color-mix(in oklch, var(--mdz-hero-ink) 35%, transparent); }
+.mdz-home-dots button.is-active::before { content: ''; position: absolute; z-index: 1; left: 0; right: 0; top: 11px; height: 2px; background: var(--mdz-primary); transform-origin: left; animation: mdz-home-progress 5s linear both; }
+@keyframes mdz-home-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.mdz-home .mdz-hero-label i { animation: mdz-home-bounce 1.8s ease-in-out infinite; }
+@keyframes mdz-home-bounce { 0%, 100% { transform: none; } 50% { transform: translateY(4px); } }
+.mdz-home .mdz-btn i { transition: transform 0.2s ease; }
+.mdz-home .mdz-btn:hover i { transform: translateX(3px); }
+.mdz-home .mdz-btn-brand:hover .fa-arrow-down { transform: translateY(3px); }
+.mdz-home .mdz-benefit i { transition: transform 0.3s ease; }
+.mdz-home .mdz-benefit:hover i { transform: translateY(-4px) rotate(-6deg); }
+.mdz-home-tile:nth-child(4n + 2) { transition-delay: 0.08s; }
+.mdz-home-tile:nth-child(4n + 3) { transition-delay: 0.16s; }
+.mdz-home-tile:nth-child(4n) { transition-delay: 0.24s; }
+.mdz-home .mdz-process-grid > :nth-child(2) { transition-delay: 0.1s; }
+.mdz-home .mdz-process-grid > :nth-child(3) { transition-delay: 0.2s; }
+.mdz-home .mdz-process-grid > :nth-child(4) { transition-delay: 0.3s; }
+.mdz-home-tile-text { transition: transform 0.35s ease; }
+.mdz-home-tile:hover .mdz-home-tile-text { transform: translateY(-6px); }
+.mdz-home-about-media::before { transition: transform 0.4s ease; }
+.mdz-home-about-media:hover::before { transform: translate(-8px, -8px); }
+.mdz-nav a { position: relative; }
+.mdz-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: var(--mdz-primary); transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease; }
+.mdz-nav a:hover::after, .mdz-nav a.mdz-nav-active::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) {
+  .mdz-home .mdz-hero-photo-fade { animation: mdz-hero-fade-in 0.01s forwards; }
+  .mdz-home .mdz-hero-label i, .mdz-home-dots button.is-active::before { animation: none; }
+  .mdz-home-tile, .mdz-home .mdz-process-grid > * { transition-delay: 0s !important; }
+}
