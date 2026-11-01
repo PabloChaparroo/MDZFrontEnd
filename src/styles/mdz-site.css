@@ -684,3 +684,8 @@ html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale
   content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
   background: linear-gradient(90deg, var(--mdz-primary), transparent 75%);
 }
+
+/* Perfil: el avatar va por encima del banner, con el mismo fondo cálido de los encabezados */
+.mdz-profile-avatar-row { position: relative; z-index: 2; }
+.mdz-profile-banner.mdz-diagonal-detail { background: radial-gradient(70% 170% at 88% 0%, color-mix(in oklch, var(--mdz-primary) 32%, transparent), transparent 72%), var(--mdz-secondary); }
+.mdz-profile-banner.mdz-diagonal-detail::before { display: none; }
