@@ -170,10 +170,39 @@ const CatalogoTabla = () => {
 
   const [busquedaMueble, setBusquedaMueble] = useState("");
   const [localPage, setLocalPage] = useState(0);
+  const [mueblesCategoriaCompleta, setMueblesCategoriaCompleta] = useState<Mueble[] | null>(null);
+  const buscandoMueble = busquedaMueble.trim() !== "";
+
+  // La API pagina de a 12: para buscar en toda la categoría se traen todas sus páginas
+  useEffect(() => {
+    const catObj = categorias.find(cat => cat.nombreCategoria === categoriaSeleccionada);
+    if (!buscandoMueble || mostrarMueblesDadosDeBaja || !catObj) {
+      setMueblesCategoriaCompleta(null);
+      return;
+    }
+    let cancelado = false;
+    const fetchCategoriaCompleta = async () => {
+      try {
+        const primera = await MuebleService.getCatalogoMueblesByCategoria(0, catObj.id);
+        const resto = await Promise.all(
+          Array.from({ length: Math.max(primera.totalPages - 1, 0) }, (_, i) =>
+            MuebleService.getCatalogoMueblesByCategoria(i + 1, catObj.id))
+        );
+        if (!cancelado) {
+          setMueblesCategoriaCompleta([primera, ...resto].flatMap((pagina) => pagina.content));
+        }
+      } catch (error) {
+        console.error('Error al buscar en la categoría:', error);
+      }
+    };
+    fetchCategoriaCompleta();
+    return () => { cancelado = true; };
+  }, [buscandoMueble, mostrarMueblesDadosDeBaja, categoriaSeleccionada, categorias, refreshData]);
 
   useEffect(() => {
     if (busquedaMueble.trim() !== "") {
-      let filtrados = Array.isArray(muebles) ? muebles : [];
+      const base = mueblesCategoriaCompleta ?? muebles;
+      let filtrados = Array.isArray(base) ? base : [];
       filtrados = filtrados.filter(mueble =>
         mueble.nombreMueble.toLowerCase().includes(busquedaMueble.trim().toLowerCase())
       );
@@ -181,7 +210,7 @@ const CatalogoTabla = () => {
     } else {
       setMueblesFiltrados(muebles);
     }
-  }, [muebles, busquedaMueble]);
+  }, [muebles, mueblesCategoriaCompleta, busquedaMueble]);
 
   useEffect(() => {
     setLocalPage(0);
