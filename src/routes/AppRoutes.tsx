@@ -1,15 +1,17 @@
-import { Route, Routes } from "react-router-dom"
-import HomePage from "../pages/HomePage"
-import Catalogo from "../pages/Catalogo";
-import LoginPage from "../pages/LoginPage/LoginPage";
-import RegisterPage from "../pages/RegisterPage/RegisterPage";
-import ViewMueble from "../components/ViewMueble/ViewMueble";
-import AdministrarCategorias from "../pages/AdministrarCategorias";
-import QuienesSomos from "../pages/QuienesSomos";
-import AdministrarSolicitudPage from "../pages/AdministrarSolicitud";
-import PerfilPage from "../pages/PerfilPage";
-import Novedades from "../pages/Novedades";
+import { lazy } from "react";
+import { Route, Routes } from "react-router-dom";
+import HomePage from "../pages/HomePage";
+import PrivateRoute from "./PrivateRoutes";
 
+const Catalogo = lazy(() => import("../pages/Catalogo"));
+const Novedades = lazy(() => import("../pages/Novedades"));
+const LoginPage = lazy(() => import("../pages/LoginPage/LoginPage"));
+const RegisterPage = lazy(() => import("../pages/RegisterPage/RegisterPage"));
+const ViewMueble = lazy(() => import("../components/ViewMueble/ViewMueble"));
+const AdministrarCategorias = lazy(() => import("../pages/AdministrarCategorias"));
+const QuienesSomos = lazy(() => import("../pages/QuienesSomos"));
+const AdministrarSolicitudPage = lazy(() => import("../pages/AdministrarSolicitud"));
+const PerfilPage = lazy(() => import("../pages/PerfilPage"));
 
 const AppRoutes: React.FC = () => {
     return (
@@ -19,18 +21,13 @@ const AppRoutes: React.FC = () => {
             <Route path="/registrarse" element={<RegisterPage />} />
             <Route path="/catalogo" element={<Catalogo/>}/>
             <Route path="/novedades" element={<Novedades/>}/>
-            <Route path="/perfil" element={<PerfilPage/>} />
-            <Route path="/administrarCategorias" element={<AdministrarCategorias/>}/>
-            <Route path="/administrarSolicitud" element={<AdministrarSolicitudPage/>}/>
             <Route path="/quienesSomos" element={<QuienesSomos/>}/>
             <Route path="/ViewMueble/:nombreMueble" element={<ViewMueble/>} />
-
-            
+            <Route path="/perfil" element={<PrivateRoute element={<PerfilPage/>}/>} />
+            <Route path="/administrarCategorias" element={<PrivateRoute element={<AdministrarCategorias/>}/>}/>
+            <Route path="/administrarSolicitud" element={<PrivateRoute element={<AdministrarSolicitudPage/>}/>}/>
         </Routes>
+    );
+};
 
-
-
-    
-    )
-}
 export default AppRoutes;

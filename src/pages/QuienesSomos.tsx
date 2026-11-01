@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import fotoAbout from '../assets/images/fotoAbout.jpg';
+import fotoAbout from '../assets/images/fotoAbout.webp';
 import '../styles/mdz-theme.css';
 import '../styles/mdz-site.css';
 

@@ -7,7 +7,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Suspense, useEffect, type ReactNode } from "react"
 import { AuthService } from "./services/AuthService";
 import Loader from "./components/Loader/Loader"
-import 'animate.css/animate.min.css'
 import { Container } from "react-bootstrap"
 import './styles/mdz-site.css'
 

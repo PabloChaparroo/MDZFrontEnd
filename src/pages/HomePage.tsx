@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import cocinaNegra from '../assets/images/cocina-portada.jpg';
-import placar from '../assets/images/placar-portada.jpg';
-import racks from '../assets/images/rack-Portada.jpg';
-import fotoAbout from '../assets/images/fotoAbout.jpg';
-import { CategoriaService } from "../services/CategoriaService";
+import cocinaNegra from '../assets/images/cocina-portada.webp';
+import placar from '../assets/images/placar-portada.webp';
+import racks from '../assets/images/rack-portada.webp';
+import fotoAbout from '../assets/images/fotoAbout.webp';
 import { ConsultaService } from "../services/ConsultaService";
 import { MuebleService } from "../services/MuebleService";
 import { Cliente } from "../types/Cliente";
@@ -79,16 +78,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchDestacados = async () => {
       try {
-        // Un mueble por categoría, para que la portada muestre toda la variedad
-        const categorias = await CategoriaService.getAllCategoria();
-        const paginas = await Promise.all(
-          categorias.slice(0, 12).map((c) => MuebleService.getCatalogoMueblesByCategoria(0, c.id))
-        );
-        const items = paginas
-          .map((p) => (p.content || []).find((m) => getPortadaSrc(m)))
-          .filter((m): m is Mueble => Boolean(m))
-          .slice(0, 8);
-        setDestacados(items);
+        setDestacados(await MuebleService.getDestacados());
       } catch (error) {
         console.error('Error al cargar destacados del catálogo:', error);
       }
@@ -227,7 +217,7 @@ const HomePage = () => {
             <Link className="mdz-home-tile mdz-reveal" key={mueble.id} to={`/ViewMueble/${mueble.nombreMueble}`} state={{ mueble }}>
               <img src={getPortadaSrc(mueble) ?? undefined} alt={mueble.nombreMueble} loading="lazy" />
               <span className="mdz-home-tile-text">
-                <small>{mueble.categoria?.nombreCategoria}</small>
+                <small>{mueble.nombreCategoria}</small>
                 <strong>{mueble.nombreMueble}</strong>
               </span>
             </Link>
