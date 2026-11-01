@@ -704,3 +704,7 @@ html:not(.mdz-light) .mdz-modal-content .btn-close { filter: invert(1) grayscale
 
 /* El logo tiene fondo negro: en modo oscuro se funde con el fondo del header y del footer */
 html:not(.mdz-light) .mdz-brand img { mix-blend-mode: lighten; }
+
+/* Sección activa del menú en el color de marca */
+.mdz-nav .mdz-nav-active { color: var(--mdz-primary); font-weight: 600; }
+.mdz-nav .mdz-nav-active:hover { color: var(--mdz-primary); }
