@@ -384,6 +384,19 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                         </Form.Control.Feedback>
                     </Form.Group>
 
+                    {/* Publicar solo se decide al crear: después ya no se puede cambiar */}
+                    {modalType === ModalType.CREATE && (
+                        <Form.Group controlId="formPublicar" className="mt-3">
+                            <Form.Check
+                                type="checkbox"
+                                name="publicar"
+                                label="Publicar en Novedades (no se puede cambiar después)"
+                                checked={Boolean(formik.values.publicar)}
+                                onChange={formik.handleChange}
+                            />
+                        </Form.Group>
+                    )}
+
                     {/* Solo mostrar la sección de imágenes al crear un mueble nuevo */}
                     {modalType === ModalType.CREATE && (
                         <>                    {/* Sección de imágenes - Solo mostrar al crear un mueble nuevo */}

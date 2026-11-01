@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import logo from '../../assets/images/logoMZD.png';
+import logo from '../../assets/images/LOGOO.jpg';
 import { useMdzTheme } from '../../hooks/useMdzTheme';
 import '../../styles/mdz-theme.css';
 import '../../styles/mdz-site.css';
@@ -51,6 +51,7 @@ const Header = () => {
         <nav className="mdz-nav" aria-label="Navegación principal">
           <span className={isActive('/') ? 'mdz-nav-active' : ''} onClick={() => go('/')}>Inicio</span>
           <span className={isActive('/catalogo') ? 'mdz-nav-active' : ''} onClick={() => go('/catalogo')}>Catálogo</span>
+          <span className={isActive('/novedades') ? 'mdz-nav-active' : ''} onClick={() => go('/novedades')}>Novedades</span>
           <span className={isActive('/quienesSomos') ? 'mdz-nav-active' : ''} onClick={() => go('/quienesSomos')}>El taller</span>
           {isLoggedIn && (
             <>
@@ -114,6 +115,7 @@ const Header = () => {
         </div>
         <span onClick={() => go('/')}>Inicio</span>
         <span onClick={() => go('/catalogo')}>Catálogo</span>
+        <span onClick={() => go('/novedades')}>Novedades</span>
         <span onClick={() => go('/quienesSomos')}>El taller</span>
         {isLoggedIn ? (
           <>

@@ -93,6 +93,14 @@ export const MuebleService = {
         }
     },
 
+    getNovedades: async (pageNumber: number): Promise<{content: Mueble[], totalPages: number, totalElements: number}> => {
+        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/novedades/${pageNumber}`);
+        if (!response.ok) {
+            throw new Error(`Error al obtener novedades: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+    },
+
     getCatalogoMueblesByCategoria: async (pageNumber: number, categoriaId: number): Promise<{content: Mueble[], totalPages: number, totalElements: number, currentPage: number}> => {
         try {
             const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/muebles-por-categoria/${pageNumber}/categoria/${categoriaId}`);
@@ -183,7 +191,8 @@ export const MuebleService = {
                 colorMueble: mueble.colorMueble,
                 descripcion: mueble.descripcion,
                 linkInstagram: mueble.linkInstagram || null,
-                linkFacebook: mueble.linkFacebook || null
+                linkFacebook: mueble.linkFacebook || null,
+                publicar: Boolean(mueble.publicar)
             };
             
             formData.append('mueble', JSON.stringify(muebleSinCategoria));

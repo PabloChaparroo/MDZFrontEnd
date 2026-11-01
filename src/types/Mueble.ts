@@ -14,6 +14,9 @@ export interface Mueble {
     linkInstagram?: string | null;
     linkFacebook?: string | null;
 
+    // Solo se define al crear el mueble: si es true aparece en Novedades
+    publicar?: boolean;
+
     //Relacion con categoria
     categoria: Categoria | null ;
      //Relaciones con imagens
