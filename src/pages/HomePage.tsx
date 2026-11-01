@@ -4,6 +4,7 @@ import cocinaNegra from '../assets/images/cocina-portada.jpg';
 import placar from '../assets/images/placar-portada.jpg';
 import racks from '../assets/images/rack-Portada.jpg';
 import fotoAbout from '../assets/images/fotoAbout.jpg';
+import { CategoriaService } from "../services/CategoriaService";
 import { ConsultaService } from "../services/ConsultaService";
 import { MuebleService } from "../services/MuebleService";
 import { Cliente } from "../types/Cliente";
@@ -41,8 +42,6 @@ const HomePage = () => {
 
   // Catálogo destacado (datos reales)
   const [destacados, setDestacados] = useState<Mueble[]>([]);
-  const [categorias, setCategorias] = useState<string[]>([]);
-  const [categoriaActiva, setCategoriaActiva] = useState('Todos');
 
   // Formulario de contacto general
   const [formData, setFormData] = useState({
@@ -80,13 +79,16 @@ const HomePage = () => {
   useEffect(() => {
     const fetchDestacados = async () => {
       try {
-        const response = await MuebleService.getCatalogoMueblesAll(0);
-        const items = (response.content || []).slice(0, 6);
-        setDestacados(items);
-        const nombresCategoria = Array.from(
-          new Set(items.map((m) => m.categoria?.nombreCategoria).filter((c): c is string => Boolean(c)))
+        // Un mueble por categoría, para que la portada muestre toda la variedad
+        const categorias = await CategoriaService.getAllCategoria();
+        const paginas = await Promise.all(
+          categorias.slice(0, 12).map((c) => MuebleService.getCatalogoMueblesByCategoria(0, c.id))
         );
-        setCategorias(nombresCategoria);
+        const items = paginas
+          .map((p) => (p.content || []).find((m) => getPortadaSrc(m)))
+          .filter((m): m is Mueble => Boolean(m))
+          .slice(0, 8);
+        setDestacados(items);
       } catch (error) {
         console.error('Error al cargar destacados del catálogo:', error);
       }
@@ -94,9 +96,20 @@ const HomePage = () => {
     fetchDestacados();
   }, []);
 
-  const productosVisibles = categoriaActiva === 'Todos'
-    ? destacados
-    : destacados.filter((m) => m.categoria?.nombreCategoria === categoriaActiva);
+  // Aparición suave de cada bloque al entrar en pantalla
+  useEffect(() => {
+    const elementos = document.querySelectorAll('.mdz-reveal:not(.is-visible)');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    elementos.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [destacados]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -142,7 +155,7 @@ const HomePage = () => {
   };
 
   return (
-    <>
+    <div className="mdz-home">
       {/* Hero */}
       <section className="mdz-hero">
         <img
@@ -151,21 +164,35 @@ const HomePage = () => {
           src={heroImages[currentImageIndex]}
           alt={`Mueble MDZ ${currentImageIndex + 1}`}
         />
-        <div className="mdz-container">
+        <div className="mdz-container mdz-home-hero-content">
           <p className="mdz-eyebrow">Hecho a mano en Mendoza</p>
           <h1>MDZ Muebles.<br />Tu espacio,<br /><span>con tu esencia.</span></h1>
           <p className="mdz-hero-description">
             Muebles a medida que unen diseño, madera y oficio. Pensados para tu casa. Hechos para vivirlos.
           </p>
-          <a href="#coleccion" className="mdz-btn mdz-btn-brand mdz-btn-lg">
-            Descubrí nuestros muebles <i className="fas fa-arrow-up-right-from-square"></i>
-          </a>
+          <div className="mdz-home-hero-actions">
+            <a href="#coleccion" className="mdz-btn mdz-btn-brand mdz-btn-lg">
+              Descubrí nuestros muebles <i className="fas fa-arrow-down"></i>
+            </a>
+            <a href="#contacto" className="mdz-btn mdz-home-btn-ghost mdz-btn-lg">Pedí tu presupuesto</a>
+          </div>
         </div>
         <div className="mdz-hero-bottom">
           <div className="mdz-container">
             <a className="mdz-hero-label" href="#coleccion">
               <i className="fas fa-chevron-down"></i> Diseño que se siente como hogar
             </a>
+            <div className="mdz-home-dots">
+              {heroImages.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className={index === currentImageIndex ? 'is-active' : ''}
+                  aria-label={`Ver foto ${index + 1}`}
+                  onClick={() => setCurrentImageIndex(index)}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -190,59 +217,30 @@ const HomePage = () => {
             <h2>Un lugar para cada idea.</h2>
             <p className="mdz-section-copy">Elegí una inspiración. La hacemos tuya.</p>
           </div>
-          {categorias.length > 0 && (
-            <div className="mdz-filters" aria-label="Categorías de muebles">
-              <button
-                className={`mdz-btn mdz-btn-filter mdz-btn-sm ${categoriaActiva === 'Todos' ? 'is-active' : ''}`}
-                onClick={() => setCategoriaActiva('Todos')}
-              >
-                Todos
-              </button>
-              {categorias.map((c) => (
-                <button
-                  key={c}
-                  className={`mdz-btn mdz-btn-filter mdz-btn-sm ${categoriaActiva === c ? 'is-active' : ''}`}
-                  onClick={() => setCategoriaActiva(c)}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-          )}
+          <Link to="/catalogo" className="mdz-btn mdz-btn-filter">
+            Ver todo el catálogo <i className="fas fa-arrow-right"></i>
+          </Link>
         </div>
 
-        <div className="mdz-product-grid">
-          {productosVisibles.map((mueble) => {
-            const src = getPortadaSrc(mueble);
-            return (
-              <Link className="mdz-product" key={mueble.id} to={`/ViewMueble/${mueble.nombreMueble}`}>
-                <div className="mdz-product-image">
-                  {src ? (
-                    <img src={src} alt={mueble.nombreMueble} loading="lazy" />
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', display: 'grid', placeItems: 'center', color: 'var(--mdz-muted-foreground)' }}>
-                      <i className="fas fa-image" style={{ fontSize: 28 }}></i>
-                    </div>
-                  )}
-                  <span className="mdz-badge"><i className="fas fa-star"></i>A MEDIDA</span>
-                </div>
-                <div className="mdz-product-meta">
-                  <div>
-                    <h3>{mueble.nombreMueble}</h3>
-                    <p>{mueble.colorMueble}{mueble.categoria ? ` · ${mueble.categoria.nombreCategoria}` : ''}</p>
-                  </div>
-                  <span className="mdz-product-arrow"><i className="fas fa-arrow-up-right-from-square"></i></span>
-                </div>
-              </Link>
-            );
-          })}
+        <div className="mdz-home-grid">
+          {destacados.map((mueble) => (
+            <Link className="mdz-home-tile mdz-reveal" key={mueble.id} to={`/ViewMueble/${mueble.nombreMueble}`} state={{ mueble }}>
+              <img src={getPortadaSrc(mueble) ?? undefined} alt={mueble.nombreMueble} loading="lazy" />
+              <span className="mdz-home-tile-text">
+                <small>{mueble.categoria?.nombreCategoria}</small>
+                <strong>{mueble.nombreMueble}</strong>
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
       {/* Nosotros */}
       <section id="nosotros" className="mdz-container mdz-section mdz-about">
-        <img className="mdz-about-image" src={fotoAbout} alt="Taller MDZ Muebles" loading="lazy" />
-        <div>
+        <div className="mdz-home-about-media mdz-reveal">
+          <img className="mdz-about-image" src={fotoAbout} alt="Taller MDZ Muebles" loading="lazy" />
+        </div>
+        <div className="mdz-reveal">
           <p className="mdz-eyebrow">La esencia de nuestro taller</p>
           <h2>La madera es el comienzo.<br />Tu historia, el diseño.</h2>
           <p className="mdz-section-copy">
@@ -276,7 +274,7 @@ const HomePage = () => {
           </div>
           <div className="mdz-process-grid">
             {steps.map((step, index) => (
-              <div key={step.title}>
+              <div key={step.title} className="mdz-reveal">
                 <div className="mdz-step-number">0{index + 1}</div>
                 <h3>{step.title}</h3>
                 <p>{step.text}</p>
@@ -300,7 +298,7 @@ const HomePage = () => {
           </div>
         </div>
 
-        <form className="mdz-contact-form" onSubmit={handleSubmit}>
+        <form className="mdz-contact-form mdz-reveal" onSubmit={handleSubmit}>
           <label>
             Tu nombre
             <input name="nombreCompleto" placeholder="Nombre y apellido" value={formData.nombreCompleto} onChange={handleInputChange} required />
@@ -336,7 +334,7 @@ const HomePage = () => {
           )}
         </form>
       </section>
-    </>
+    </div>
   );
 };
 
