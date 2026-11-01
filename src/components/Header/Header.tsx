@@ -55,7 +55,6 @@ const Header = () => {
           <span className={isActive('/quienesSomos') ? 'mdz-nav-active' : ''} onClick={() => go('/quienesSomos')}>El taller</span>
           {isLoggedIn && (
             <>
-              <span className={isActive('/perfil') ? 'mdz-nav-active' : ''} onClick={() => go('/perfil')}>Mi perfil</span>
               <span className={isActive('/administrarCategorias') ? 'mdz-nav-active' : ''} onClick={() => go('/administrarCategorias')}>Admin categorías</span>
               <span className={isActive('/administrarSolicitud') ? 'mdz-nav-active' : ''} onClick={() => go('/administrarSolicitud')}>Admin consultas</span>
             </>
