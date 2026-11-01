@@ -708,3 +708,27 @@ body.mdz-no-scroll { overflow: hidden; }
 /* Sección activa del menú en el color de marca */
 .mdz-nav .mdz-nav-active { color: var(--mdz-primary); font-weight: 600; }
 .mdz-nav .mdz-nav-active:hover { color: var(--mdz-primary); }
+
+/* === Header: tamaños más legibles === */
+.mdz-site-header { --mdz-header-height: 92px; }
+.mdz-site-header .mdz-container { height: var(--mdz-header-height); }
+.mdz-brand { font-size: 23px; gap: 14px; letter-spacing: 0.01em; white-space: nowrap; }
+.mdz-brand img { height: 54px; }
+.mdz-nav { gap: clamp(18px, 2.4vw, 36px); font-size: 17px; font-weight: 500; white-space: nowrap; }
+.mdz-header-cta { height: 46px; padding: 0 22px; font-size: 15px; white-space: nowrap; }
+.mdz-home .mdz-hero { height: calc(100svh - 92px); }
+@media (max-width: 1240px) {
+  .mdz-site-header .mdz-container { padding-inline: 24px; gap: 16px; }
+  .mdz-nav { font-size: 15px; gap: 16px; }
+  .mdz-brand { font-size: 19px; }
+}
+@media (max-width: 640px) {
+  .mdz-site-header { --mdz-header-height: 76px; }
+  .mdz-site-header .mdz-container { height: var(--mdz-header-height); }
+  .mdz-brand { font-size: 19px; }
+  .mdz-brand img { height: 44px; }
+  .mdz-home .mdz-hero { height: calc(100svh - 76px); }
+}
+@media (min-width: 861px) and (max-width: 1000px) {
+  .mdz-brand span { display: none; }
+}
