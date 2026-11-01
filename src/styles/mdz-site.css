@@ -800,3 +800,59 @@ body.mdz-no-scroll { overflow: hidden; }
   .mdz-product h3 { font-size: 14px; }
   .mdz-product-arrow { display: none; }
 }
+
+/* === Mobile: admin y uso táctil === */
+.mdz-filters.mdz-filters-scroll { scrollbar-width: none; }
+@media (max-width: 640px) {
+  .mdz-filters.mdz-filters-scroll { display: flex; flex-wrap: nowrap; overflow-x: auto; margin-inline: -20px; padding-inline: 20px; }
+  .mdz-filters-scroll .mdz-btn { flex-shrink: 0; height: 42px; }
+}
+@media (max-width: 760px) {
+  input, textarea, select, .form-control, .form-select { font-size: 16px !important; }
+  .mdz-btn { min-height: 44px; }
+  .mdz-btn-sm { min-height: 40px; }
+  .mdz-icon-btn { width: 44px; height: 44px; }
+  .mdz-home-dots button { height: 40px; }
+  .mdz-home-dots button::after, .mdz-home-dots button.is-active::before { top: 19px; }
+  .mdz-section-heading .mdz-btn { width: 100%; justify-content: center; }
+
+  /* Tablas como tarjetas */
+  .mdz-table-wrap { border: 0; overflow: visible; background: none; }
+  .mdz-table, .mdz-table tbody, .mdz-table tr { display: block; width: 100%; }
+  .mdz-table thead { display: none; }
+  .mdz-table tr { border: 1px solid var(--mdz-border); border-radius: 12px; background: var(--mdz-secondary); padding: 6px 14px; margin-bottom: 12px; }
+  .mdz-table tbody tr:hover { background: var(--mdz-secondary); }
+  .mdz-table td { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 9px 0; border-top: 1px solid var(--mdz-border); font-size: 14px; text-align: right; min-width: 0; overflow-wrap: anywhere; }
+  .mdz-table td:first-child { display: none; }
+  .mdz-table td:nth-child(2) { border-top: 0; }
+  .mdz-table td::before { flex-shrink: 0; color: var(--mdz-muted-foreground); font-size: 12px; text-align: left; }
+  .mdz-table td > div { max-width: 100% !important; white-space: normal !important; }
+  .mdz-cards-categoria td:nth-child(2)::before { content: "Nombre"; }
+  .mdz-cards-categoria td:nth-child(3)::before { content: "Alta"; }
+  .mdz-cards-categoria td:nth-child(4)::before { content: "Modificación"; }
+  .mdz-cards-categoria td:nth-child(5)::before { content: "Baja"; }
+  .mdz-cards-categoria td:nth-child(6)::before { content: "Estado"; }
+  .mdz-cards-categoria td:nth-child(7)::before { content: "Acciones"; }
+  .mdz-cards-mueble td:nth-child(2)::before { content: "Nombre"; }
+  .mdz-cards-mueble td:nth-child(3)::before { content: "Categoría"; }
+  .mdz-cards-mueble td:nth-child(4)::before { content: "Color"; }
+  .mdz-cards-mueble td:nth-child(5)::before { content: "Descripción"; }
+  .mdz-cards-mueble td:nth-child(6)::before { content: "Redes"; }
+  .mdz-cards-mueble td:nth-child(7)::before { content: "Imagen"; }
+  .mdz-cards-mueble td:nth-child(8)::before { content: "Acciones"; }
+  .mdz-cards-consulta td:nth-child(2)::before { content: "Cliente"; }
+  .mdz-cards-consulta td:nth-child(3)::before { content: "Contacto"; }
+  .mdz-cards-consulta td:nth-child(4)::before { content: "Fecha"; }
+  .mdz-cards-consulta td:nth-child(5)::before { content: "Consulta"; }
+  .mdz-cards-consulta td:nth-child(6)::before { content: "Mueble"; }
+  .mdz-cards-consulta td:nth-last-child(2)::before { content: "Respuesta"; }
+  .mdz-cards-consulta td:nth-last-child(1)::before { content: "Acciones"; }
+}
+@media (hover: none) {
+  .mdz-product:hover, .mdz-home .mdz-process-grid > div:hover { transform: none; box-shadow: none; }
+}
+@media (max-width: 760px) {
+  .mdz-cards-mueble td:nth-child(3), .mdz-cards-mueble td:nth-child(5) { display: none; }
+  .mdz-section input[type="checkbox"] { width: 22px; height: 22px; }
+  .mdz-search button { min-width: 44px; min-height: 44px; }
+}

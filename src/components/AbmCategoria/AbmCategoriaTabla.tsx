@@ -310,7 +310,7 @@ const CatalogoTabla = () => {
 
       <div className="mdz-container mdz-section">
         {/* Botones de categorías */}
-        <div className="mdz-filters" style={{ marginBottom: 32 }}>
+        <div className="mdz-filters mdz-filters-scroll" style={{ marginBottom: 32 }}>
           {categorias.map((categoria) => (
             <button
               key={categoria.id}
@@ -361,7 +361,7 @@ const CatalogoTabla = () => {
               </div>
             ) : (
               <div className="mdz-table-wrap">
-                <table className="mdz-table">
+                <table className="mdz-table mdz-cards-categoria">
                   <thead>
                     <tr>
                       <th>ID</th>
@@ -466,7 +466,7 @@ const CatalogoTabla = () => {
               </div>
             ) : (
               <div className="mdz-table-wrap">
-                <table className="mdz-table">
+                <table className="mdz-table mdz-cards-mueble">
                   <thead>
                     <tr>
                       <th>ID</th>

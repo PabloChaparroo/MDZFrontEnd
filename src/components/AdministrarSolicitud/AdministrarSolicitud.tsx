@@ -155,7 +155,7 @@ const AdministrarSolicitud = () => {
           </div>
         ) : (
           <div className="mdz-table-wrap">
-            <table className="mdz-table">
+            <table className="mdz-table mdz-cards-consulta">
               <thead>
                 <tr>
                   <th>ID</th>
