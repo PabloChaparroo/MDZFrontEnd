@@ -134,7 +134,6 @@ const HomePage = () => {
 
       setShowSuccessMessage(true);
       setFormData({ nombreCompleto: '', email: '', telefono: '', consulta: '' });
-      setTimeout(() => setShowSuccessMessage(false), 5000);
     } catch (error) {
       console.error('Error al enviar consulta:', error);
       setShowErrorMessage(true);
@@ -146,6 +145,19 @@ const HomePage = () => {
 
   return (
     <div className="mdz-home">
+      {showSuccessMessage && (
+        <div className="mdz-confirm-overlay" onClick={() => setShowSuccessMessage(false)}>
+          <div className="mdz-modal-content mdz-confirm-card" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 440, textAlign: 'center' }}>
+            <i className="fas fa-check-circle" style={{ fontSize: 40, color: 'var(--mdz-primary)', marginBottom: 14 }}></i>
+            <h3 style={{ justifyContent: 'center' }}>¡Consulta enviada correctamente!</h3>
+            <p>Gracias por contactarte con nosotros. En breve nos comunicaremos para responder tu consulta.</p>
+            <div className="mdz-confirm-actions" style={{ justifyContent: 'center' }}>
+              <button className="mdz-btn mdz-btn-brand" onClick={() => setShowSuccessMessage(false)}>Entendido</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero */}
       <section className="mdz-hero">
         <img
@@ -312,11 +324,6 @@ const HomePage = () => {
               <>Enviar consulta <i className="fas fa-arrow-up-right-from-square"></i></>
             )}
           </button>
-          {showSuccessMessage && (
-            <p className="mdz-full-field mdz-form-feedback" role="status">
-              ¡Consulta enviada! Nos pondremos en contacto con vos a la brevedad.
-            </p>
-          )}
           {showErrorMessage && (
             <p className="mdz-full-field mdz-form-feedback is-error" role="alert">
               Hubo un error al enviar tu consulta. Por favor, intentá nuevamente.
