@@ -22,7 +22,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/catalogo" element={<Catalogo/>}/>
             <Route path="/novedades" element={<Novedades/>}/>
             <Route path="/quienesSomos" element={<QuienesSomos/>}/>
-            <Route path="/ViewMueble/:nombreMueble" element={<ViewMueble/>} />
+            <Route path="/ViewMueble/:id" element={<ViewMueble/>} />
             <Route path="/perfil" element={<PrivateRoute element={<PerfilPage/>}/>} />
             <Route path="/administrarCategorias" element={<PrivateRoute element={<AdministrarCategorias/>}/>}/>
             <Route path="/administrarSolicitud" element={<PrivateRoute element={<AdministrarSolicitudPage/>}/>}/>

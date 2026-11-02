@@ -1,4 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { Mueble } from "../../types/Mueble";
 import { MuebleImagenes } from "../../types/MuebleImagenes";
 import { useEffect, useRef, useState } from "react";
 import { CategoriaService } from "../../services/CategoriaService";
@@ -10,9 +11,63 @@ import Loader from "../Loader/Loader";
 import '../../styles/mdz-theme.css';
 import '../../styles/mdz-site.css';
 
+// Desde el catálogo el mueble llega por state; desde un link compartido se busca por id
 const ViewMueble = () => {
+  const { id } = useParams();
   const location = useLocation();
-  const mueble = location.state.mueble;
+  const muebleDelCatalogo = location.state?.mueble;
+  const [muebleDelLink, setMuebleDelLink] = useState<Mueble | null>(null);
+  const [noDisponible, setNoDisponible] = useState(false);
+
+  useEffect(() => {
+    if (muebleDelCatalogo) return;
+    let cancelado = false;
+    setMuebleDelLink(null);
+    setNoDisponible(false);
+    MuebleService.getMuebleById(Number(id))
+      .then((data) => {
+        if (cancelado) return;
+        if (data.fechaBajaMueble) setNoDisponible(true);
+        else setMuebleDelLink(data);
+      })
+      .catch(() => { if (!cancelado) setNoDisponible(true); });
+    return () => { cancelado = true; };
+  }, [id, muebleDelCatalogo]);
+
+  if (noDisponible) {
+    return (
+      <div className="mdz-container mdz-section">
+        <div className="mdz-empty-state">
+          <p>Este mueble ya no está disponible.</p>
+          <Link to="/catalogo" className="mdz-btn mdz-btn-brand">Ver catálogo</Link>
+        </div>
+      </div>
+    );
+  }
+
+  const mueble = muebleDelCatalogo ?? muebleDelLink;
+  if (!mueble) {
+    return <div className="mdz-container mdz-section"><Loader /></div>;
+  }
+
+  return <FichaMueble key={mueble.id} mueble={mueble} imagenesCompletas={!muebleDelCatalogo} />;
+};
+
+const FichaMueble = ({ mueble, imagenesCompletas }: { mueble: any; imagenesCompletas: boolean }) => {
+  const location = useLocation();
+  const [enlaceCopiado, setEnlaceCopiado] = useState(false);
+  const enlaceMueble = `${window.location.origin}/ViewMueble/${mueble.id}`;
+  const textoWhatsApp = encodeURIComponent(`Mirá este mueble de MDZ Muebles: ${mueble.nombreMueble} ${enlaceMueble}`);
+
+  const handleCopiarEnlace = async () => {
+    try {
+      await navigator.clipboard.writeText(enlaceMueble);
+      setEnlaceCopiado(true);
+      setTimeout(() => setEnlaceCopiado(false), 2000);
+    } catch {
+      window.prompt('Copiá el enlace:', enlaceMueble);
+    }
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -38,7 +93,7 @@ const ViewMueble = () => {
     const fetchImagenes = async () => {
       try {
         setLoadingImages(true);
-        const imagenes = await MuebleService.obtenerImagenesMueble(mueble.id);
+        const imagenes = imagenesCompletas ? mueble.imagenes : await MuebleService.obtenerImagenesMueble(mueble.id);
         setImagenesFromBackend(imagenes);
         const imagenPortada = imagenes.find((img: MuebleImagenes) => img.esPortada) || imagenes[0];
         setImagenPrincipal(imagenPortada);
@@ -193,6 +248,16 @@ const ViewMueble = () => {
             <div style={{ marginTop: 40 }}>
               <h1 className="mdz-detail-title">{mueble.nombreMueble}</h1>
               <p className="mdz-detail-desc">{mueble.descripcion}</p>
+
+              <div className="mdz-share">
+                <a className="mdz-btn mdz-btn-filter" href={`https://wa.me/?text=${textoWhatsApp}`} target="_blank" rel="noopener noreferrer">
+                  <i className="fab fa-whatsapp"></i> Compartir por WhatsApp
+                </a>
+                <button type="button" className="mdz-btn mdz-btn-filter" onClick={handleCopiarEnlace}>
+                  <i className={`fas ${enlaceCopiado ? 'fa-check' : 'fa-link'}`}></i>
+                  {enlaceCopiado ? '¡Enlace copiado!' : 'Copiar enlace'}
+                </button>
+              </div>
 
               <div className="mdz-spec-row">
                 <div className="mdz-card-icon"><i className="fas fa-palette"></i></div>

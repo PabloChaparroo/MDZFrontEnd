@@ -272,6 +272,14 @@ export const MuebleService = {
         }
     },
 
+    getMuebleById: async (id: number): Promise<Mueble> => {
+        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/${id}`);
+        if (!response.ok) {
+            throw new Error(`Mueble ${id} no encontrado`);
+        }
+        return response.json();
+    },
+
     agregarImagenesMueble: async (id: number, files: File[], portadaIndex?: number): Promise<void> => {
         checkAuth();
 

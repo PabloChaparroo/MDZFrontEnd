@@ -296,7 +296,7 @@ const CatalogoMueble = () => {
                 <Link
                   className="mdz-product"
                   key={mueble.id}
-                  to={`/ViewMueble/${mueble.nombreMueble}`}
+                  to={`/ViewMueble/${mueble.id}`}
                   state={{ mueble }}
                 >
                   <div className="mdz-product-image">

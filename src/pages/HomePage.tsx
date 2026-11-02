@@ -226,7 +226,7 @@ const HomePage = () => {
 
         <div className="mdz-home-grid">
           {destacados.map((mueble) => (
-            <Link className="mdz-home-tile mdz-reveal" key={mueble.id} to={`/ViewMueble/${mueble.nombreMueble}`} state={{ mueble }}>
+            <Link className="mdz-home-tile mdz-reveal" key={mueble.id} to={`/ViewMueble/${mueble.id}`} state={{ mueble }}>
               <img src={getPortadaSrc(mueble) ?? undefined} alt={mueble.nombreMueble} loading="lazy" />
               <span className="mdz-home-tile-text">
                 <small>{mueble.nombreCategoria}</small>

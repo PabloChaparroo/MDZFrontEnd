@@ -66,7 +66,7 @@ const Novedades = () => {
                   <span className="mdz-post-category">{mueble.nombreCategoria}</span>
                   <time dateTime={mueble.fechaAltaMueble?.replace(' ', 'T')}>{formatearFecha(mueble.fechaAltaMueble)}</time>
                 </header>
-                <Link className="mdz-post-image" to={`/ViewMueble/${mueble.nombreMueble}`} state={{ mueble }}>
+                <Link className="mdz-post-image" to={`/ViewMueble/${mueble.id}`} state={{ mueble }}>
                   {typeof mueble.imagenPortada === 'string' && (
                     <img src={`data:image/jpeg;base64,${mueble.imagenPortada}`} alt={mueble.nombreMueble} loading="lazy" />
                   )}

@@ -460,6 +460,7 @@ body.mdz-no-scroll { overflow: hidden; }
 
 .mdz-detail-title { font-family: var(--mdz-font-display); font-size: clamp(26px, 3vw, 36px); font-weight: 600; margin: 0 0 14px; color: var(--mdz-foreground); }
 .mdz-detail-desc { color: var(--mdz-muted-foreground); font-size: 14px; line-height: 1.8; margin-bottom: 20px; }
+.mdz-share { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
 .mdz-spec-row { display: flex; align-items: center; gap: 14px; padding: 16px; border: 1px solid var(--mdz-border); border-radius: 8px; margin-bottom: 10px; }
 .mdz-spec-row h4 { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--mdz-muted-foreground); font-weight: 600; }
 .mdz-spec-row p { margin: 2px 0 0; font-size: 14px; color: var(--mdz-foreground); }
