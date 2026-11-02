@@ -40,7 +40,7 @@ const QuienesSomos = () => {
         <div className="mdz-container">
           <p className="mdz-eyebrow">El taller</p>
           <h1>Quiénes somos.</h1>
-          <p className="mdz-section-copy">5 años creando muebles únicos en Mendoza.</p>
+          <p className="mdz-section-copy">6 años creando muebles únicos en Mendoza.</p>
         </div>
       </div>
 
@@ -49,7 +49,7 @@ const QuienesSomos = () => {
         <div className="mdz-section-heading">
           <div>
             <p className="mdz-eyebrow">Nuestra historia</p>
-            <h2>15 años creando muebles únicos en Mendoza.</h2>
+            <h2>6 años creando muebles únicos en Mendoza.</h2>
           </div>
         </div>
 

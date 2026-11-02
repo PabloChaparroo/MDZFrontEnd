@@ -43,7 +43,7 @@ const Header = () => {
       <div className="mdz-container">
         <Link to="/" className="mdz-brand" aria-label="MDZ Muebles, inicio">
           <img src={logo} alt="MDZ Muebles" />
-          <span>MDZ MUEBLES<small>Diseño &amp; carpintería a medida</small></span>
+          <span>MDZ MUEBLES</span>
         </Link>
 
         <nav className="mdz-nav" aria-label="Navegación principal">
