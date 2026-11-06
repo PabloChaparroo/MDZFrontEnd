@@ -857,3 +857,31 @@ body.mdz-no-scroll { overflow: hidden; }
   .mdz-section input[type="checkbox"] { width: 22px; height: 22px; }
   .mdz-search button { min-width: 44px; min-height: 44px; }
 }
+
+/* ---------- Mi Perfil: avisos de consultas nuevas (solo admin) ---------- */
+.mdz-notif { border-top: 1px solid var(--mdz-border); }
+.mdz-notif-help { color: var(--mdz-muted-foreground); font-size: 14px; margin: -8px 0 16px; line-height: 1.5; }
+.mdz-notif-alert {
+  display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap;
+  padding: 12px 14px; margin-bottom: 16px; border-radius: 8px; font-size: 14px; line-height: 1.5;
+  border: 1px solid var(--mdz-border); color: var(--mdz-foreground);
+}
+.mdz-notif-alert i { color: var(--mdz-primary); margin-top: 3px; }
+.mdz-notif-alert-error i { color: oklch(0.62 0.2 25); }
+.mdz-notif-list { list-style: none; padding: 0; margin: 0 0 16px; display: grid; gap: 8px; }
+.mdz-notif-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 10px 12px; border: 1px solid var(--mdz-border); border-radius: 8px;
+}
+.mdz-notif-mail { display: flex; align-items: center; gap: 8px; min-width: 0; overflow-wrap: anywhere; color: var(--mdz-foreground); }
+.mdz-notif-mail i { color: var(--mdz-muted-foreground); }
+.mdz-notif-actions { display: flex; align-items: center; gap: 8px; }
+.mdz-notif-actions .mdz-btn { padding: 6px 12px; font-size: 13px; }
+.mdz-notif-quitar:hover { color: oklch(0.62 0.2 25); border-color: oklch(0.62 0.2 25); }
+.mdz-notif-form { display: flex; gap: 10px; flex-wrap: wrap; }
+.mdz-notif-input {
+  flex: 1 1 240px; min-width: 0; height: 44px; padding: 0 14px; border-radius: 8px;
+  border: 1px solid var(--mdz-border); background: var(--mdz-background); color: var(--mdz-foreground); font: inherit;
+}
+.mdz-notif-input:focus { outline: 0; border-color: var(--mdz-primary); }
+.mdz-notif button:disabled { opacity: 0.6; cursor: not-allowed; }

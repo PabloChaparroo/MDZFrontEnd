@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthService } from "../../services/AuthService";
 import Loader from "../Loader/Loader";
+import NotificacionesPerfil from "./NotificacionesPerfil";
 import '../../styles/mdz-theme.css';
 import '../../styles/mdz-site.css';
 
@@ -162,6 +163,8 @@ const PerfilUsuario: React.FC = () => {
               </button>
             </div>
           </div>
+
+          {usuario.role === 'ADMIN' && <NotificacionesPerfil />}
         </div>
       </div>
 
