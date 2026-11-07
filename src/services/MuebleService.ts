@@ -50,32 +50,6 @@ const checkAuth = () => {
 
 export const MuebleService = {
     // Métodos públicos (no requieren autenticación)
-    getAllMuebles: async (): Promise<Mueble[]> => {
-        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble`);
-        const data = await response.json();
-        return data;
-    },
-
-    getMueblesByCategoria: async (categoria: string) => {
-        try {
-            const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble?categoria=${categoria}`);
-            if (!response.ok) {
-                throw new Error(`Error al obtener los muebles por categoría: ${response.status} ${response.statusText}`);
-            }
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('Error al obtener los muebles por categoría:', error);
-            throw error;
-        }
-    },
-
-    getMueble: async (id: number): Promise<Mueble> => {
-        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/${id}`);
-        const data = await response.json();
-        return data;
-    },
-
     getCatalogoMueblesAll: async (pageNumber: number): Promise<{content: Mueble[], totalPages: number, totalElements: number, currentPage: number}> => {
         try {
             const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/catalogo-completo/${pageNumber}`);
@@ -91,6 +65,22 @@ export const MuebleService = {
             console.error('Error al obtener el catálogo:', error);
             throw error;
         }
+    },
+
+    getDestacados: async (): Promise<Mueble[]> => {
+        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/destacados`);
+        if (!response.ok) {
+            throw new Error(`Error al obtener destacados: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+    },
+
+    getNovedades: async (pageNumber: number): Promise<{content: Mueble[], totalPages: number, totalElements: number}> => {
+        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/novedades/${pageNumber}`);
+        if (!response.ok) {
+            throw new Error(`Error al obtener novedades: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
     },
 
     getCatalogoMueblesByCategoria: async (pageNumber: number, categoriaId: number): Promise<{content: Mueble[], totalPages: number, totalElements: number, currentPage: number}> => {
@@ -145,29 +135,6 @@ export const MuebleService = {
     },
 
     // Métodos protegidos (requieren autenticación)
-    createMuebleSoly: async (mueble: Mueble): Promise<Mueble> => {
-        checkAuth();
-
-        try {
-            const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/create`, {
-                method: "POST",
-                headers: getAuthHeaders(),
-                body: JSON.stringify(mueble)
-            });
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Error al crear el mueble: ${response.status} ${response.statusText}. Detalles: ${errorText}`);
-            }
-    
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error("Error al crear el mueble:", error);
-            throw error;
-        }
-    },
-
     createMueble: async (mueble: Mueble, categoriaId: number, files: FileList, portadaIndex?: number): Promise<void> => {
         checkAuth();
 
@@ -181,10 +148,10 @@ export const MuebleService = {
                 fechaModificacionMueble: mueble.fechaModificacionMueble,
                 fechaBajaMueble: mueble.fechaBajaMueble,
                 colorMueble: mueble.colorMueble,
-                dimension: mueble.dimension,
-                tipoMadera: mueble.tipoMadera,
-                precio: mueble.precio,
-                descripcion: mueble.descripcion
+                descripcion: mueble.descripcion,
+                linkInstagram: mueble.linkInstagram || null,
+                linkFacebook: mueble.linkFacebook || null,
+                publicar: Boolean(mueble.publicar)
             };
             
             formData.append('mueble', JSON.stringify(muebleSinCategoria));
@@ -305,7 +272,15 @@ export const MuebleService = {
         }
     },
 
-    agregarImagenesMueble: async (id: number, files: FileList, portadaIndex?: number): Promise<void> => {
+    getMuebleById: async (id: number): Promise<Mueble> => {
+        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/${id}`);
+        if (!response.ok) {
+            throw new Error(`Mueble ${id} no encontrado`);
+        }
+        return response.json();
+    },
+
+    agregarImagenesMueble: async (id: number, files: File[], portadaIndex?: number): Promise<void> => {
         checkAuth();
 
         try {
@@ -322,9 +297,9 @@ export const MuebleService = {
                     throw new Error(`El archivo ${file.name} no es una imagen válida`);
                 }
                 
-                const maxSize = 5 * 1024 * 1024; // 5MB
+                const maxSize = 10 * 1024 * 1024; // 10MB, igual que el backend
                 if (file.size > maxSize) {
-                    throw new Error(`El archivo ${file.name} es demasiado grande. Tamaño máximo: 5MB`);
+                    throw new Error(`El archivo ${file.name} es demasiado grande. Tamaño máximo: 10MB`);
                 }
                 
                 formData.append('files', file);

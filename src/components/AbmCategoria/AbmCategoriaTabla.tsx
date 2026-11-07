@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Table } from 'react-bootstrap';
 
 // Types
 import { Mueble } from '../../types/Mueble';
 import { Categoria } from '../../types/Categoria';
 import { ModalType } from '../../types/ModalType';
-// import { MuebleService } from '../../services/MuebleService';
 
 // Services
 import { MuebleService } from '../../services/MuebleService';
@@ -17,12 +15,11 @@ import Loader from '../Loader/Loader';
 import CatalogoModalMueble from '../ModalCatalogoMuebles/CatalogoModalMueble';
 import ModalABMCategoria from '../CategoriaModal/CategoriaModal';
 import ModalGestionImagenes from '../ModalGestionImagenes/ModalGestionImagenes';
+import Pagination from '../Pagination/Pagination';
 
 // Styles
-
-import '../CatalogoMueble/CatalogoMueble.css';
-import './AbmCategoriaTabla.css';
-import Pagination from '../Pagination/Pagination';
+import '../../styles/mdz-theme.css';
+import '../../styles/mdz-site.css';
 
 const CatalogoTabla = () => {
   const location = useLocation();
@@ -54,11 +51,8 @@ const CatalogoTabla = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [isLoadingMuebles, setIsLoadingMuebles] = useState(false);
   const [mostrarMueblesDadosDeBaja, setMostrarMueblesDadosDeBaja] = useState(false);
-  // const [totalElements, setTotalElements] = useState(0);
   const pageSize = 10;
-  // Eliminado: const [, setTotalPages] = useState(0); y setTotalElements
 
-  // Funciones de inicialización
   function initializeNewCategoria(): Categoria {
     return {
       id: 0,
@@ -77,27 +71,23 @@ const CatalogoTabla = () => {
       fechaModificacionMueble: null,
       fechaBajaMueble: null,
       colorMueble: '',
-      dimension: null,
-      tipoMadera: '',
-      precio: null,
       descripcion: '',
+      linkInstagram: '',
+      linkFacebook: '',
       imagenes: [],
       categoria: null,
       imagenPortada: null,
     };
   }
 
-  // Efecto para scroll al inicio cuando cambia la ubicación
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
 
-  // Efecto para cargar categorías (siempre todas para los botones principales)
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
         setIsLoading(true);
-        // Siempre cargar todas las categorías para los botones principales
         const categoriasData = await CategoriaService.getAllCategoria();
         setCategorias(categoriasData);
         setIsLoading(false);
@@ -109,44 +99,37 @@ const CatalogoTabla = () => {
     fetchCategorias();
   }, [refreshData]);
 
-  // Efecto para cargar categorías para la tabla de edición (con filtro)
   useEffect(() => {
     const fetchCategoriasParaEdicion = async () => {
-      if (!editCategory) return; // Solo cargar cuando estamos en modo edición
-      
+      if (!editCategory) return;
+
       try {
         let categoriasData: Categoria[] = [];
-        
+
         if (mostrarCategoriasDadasDeBaja) {
-          // Cargar categorías dadas de baja
           categoriasData = await CategoriaService.getCategoriasDadasDeBaja();
         } else {
-          // Cargar todas las categorías
           categoriasData = await CategoriaService.getAllCategoria();
         }
-        
+
         setCategoriasParaEdicion(categoriasData);
       } catch (error) {
         console.error('Error al cargar categorías para edición:', error);
-        // En caso de error, mostrar array vacío para evitar errores en la UI
         setCategoriasParaEdicion([]);
       }
     };
     fetchCategoriasParaEdicion();
   }, [refreshData, mostrarCategoriasDadasDeBaja, editCategory]);
 
-  // Efecto para cargar muebles (activos o dados de baja) de forma paginada o por categoría
   useEffect(() => {
     const fetchMuebles = async () => {
       try {
         setIsLoadingMuebles(true);
         if (mostrarMueblesDadosDeBaja) {
-          // Cargar muebles dados de baja usando el método correcto
           const response = await MuebleService.getMueblesDadosDeBaja(currentPage);
           setMuebles(response.muebles || []);
           setTotalPages(response.totalPages);
         } else if (categoriaSeleccionada) {
-          // Buscar la categoría seleccionada para obtener su ID
           const catObj = categorias.find(cat => cat.nombreCategoria === categoriaSeleccionada);
           if (catObj) {
             const response = await MuebleService.getCatalogoMueblesByCategoria(currentPage, catObj.id);
@@ -157,7 +140,6 @@ const CatalogoTabla = () => {
             setTotalPages(0);
           }
         } else {
-          // Cargar muebles activos (sin filtro de categoría)
           const mueblesData = await MuebleService.getMueblesByPage(currentPage);
           setMuebles(mueblesData);
           setTotalPages(0);
@@ -173,15 +155,54 @@ const CatalogoTabla = () => {
     fetchMuebles();
   }, [refreshData, currentPage, mostrarMueblesDadosDeBaja, categoriaSeleccionada, categorias]);
 
+  // Estado para feedback visual al copiar un link de red social
+  const [copiedLink, setCopiedLink] = useState<{ id: number; tipo: 'instagram' | 'facebook' } | null>(null);
 
-  // Estado y lógica para el filtro de búsqueda por nombre de mueble
+  const handleCopyLink = async (link: string, muebleId: number, tipo: 'instagram' | 'facebook') => {
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopiedLink({ id: muebleId, tipo });
+      setTimeout(() => setCopiedLink(null), 1500);
+    } catch (error) {
+      console.error('Error al copiar el link:', error);
+    }
+  };
+
   const [busquedaMueble, setBusquedaMueble] = useState("");
-  const [localPage, setLocalPage] = useState(0); // Para paginación local
+  const [localPage, setLocalPage] = useState(0);
+  const [mueblesCategoriaCompleta, setMueblesCategoriaCompleta] = useState<Mueble[] | null>(null);
+  const buscandoMueble = busquedaMueble.trim() !== "";
 
-  // Efecto para filtrar muebles por nombre (buscador) y paginar localmente si hay búsqueda
+  // La API pagina de a 12: para buscar en toda la categoría se traen todas sus páginas
+  useEffect(() => {
+    const catObj = categorias.find(cat => cat.nombreCategoria === categoriaSeleccionada);
+    if (!buscandoMueble || mostrarMueblesDadosDeBaja || !catObj) {
+      setMueblesCategoriaCompleta(null);
+      return;
+    }
+    let cancelado = false;
+    const fetchCategoriaCompleta = async () => {
+      try {
+        const primera = await MuebleService.getCatalogoMueblesByCategoria(0, catObj.id);
+        const resto = await Promise.all(
+          Array.from({ length: Math.max(primera.totalPages - 1, 0) }, (_, i) =>
+            MuebleService.getCatalogoMueblesByCategoria(i + 1, catObj.id))
+        );
+        if (!cancelado) {
+          setMueblesCategoriaCompleta([primera, ...resto].flatMap((pagina) => pagina.content));
+        }
+      } catch (error) {
+        console.error('Error al buscar en la categoría:', error);
+      }
+    };
+    fetchCategoriaCompleta();
+    return () => { cancelado = true; };
+  }, [buscandoMueble, mostrarMueblesDadosDeBaja, categoriaSeleccionada, categorias, refreshData]);
+
   useEffect(() => {
     if (busquedaMueble.trim() !== "") {
-      let filtrados = Array.isArray(muebles) ? muebles : [];
+      const base = mueblesCategoriaCompleta ?? muebles;
+      let filtrados = Array.isArray(base) ? base : [];
       filtrados = filtrados.filter(mueble =>
         mueble.nombreMueble.toLowerCase().includes(busquedaMueble.trim().toLowerCase())
       );
@@ -189,43 +210,38 @@ const CatalogoTabla = () => {
     } else {
       setMueblesFiltrados(muebles);
     }
-  }, [muebles, busquedaMueble]);
+  }, [muebles, mueblesCategoriaCompleta, busquedaMueble]);
 
-  // Resetear página local/backend al cambiar búsqueda
   useEffect(() => {
     setLocalPage(0);
     setCurrentPage(0);
   }, [busquedaMueble, categoriaSeleccionada]);
 
-  // Efecto para corregir currentPage/localPage si se queda fuera de rango al cambiar filtros
   useEffect(() => {
     if (busquedaMueble.trim() !== "") {
-      // Paginación local
       const pages = Math.ceil(mueblesFiltrados.length / pageSize);
       if (localPage >= pages && pages > 0) {
         setLocalPage(pages - 1);
       }
     } else {
-      // Paginación backend
       if (currentPage >= totalPages && totalPages > 0) {
         setCurrentPage(totalPages - 1);
       }
     }
   }, [mueblesFiltrados, busquedaMueble, localPage, currentPage, totalPages, pageSize]);
 
-  // Manejadores de eventos para categorías
   const handleClickCategoria = (categoria: string) => {
     setCategoriaSeleccionada(categoria);
     setEditCategory(false);
-    setCurrentPage(0); // Reiniciar la página cuando se selecciona una categoría
-    setMostrarMueblesDadosDeBaja(false); // Resetear filtro de muebles dados de baja
+    setCurrentPage(0);
+    setMostrarMueblesDadosDeBaja(false);
   };
 
   const handleClickEditCategory = () => {
     setEditCategory(true);
     setCategoriaSeleccionada("");
-    setCurrentPage(0); // Reiniciar la página cuando se entra en modo edición
-    setMostrarMueblesDadosDeBaja(false); // Resetear filtro de muebles dados de baja
+    setCurrentPage(0);
+    setMostrarMueblesDadosDeBaja(false);
   };
 
   const handleClickCategoriaButton = (_newNombreCategoria: string, cat: Categoria, modal: ModalType) => {
@@ -234,20 +250,17 @@ const CatalogoTabla = () => {
     setShowEditCategory(true);
   };
 
-  // Manejador para el checkbox de categorías dadas de baja
   const handleToggleCategoriasDadasDeBaja = () => {
     setMostrarCategoriasDadasDeBaja(!mostrarCategoriasDadasDeBaja);
-    setCategoriaSeleccionada(""); // Limpiar la selección actual
+    setCategoriaSeleccionada("");
   };
 
-  // Manejadores de eventos para muebles
   const handleClickMueble = (_newNombreMueble: string, mue: Mueble, modal: ModalType) => {
     setModalType(modal);
     setMueble(mue);
     setShowModal(true);
   };
 
-  // Manejador para abrir el modal de gestión de imágenes
   const handleClickImagenPortada = (mueble: Mueble) => {
     setMuebleParaImagenes(mueble);
     setShowGestionImagenes(true);
@@ -255,58 +268,47 @@ const CatalogoTabla = () => {
 
   const handleModalClose = () => {
     setShowModal(false);
-    // No hacer refresh aquí - el modal ya lo hace cuando es exitoso
   };
 
-  // Manejador para cerrar el modal de gestión de imágenes
   const handleGestionImagenesClose = () => {
     setShowGestionImagenes(false);
   };
 
-  // Manejador para cuando se actualizan las imágenes
   const handleImagenesActualizadas = () => {
-    // Activar refresh para recargar los muebles con las imágenes actualizadas
     setRefreshData(prev => !prev);
   };
 
   const handleCategoryModalClose = async () => {
     setShowEditCategory(false);
-    // Simplificar - solo activar el refresh, no hacer múltiples llamadas
     setRefreshData(prev => !prev);
   };
 
-  // Función para manejar el refresh desde el modal de categoría (optimizada)
   const handleCategoryRefresh = async () => {
     setRefreshData(prev => !prev);
-    
-    // Recargar categorías de manera optimizada
+
     try {
       const categoriasData = await CategoriaService.getAllCategoria();
       setCategorias(categoriasData);
-      
-      // Solo recargar categorías para edición si estamos en modo edición
+
       if (editCategory) {
         let categoriasParaEdicionData: Categoria[] = [];
-        
+
         if (mostrarCategoriasDadasDeBaja) {
           categoriasParaEdicionData = await CategoriaService.getCategoriasDadasDeBaja();
         } else {
-          categoriasParaEdicionData = categoriasData; // Reutilizar las ya cargadas
+          categoriasParaEdicionData = categoriasData;
         }
-        
+
         setCategoriasParaEdicion(categoriasParaEdicionData);
       }
-      
     } catch (error) {
       console.error('Error al recargar categorías:', error);
-      // En caso de error, al menos mantener las categorías principales
       if (editCategory) {
         setCategoriasParaEdicion([]);
       }
     }
   };
 
-  // Manejador para cambio de página
   const handlePageChange = (newPage: number) => {
     if (busquedaMueble.trim() !== "") {
       setLocalPage(newPage);
@@ -319,341 +321,246 @@ const CatalogoTabla = () => {
     return <Loader />;
   }
 
+  const mueblesVisibles = (Array.isArray(mueblesFiltrados) ?
+    (busquedaMueble.trim() !== ""
+      ? mueblesFiltrados.slice(localPage * pageSize, (localPage + 1) * pageSize)
+      : mueblesFiltrados)
+    : []);
+
   return (
-    <div className="abm-container">
-      {/* Overlay para oscurecer el fondo cuando hay modales abiertos */}
-      {(showModal || showEditCategory || showGestionImagenes) && (
-        <div className="modal-overlay show"></div>
-      )}
-
-      {/* Hero Section */}
-        <div className="catalog-header fade-in-up">
-              <h1 className="catalog-title">
-                <i className="fas fa-cogs me-3"></i>
-                Gestión de Categorías y Mueble
-              </h1>
-               <p className="catalog-subtitle">
-              Sistema de gestión de categorías y muebles
-            </p>
-            <hr/>
-            <div className="about-hero-divider"></div>
-         </div>
-
-      {/* Botones de categorías */}
-      <div className="category-buttons-container fade-in">
-        {categorias.map((categoria) => (
-          <button 
-            key={categoria.id}
-            className={`category-btn ${categoriaSeleccionada === categoria.nombreCategoria ? 'active' : ''}`}
-            onClick={() => handleClickCategoria(categoria.nombreCategoria)}
-          >
-            <i className="fas fa-tag me-2"></i>
-            {categoria.nombreCategoria}
-          </button>
-        ))}
-        
-        <button 
-          className="category-btn edit-btn"
-          onClick={handleClickEditCategory}
-        >
-          <i className="fas fa-edit me-2"></i>
-          Editar Categorías
-        </button>
+    <>
+      <div className="mdz-page-header mdz-diagonal-detail">
+        <div className="mdz-container">
+          <p className="mdz-eyebrow">Administración</p>
+          <h1>Categorías y muebles.</h1>
+          <p className="mdz-section-copy">Gestioná el catálogo: categorías, productos, imágenes y links a redes sociales.</p>
+        </div>
       </div>
 
-      {/* Sección de edición de categorías */}
-      {editCategory && (
-        <div className="fade-in">
-          <div className="section-header">
-            <div className="d-flex align-items-center justify-content-center">
-              <i className="fas fa-tags icon"></i>
-              <h3>Administración de Categorías</h3>
-            </div>
-          </div>
+      <div className="mdz-container mdz-section">
+        {/* Botones de categorías */}
+        <div className="mdz-filters mdz-filters-scroll" style={{ marginBottom: 32 }}>
+          {categorias.map((categoria) => (
+            <button
+              key={categoria.id}
+              className={`mdz-btn mdz-btn-filter ${categoriaSeleccionada === categoria.nombreCategoria ? 'is-active' : ''}`}
+              onClick={() => handleClickCategoria(categoria.nombreCategoria)}
+            >
+              <i className="fas fa-tag"></i> {categoria.nombreCategoria}
+            </button>
+          ))}
+          <button
+            className={`mdz-btn mdz-btn-filter ${editCategory ? 'is-active' : ''}`}
+            onClick={handleClickEditCategory}
+          >
+            <i className="fas fa-edit"></i> Editar categorías
+          </button>
+        </div>
 
-          {/* Checkbox para filtrar categorías dadas de baja - Solo en modo edición */}
-          <div className="filter-section">
-            <div className="form-check">
+        {/* Sección de edición de categorías */}
+        {editCategory && (
+          <div style={{ marginBottom: 48 }}>
+            <div className="mdz-section-heading">
+              <div>
+                <p className="mdz-eyebrow">Categorías</p>
+                <h2>Administración de categorías.</h2>
+              </div>
+              <button
+                className="mdz-btn mdz-btn-brand"
+                onClick={() => handleClickCategoriaButton("Nueva Categoría", initializeNewCategoria(), ModalType.CREATE)}
+              >
+                <i className="fas fa-plus"></i> Nueva categoría
+              </button>
+            </div>
+
+            <label className="mdz-checkbox-field">
               <input
-                className="form-check-input"
                 type="checkbox"
-                id="mostrarCategoriasDadasDeBaja"
                 checked={mostrarCategoriasDadasDeBaja}
                 onChange={handleToggleCategoriasDadasDeBaja}
               />
-              <label className="form-check-label" htmlFor="mostrarCategoriasDadasDeBaja">
-                <i className="fas fa-eye-slash me-2"></i>
-                Mostrar solo categorías dadas de baja
-              </label>
-            </div>
-          </div>
+              Mostrar solo categorías dadas de baja
+            </label>
 
-          <div className="category-buttons-container">
-            <button 
-              className="category-btn new-btn"
-              onClick={() => handleClickCategoriaButton(
-                "Nueva Categoría", 
-                initializeNewCategoria(), 
-                ModalType.CREATE
-              )}
-            >
-              <i className="fas fa-plus me-2"></i>
-              Nueva Categoría
-            </button>
-          </div>
-          
-          <div className="table-container">
-            <div className="table-responsive">
-              {categoriasParaEdicion.length === 0 ? (
-                <div className="text-center py-5">
-                  <i className="fas fa-info-circle fa-3x text-muted mb-3"></i>
-                  <h5 className="text-muted">
-                    {mostrarCategoriasDadasDeBaja 
-                      ? "No hay categorías dadas de baja" 
-                      : "No hay categorías disponibles"}
-                  </h5>
-                  <p className="text-muted">
-                    {mostrarCategoriasDadasDeBaja 
-                      ? "Todas las categorías están activas actualmente." 
-                      : "Crea una nueva categoría para comenzar."}
-                  </p>
-                </div>
-              ) : (
-                <Table className="professional-table">
+            {categoriasParaEdicion.length === 0 ? (
+              <div className="mdz-empty-table">
+                <i className="fas fa-info-circle"></i>
+                <h3>{mostrarCategoriasDadasDeBaja ? 'No hay categorías dadas de baja' : 'No hay categorías disponibles'}</h3>
+                <p>{mostrarCategoriasDadasDeBaja ? 'Todas las categorías están activas actualmente.' : 'Creá una nueva categoría para comenzar.'}</p>
+              </div>
+            ) : (
+              <div className="mdz-table-wrap">
+                <table className="mdz-table mdz-cards-categoria">
                   <thead>
                     <tr>
-                      <th>ID Categoría</th>
-                      <th>Nombre de la Categoría</th>
-                      <th>Fecha de Creación</th>
-                      <th>Última Modificación</th>
-                      <th>Fecha de Baja</th>
-                      <th>Estado Actual</th>
-                      <th>Acciones Disponibles</th>
+                      <th>ID</th>
+                      <th>Nombre</th>
+                      <th>Alta</th>
+                      <th>Modificación</th>
+                      <th>Baja</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
                     {categoriasParaEdicion.map((categoria, idx) => (
-                      <tr key={categoria.id ? categoria.id : `new-${idx}`} className="slide-in">
+                      <tr key={categoria.id ? categoria.id : `new-${idx}`}>
+                        <td>#{categoria.id}</td>
+                        <td><strong>{categoria.nombreCategoria}</strong></td>
+                        <td>{categoria.fechaAltaCategoria ? new Date(categoria.fechaAltaCategoria).toLocaleDateString() : 'N/A'}</td>
+                        <td>{categoria.fechaModificacionCategoria ? new Date(categoria.fechaModificacionCategoria).toLocaleDateString() : 'N/A'}</td>
+                        <td>{categoria.fechaBajaCategoria ? new Date(categoria.fechaBajaCategoria).toLocaleDateString() : <span style={{ color: 'var(--mdz-muted-foreground)' }}>-</span>}</td>
                         <td>
-                          <span className="status-badge active">#{categoria.id}</span>
-                        </td>
-                        <td>
-                          <strong>{categoria.nombreCategoria}</strong>
-                        </td>
-                        <td>
-                          {categoria.fechaAltaCategoria ? 
-                            new Date(categoria.fechaAltaCategoria).toLocaleDateString() : 
-                            'N/A'
-                          }
-                        </td>
-                        <td>
-                          {categoria.fechaModificacionCategoria ? 
-                            new Date(categoria.fechaModificacionCategoria).toLocaleDateString() : 
-                            'N/A'
-                          }
-                        </td>
-                        <td>
-                          {categoria.fechaBajaCategoria ? 
-                            new Date(categoria.fechaBajaCategoria).toLocaleDateString() : 
-                            <span className="text-muted">-</span>
-                          }
-                        </td>
-                        <td>
-                          <span className={`status-badge ${categoria.fechaBajaCategoria ? 'inactive' : 'active'}`}>
+                          <span className={`mdz-pill ${categoria.fechaBajaCategoria ? 'mdz-pill-muted' : 'mdz-pill-success'}`}>
                             {categoria.fechaBajaCategoria ? 'Inactiva' : 'Activa'}
                           </span>
                         </td>
                         <td>
-                          {!categoria.fechaBajaCategoria && (
-                            <button 
-                              className="action-btn edit-btn"
-                              onClick={() => handleClickCategoriaButton(
-                                "Editar categoría", 
-                                categoria, 
-                                ModalType.UPDATE
-                              )}
-                            >
-                              <i className="fas fa-edit me-1"></i>
-                              Editar
-                            </button>
-                          )}
-                          
-                          {!categoria.fechaBajaCategoria && (
-                            <button 
-                              className="action-btn warning-btn"
-                              onClick={() => handleClickCategoriaButton(
-                                "Dar de baja categoría", 
-                                categoria, 
-                                ModalType.BAJA_LOGICA
-                              )}
-                            >
-                              <i className="fas fa-ban me-1"></i>
-                              Dar de Baja
-                            </button>
-                          )}
-                          
-                          {categoria.fechaBajaCategoria && (
-                            <span className="text-muted font-italic">
-                              <i className="fas fa-lock me-1"></i>
-                              No editable
+                          {!categoria.fechaBajaCategoria ? (
+                            <div className="mdz-row-actions">
+                              <button
+                                className="mdz-icon-btn"
+                                title="Editar categoría"
+                                onClick={() => handleClickCategoriaButton("Editar categoría", categoria, ModalType.UPDATE)}
+                              >
+                                <i className="fas fa-edit"></i>
+                              </button>
+                              <button
+                                className="mdz-icon-btn"
+                                title="Dar de baja categoría"
+                                onClick={() => handleClickCategoriaButton("Dar de baja categoría", categoria, ModalType.BAJA_LOGICA)}
+                              >
+                                <i className="fas fa-ban"></i>
+                              </button>
+                            </div>
+                          ) : (
+                            <span style={{ color: 'var(--mdz-muted-foreground)', fontSize: 12 }}>
+                              <i className="fas fa-lock"></i> No editable
                             </span>
                           )}
                         </td>
                       </tr>
                     ))}
                   </tbody>
-                </Table>
-              )}
-            </div>
+                </table>
+              </div>
+            )}
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Sección de todos los muebles (con filtros) */}
-      {/* Ahora solo se muestra si hay una categoría seleccionada y no está en modo edición */}
-      {/* Si quieres que no se muestre nunca hasta seleccionar categoría, simplemente no renderices nada aquí */}
-      {/* Si quieres mostrar un mensaje, puedes agregarlo aquí */}
-      {!categoriaSeleccionada && !editCategory && (
-        <></>
-      )}
-
-      {/* Sección de muebles filtrados por categoría */}
-      {categoriaSeleccionada && (
-        <div className="fade-in">
-          <div className="section-header">
-            <div className="d-flex align-items-center justify-content-center">
-              <i className="fas fa-couch icon"></i>
-              <h3>
-                Muebles de la categoría: 
-                <span className="subtitle">{categoriaSeleccionada}</span>
-              </h3>
+        {/* Sección de muebles filtrados por categoría */}
+        {categoriaSeleccionada && (
+          <div>
+            <div className="mdz-section-heading">
+              <div>
+                <p className="mdz-eyebrow">Muebles</p>
+                <h2>Categoría: {categoriaSeleccionada}</h2>
+              </div>
             </div>
-          </div>
 
-          {/* Filtro para muebles dados de baja */}
-          <div className="filter-section" style={{ maxWidth: 350, marginBottom: 10, textAlign: 'left' }}>
-            <div className="form-check">
+            <label className="mdz-checkbox-field">
               <input
-                className="form-check-input"
                 type="checkbox"
-                id="mostrarMueblesDadosDeBaja"
                 checked={mostrarMueblesDadosDeBaja}
                 onChange={() => setMostrarMueblesDadosDeBaja(v => !v)}
               />
-              <label className="form-check-label" htmlFor="mostrarMueblesDadosDeBaja">
-                <i className="fas fa-eye-slash me-2"></i>
-                Mostrar solo muebles dados de baja
-              </label>
-            </div>
-          </div>
+              Mostrar solo muebles dados de baja
+            </label>
 
-
-          {/* Botón Nuevo mueble y Buscador en la misma fila */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, gap: 16 }}>
-            <div>
-              <button 
-                className="category-btn new-btn"
-                onClick={() => handleClickMueble(
-                  "Nuevo mueble", 
-                  initializeNewMueble(), 
-                  ModalType.CREATE
-                )}
+            <div className="mdz-toolbar">
+              <button
+                className="mdz-btn mdz-btn-brand"
+                onClick={() => handleClickMueble("Nuevo mueble", initializeNewMueble(), ModalType.CREATE)}
               >
-                <i className="fas fa-plus me-2"></i>
-                Nuevo Mueble
+                <i className="fas fa-plus"></i> Nuevo mueble
               </button>
+              <div className="mdz-search" style={{ minWidth: 280, maxWidth: 340 }}>
+                <i className="fas fa-search"></i>
+                <input
+                  type="text"
+                  placeholder="Buscar mueble por nombre..."
+                  value={busquedaMueble}
+                  onChange={e => setBusquedaMueble(e.target.value)}
+                />
+              </div>
             </div>
-            <div style={{ maxWidth: 350, width: '100%' }}>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Buscar mueble por nombre..."
-                value={busquedaMueble}
-                onChange={e => setBusquedaMueble(e.target.value)}
-                style={{ borderRadius: 8, border: '1px solid #ccc', padding: 8 }}
-              />
-            </div>
-          </div>
 
-          <div className="table-container">
             {isLoadingMuebles ? (
-              <div className="text-center py-5">
-                <i className="fas fa-spinner fa-spin fa-3x text-primary mb-3"></i>
-                <h5 className="text-muted">Cargando muebles...</h5>
-                <p className="text-muted">Por favor espera un momento</p>
+              <div className="mdz-loading-state"><Loader /></div>
+            ) : mueblesVisibles.length === 0 ? (
+              <div className="mdz-empty-table">
+                <i className="fas fa-couch"></i>
+                <h3>No hay muebles disponibles</h3>
+                <p>Creá un nuevo mueble para esta categoría.</p>
               </div>
             ) : (
-              <div className="table-responsive">
-                <Table className="professional-table">
-                <thead>
-                  <tr>
-                    <th>ID Mueble</th>
-                    <th>Nombre del Mueble</th>
-                    <th>Categoría</th>
-                    <th>Detalles del Producto</th>
-                    <th>Precio (ARS)</th>
-                    <th>Descripción</th>
-                    <th>Imagen Principal</th>
-                    <th>Acciones Disponibles</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(Array.isArray(mueblesFiltrados) ?
-                    (busquedaMueble.trim() !== ""
-                      ? mueblesFiltrados.slice(localPage * pageSize, (localPage + 1) * pageSize)
-                      : mueblesFiltrados)
-                    : []).map((mueble) => (
-                    <tr key={mueble.id} className="slide-in">
-                      <td>
-                        <span className="status-badge active">#{mueble.id}</span>
-                      </td>
-                      <td>
-                        <strong>{mueble.nombreMueble}</strong>
-                      </td>
-                      <td>
-                        <div className="category-info">
-                          <span className="category-name">{mueble.categoria?.nombreCategoria || 'Sin categoría'}</span>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="product-details-compact">
-                          <div className="detail-row">
-                            <i className="fas fa-palette me-1"></i>
-                            <span>{mueble.colorMueble}</span>
+              <div className="mdz-table-wrap">
+                <table className="mdz-table mdz-cards-mueble">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre</th>
+                      <th>Categoría</th>
+                      <th>Detalles</th>
+                      <th>Descripción</th>
+                      <th>Redes</th>
+                      <th>Imagen</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {mueblesVisibles.map((mueble) => (
+                      <tr key={mueble.id}>
+                        <td>#{mueble.id}</td>
+                        <td><strong>{mueble.nombreMueble}</strong></td>
+                        <td>{mueble.categoria?.nombreCategoria || 'Sin categoría'}</td>
+                        <td>
+                          <div style={{ fontSize: 12.5 }}>
+                            <div><i className="fas fa-palette" style={{ color: 'var(--mdz-primary)', width: 14 }}></i> {mueble.colorMueble}</div>
+                            <div style={{ color: 'var(--mdz-muted-foreground)' }}>
+                              <i className="fas fa-calendar-plus" style={{ width: 14 }}></i> {mueble.fechaAltaMueble ? new Date(mueble.fechaAltaMueble).toLocaleDateString() : 'N/A'}
+                            </div>
                           </div>
-                          <div className="detail-row">
-                            <i className="fas fa-ruler me-1"></i>
-                            <span>{mueble.dimension || 'N/A'}</span>
+                        </td>
+                        <td>
+                          <div style={{ maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--mdz-muted-foreground)' }} title={mueble.descripcion}>
+                            {mueble.descripcion}
                           </div>
-                          <div className="detail-row">
-                            <i className="fas fa-tree me-1"></i>
-                            <span>{mueble.tipoMadera}</span>
+                        </td>
+                        <td>
+                          <div className="d-flex gap-2">
+                            {mueble.linkInstagram ? (
+                              <button
+                                type="button"
+                                className="mdz-icon-btn"
+                                title="Copiar link de Instagram"
+                                onClick={() => handleCopyLink(mueble.linkInstagram!, mueble.id, 'instagram')}
+                                style={{ color: copiedLink?.id === mueble.id && copiedLink.tipo === 'instagram' ? 'oklch(0.6 0.17 150)' : '#E1306C' }}
+                              >
+                                <i className={copiedLink?.id === mueble.id && copiedLink.tipo === 'instagram' ? 'fas fa-check' : 'fab fa-instagram'}></i>
+                              </button>
+                            ) : null}
+                            {mueble.linkFacebook ? (
+                              <button
+                                type="button"
+                                className="mdz-icon-btn"
+                                title="Copiar link de Facebook"
+                                onClick={() => handleCopyLink(mueble.linkFacebook!, mueble.id, 'facebook')}
+                                style={{ color: copiedLink?.id === mueble.id && copiedLink.tipo === 'facebook' ? 'oklch(0.6 0.17 150)' : '#1877F2' }}
+                              >
+                                <i className={copiedLink?.id === mueble.id && copiedLink.tipo === 'facebook' ? 'fas fa-check' : 'fab fa-facebook'}></i>
+                              </button>
+                            ) : null}
+                            {!mueble.linkInstagram && !mueble.linkFacebook && (
+                              <span style={{ color: 'var(--mdz-muted-foreground)' }}>-</span>
+                            )}
                           </div>
-                          <div className="detail-row">
-                            <i className="fas fa-calendar-plus me-1"></i>
-                            <span>{mueble.fechaAltaMueble ? new Date(mueble.fechaAltaMueble).toLocaleDateString() : 'N/A'}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="price-compact">
-                          {mueble.precio ? (
-                            <span className="price-display">${mueble.precio.toLocaleString()}</span>
-                          ) : (
-                            <span className="price-na">Sin precio</span>
-                          )}
-                        </div>
-                      </td>
-                      <td>
-                        <div className="description-compact">
-                          {mueble.descripcion}
-                        </div>
-                      </td>
-                      <td>
-                        <div className="imagen-portada-container">
+                        </td>
+                        <td>
                           {mueble.imagenPortada && typeof mueble.imagenPortada === 'string' ? (
                             <img
-                              className="image-preview clickable-image"
+                              className="mdz-table-thumb"
+                              style={{ cursor: 'pointer' }}
                               src={`data:image/jpeg;base64,${mueble.imagenPortada}`}
                               alt={mueble.nombreMueble}
                               onClick={() => handleClickImagenPortada(mueble)}
@@ -661,7 +568,8 @@ const CatalogoTabla = () => {
                             />
                           ) : mueble.imagenPortada && typeof mueble.imagenPortada === 'object' && (mueble.imagenPortada as any).imagenes ? (
                             <img
-                              className="image-preview clickable-image"
+                              className="mdz-table-thumb"
+                              style={{ cursor: 'pointer' }}
                               src={`data:image/png;base64,${(mueble.imagenPortada as any).imagenes}`}
                               alt={mueble.nombreMueble}
                               onClick={() => handleClickImagenPortada(mueble)}
@@ -671,7 +579,8 @@ const CatalogoTabla = () => {
                             (mueble.imagenes || []).filter(imagen => imagen.esPortada).map((imagen, index) => (
                               <img
                                 key={index}
-                                className="image-preview clickable-image"
+                                className="mdz-table-thumb"
+                                style={{ cursor: 'pointer' }}
                                 src={`data:image/png;base64,${imagen.imagenes}`}
                                 alt={mueble.nombreMueble}
                                 onClick={() => handleClickImagenPortada(mueble)}
@@ -679,76 +588,58 @@ const CatalogoTabla = () => {
                               />
                             ))
                           ) : (
-                            <div
-                              className="no-image-placeholder clickable-image"
+                            <button
+                              className="mdz-icon-btn"
                               onClick={() => handleClickImagenPortada(mueble)}
                               title="Click para agregar imágenes"
                             >
                               <i className="fas fa-plus-circle"></i>
-                              <span>Agregar imagen</span>
+                            </button>
+                          )}
+                        </td>
+                        <td>
+                          {!mostrarMueblesDadosDeBaja ? (
+                            <div className="mdz-row-actions">
+                              <button
+                                className="mdz-icon-btn"
+                                title="Editar producto"
+                                onClick={() => handleClickMueble("Editar producto", mueble, ModalType.UPDATE)}
+                              >
+                                <i className="fas fa-edit"></i>
+                              </button>
+                              <button
+                                className="mdz-icon-btn"
+                                title="Dar de baja mueble"
+                                onClick={() => handleClickMueble("Dar de baja mueble", mueble, ModalType.BAJA_LOGICA)}
+                              >
+                                <i className="fas fa-ban"></i>
+                              </button>
                             </div>
-                          )}
-                        </div>
-                      </td>
-                      <td>
-                        <div className="d-flex flex-column gap-1">
-                          {/* Solo mostrar acciones si NO está activado el filtro de dados de baja */}
-                          {!mostrarMueblesDadosDeBaja && (
-                            <>
-                              <button 
-                                className="action-btn edit-btn"
-                                onClick={() => handleClickMueble(
-                                  "Editar producto", 
-                                  mueble, 
-                                  ModalType.UPDATE
-                                )}
-                              >
-                                <i className="fas fa-edit me-1"></i>
-                                Editar
-                              </button>
-                              <button 
-                                className="action-btn warning-btn"
-                                onClick={() => handleClickMueble(
-                                  "Dar de baja mueble", 
-                                  mueble, 
-                                  ModalType.BAJA_LOGICA
-                                )}
-                              >
-                                <i className="fas fa-ban me-1"></i>
-                                Dar de Baja
-                              </button>
-                            </>
-                          )}
-                          {/* Si está activado el filtro, mostrar solo texto informativo */}
-                          {mostrarMueblesDadosDeBaja && (
-                            <span className="text-muted font-italic">
-                              <i className="fas fa-lock me-1"></i>
-                              No editable
+                          ) : (
+                            <span style={{ color: 'var(--mdz-muted-foreground)', fontSize: 12 }}>
+                              <i className="fas fa-lock"></i> No editable
                             </span>
                           )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
-          </div>
-          
-          {/* Controles de paginación */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
-            <Pagination
-              currentPage={busquedaMueble.trim() !== "" ? localPage + 1 : currentPage + 1}
-              totalPages={busquedaMueble.trim() !== "" ? Math.max(1, Math.ceil(mueblesFiltrados.length / pageSize)) : (totalPages > 0 ? totalPages : 1)}
-              onPageChange={page => handlePageChange(page - 1)}
-              isLoading={isLoadingMuebles}
-            />
-          </div>
-        </div>
-      )}
 
-      {/* Modal de categorías */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 28 }}>
+              <Pagination
+                currentPage={busquedaMueble.trim() !== "" ? localPage + 1 : currentPage + 1}
+                totalPages={busquedaMueble.trim() !== "" ? Math.max(1, Math.ceil(mueblesFiltrados.length / pageSize)) : (totalPages > 0 ? totalPages : 1)}
+                onPageChange={page => handlePageChange(page - 1)}
+                isLoading={isLoadingMuebles}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
       {showEditCategory && (
         <ModalABMCategoria
           show={showEditCategory}
@@ -759,7 +650,6 @@ const CatalogoTabla = () => {
         />
       )}
 
-      {/* Modal de muebles */}
       {showModal && (
         <CatalogoModalMueble
           show={showModal}
@@ -772,7 +662,6 @@ const CatalogoTabla = () => {
         />
       )}
 
-      {/* Modal de gestión de imágenes */}
       {showGestionImagenes && (
         <ModalGestionImagenes
           show={showGestionImagenes}
@@ -781,7 +670,7 @@ const CatalogoTabla = () => {
           onImagenesActualizadas={handleImagenesActualizadas}
         />
       )}
-    </div>
+    </>
   );
 };
 

@@ -4,7 +4,7 @@ export interface RegisterRequest {
 
     nombreCliente: string,
     apellidoCliente: string,
-    telefonoCliente: number,
+    telefonoCliente: string,
     mailCliente: string,
 
    

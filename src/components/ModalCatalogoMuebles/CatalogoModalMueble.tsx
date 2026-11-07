@@ -1,5 +1,7 @@
-import { Button, Form, Modal, FormLabel, Table } from "react-bootstrap";
+import { Form, Modal, FormLabel } from "react-bootstrap";
 import './CatalogoModalMueble.css';
+import '../../styles/mdz-theme.css';
+import '../../styles/mdz-site.css';
 import { ModalType } from "../../types/ModalType";
 import { Mueble } from "../../types/Mueble";
 
@@ -221,12 +223,9 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
             id: Yup.number().integer().min(0),
             nombreMueble: Yup.string().required('El titulo es requerido'),
             colorMueble: Yup.string().min(0).required('El color es requido'),
-            dimension: Yup.string().nullable().optional(), // Campo opcional
-            tipoMadera: Yup.string().required('El tipo madera es requerido'),
-            precio: Yup.number().nullable().optional().test('positive', 'El precio tiene que ser positivo', value => {
-                return value === null || value === undefined || value > 0;
-            }), // Campo opcional
             descripcion: Yup.string().min(0).required('La descripción es requerida'),
+            linkInstagram: Yup.string().url('Debe ser una URL válida').nullable(),
+            linkFacebook: Yup.string().url('Debe ser una URL válida').nullable(),
         });
     };
 
@@ -249,7 +248,7 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
     <>
     {modalType === ModalType.DELETE || modalType === ModalType.BAJA_LOGICA ?( 
         <> 
-         <Modal show={show} onHide={onHide} centered backdrop="static" dialogClassName="responsive-scrollable-modal">
+         <Modal show={show} onHide={onHide} centered backdrop="static" dialogClassName="responsive-scrollable-modal" contentClassName="mdz-modal-content">
             <Modal.Header closeButton>
                 <Modal.Title>{getModalTitle()}</Modal.Title>
             </Modal.Header>
@@ -271,33 +270,34 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
             </Modal.Body>
 
             <Modal.Footer>
-                <Button variant="secondary" onClick={onHide} disabled={isLoading}>
+                <button type="button" className="mdz-btn mdz-btn-filter" onClick={onHide} disabled={isLoading}>
                     Cancelar
-                </Button>
+                </button>
 
-                <Button 
-                    variant={modalType === ModalType.DELETE ? "danger" : "warning"} 
-                    onClick={modalType === ModalType.DELETE ? handleDelete : handleBajaLogica} 
+                <button
+                    type="button"
+                    className="mdz-btn mdz-btn-brand"
+                    onClick={modalType === ModalType.DELETE ? handleDelete : handleBajaLogica}
                     disabled={isLoading}
                 >
                     {isLoading ? (
                         <>
-                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             {modalType === ModalType.DELETE ? "Eliminando..." : "Dando de baja..."}
                         </>
                     ) : (
                         <>
-                            <i className={`fas ${modalType === ModalType.DELETE ? 'fa-trash' : 'fa-ban'} me-2`}></i>
+                            <i className={`fas ${modalType === ModalType.DELETE ? 'fa-trash' : 'fa-ban'}`}></i>
                             {modalType === ModalType.DELETE ? "Eliminar" : "Dar de Baja"}
                         </>
                     )}
-                </Button>
+                </button>
             </Modal.Footer>
         </Modal>
         </>     
     ) : (
         <>
-        <Modal show={show} onHide={onHide} centered backdrop="static" dialogClassName="responsive-scrollable-modal">
+        <Modal show={show} onHide={onHide} centered backdrop="static" dialogClassName={`responsive-scrollable-modal ${modalType === ModalType.CREATE ? 'mdz-mueble-create' : ''}`} contentClassName="mdz-modal-content">
             <Modal.Header closeButton>
                 <Modal.Title>
                     {isLoading && <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>}
@@ -337,59 +337,6 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group controlId="formDimension">
-                        <FormLabel> Tamaño <small className="text-muted">(opcional)</small></FormLabel>
-                        <Form.Control
-                            name= "dimension"
-                            type="text"
-                            placeholder="Ej: 200cm x 100cm x 50cm"
-                            value={formik.values.dimension ||''}
-                            onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
-                            isInvalid= {Boolean(formik.errors.dimension && formik.touched.dimension)}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            {formik.errors.dimension}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group controlId="formTipoMadera">
-                        <FormLabel> Tipo de madera </FormLabel>
-                        <Form.Control
-                            as="select"
-                            name="tipoMadera"
-                            value={formik.values.tipoMadera || ''}
-                            onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
-                            isInvalid={Boolean(formik.errors.tipoMadera && formik.touched.tipoMadera)}
-                        >
-                            <option value="">Selecciona un tipo de madera</option>
-                            <option value="MELAMINA">MELAMINA</option>
-                        </Form.Control>
-                        {formik.errors.tipoMadera && formik.touched.tipoMadera && (
-                            <Form.Control.Feedback type="invalid">
-                                {formik.errors.tipoMadera}
-                            </Form.Control.Feedback>
-                        )}
-                    </Form.Group>
-
-                    <Form.Group controlId="formPrecio">
-                        <FormLabel> Precio <small className="text-muted">(opcional)</small></FormLabel>
-                        <Form.Control
-                            name= "precio"
-                            type="number"
-                            placeholder="Ingrese el precio"
-                            value={formik.values.precio ||''}
-                            min="0"
-                            onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
-                            isInvalid= {Boolean(formik.errors.precio && !!formik.touched.precio)}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            {formik.errors.precio}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
                     <Form.Group controlId="formDescripcion">
                         <FormLabel> Descripción </FormLabel>
                         <Form.Control
@@ -404,6 +351,51 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                             {formik.errors.descripcion}
                         </Form.Control.Feedback>
                     </Form.Group>
+
+                    <Form.Group controlId="formLinkInstagram">
+                        <FormLabel> <i className="fab fa-instagram me-1"></i> Link de Instagram (opcional) </FormLabel>
+                        <Form.Control
+                            name="linkInstagram"
+                            type="text"
+                            placeholder="https://www.instagram.com/p/..."
+                            value={formik.values.linkInstagram || ''}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            isInvalid={Boolean(formik.errors.linkInstagram && formik.touched.linkInstagram)}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {formik.errors.linkInstagram}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group controlId="formLinkFacebook">
+                        <FormLabel> <i className="fab fa-facebook me-1"></i> Link de Facebook (opcional) </FormLabel>
+                        <Form.Control
+                            name="linkFacebook"
+                            type="text"
+                            placeholder="https://www.facebook.com/..."
+                            value={formik.values.linkFacebook || ''}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            isInvalid={Boolean(formik.errors.linkFacebook && formik.touched.linkFacebook)}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {formik.errors.linkFacebook}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    {/* Publicar solo se decide al crear: después ya no se puede cambiar */}
+                    {modalType === ModalType.CREATE && (
+                        <Form.Group controlId="formPublicar" className="mt-3">
+                            <Form.Check
+                                type="checkbox"
+                                name="publicar"
+                                label="Publicar en Novedades (no se puede cambiar después)"
+                                checked={Boolean(formik.values.publicar)}
+                                onChange={formik.handleChange}
+                            />
+                        </Form.Group>
+                    )}
 
                     {/* Solo mostrar la sección de imágenes al crear un mueble nuevo */}
                     {modalType === ModalType.CREATE && (
@@ -420,18 +412,18 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                                 
                                 {/* Botón para abrir el modal de imágenes */}
                                 <div className="d-flex justify-content-between align-items-center mb-3">
-                                    <Button 
-                                        variant="outline-primary" 
+                                    <button
+                                        type="button"
+                                        className="mdz-btn mdz-btn-filter"
                                         onClick={handleOpenImagenesModal}
-                                        className="me-2"
                                         disabled={isLoading}
                                     >
-                                        <i className="fas fa-plus me-2"></i>
+                                        <i className="fas fa-plus"></i>
                                         {selectedFiles.length > 0 ? 'Editar Imágenes' : 'Agregar Imágenes'}
-                                    </Button>
+                                    </button>
                                     
                                     {selectedFiles.length > 0 && (
-                                        <span className="badge bg-success">
+                                        <span className="mdz-pill mdz-pill-success">
                                             {selectedFiles.length} imagen(es) seleccionada(s)
                                         </span>
                                     )}
@@ -444,8 +436,9 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                                             <i className="fas fa-list me-2"></i>
                                             Imágenes Seleccionadas
                                         </h6>
-                                        <Table striped bordered hover size="sm" className="mb-0">
-                                            <thead className="table-light">
+                                        <div className="mdz-table-wrap">
+                                        <table className="mdz-table">
+                                            <thead>
                                                 <tr>
                                                     <th style={{ width: '60px' }}>Orden</th>
                                                     <th style={{ width: '80px' }}>Miniatura</th>
@@ -457,20 +450,20 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                                                 {selectedFiles.map((file, index) => (
                                                     <tr key={file.id}>
                                                         <td className="text-center">
-                                                            <span className="badge bg-secondary">
+                                                            <span className="mdz-pill mdz-pill-muted">
                                                                 {index + 1}
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <img 
-                                                                src={file.url} 
+                                                            <img
+                                                                src={file.url}
                                                                 alt={`Imagen ${index + 1}`}
-                                                                style={{ 
-                                                                    width: '50px', 
-                                                                    height: '40px', 
+                                                                style={{
+                                                                    width: '50px',
+                                                                    height: '40px',
                                                                     objectFit: 'cover',
                                                                     borderRadius: '4px',
-                                                                    border: file.esPortada ? '2px solid #28a745' : '1px solid #dee2e6'
+                                                                    border: file.esPortada ? '2px solid var(--mdz-primary)' : '1px solid var(--mdz-border)'
                                                                 }}
                                                             />
                                                         </td>
@@ -478,28 +471,29 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                                                             <div className="text-truncate" style={{ maxWidth: '150px' }}>
                                                                 {file.file.name}
                                                             </div>
-                                                            <small className="text-muted">
+                                                            <small style={{ color: 'var(--mdz-muted-foreground)' }}>
                                                                 {(file.file.size / 1024 / 1024).toFixed(2)} MB
                                                             </small>
                                                         </td>
                                                         <td className="text-center">
                                                             {file.esPortada && (
-                                                                <i className="fas fa-check-circle text-success" title="Imagen portada"></i>
+                                                                <i className="fas fa-check-circle" style={{ color: 'var(--mdz-primary)' }} title="Imagen portada"></i>
                                                             )}
                                                         </td>
                                                     </tr>
                                                 ))}
                                             </tbody>
-                                        </Table>
+                                        </table>
+                                        </div>
                                     </div>
                                 )}
 
                                 {/* Mensaje cuando no hay imágenes seleccionadas */}
                                 {selectedFiles.length === 0 && (
-                                    <div className="text-center py-3 bg-light rounded">
-                                        <i className="fas fa-image fa-2x text-muted mb-2"></i>
-                                        <p className="text-muted mb-0">No hay imágenes seleccionadas</p>
-                                        <small className="text-muted">Haga clic en "Agregar Imágenes" para seleccionar</small>
+                                    <div className="text-center py-3 rounded" style={{ background: 'var(--mdz-secondary)' }}>
+                                        <i className="fas fa-image fa-2x mb-2" style={{ color: 'var(--mdz-muted-foreground)' }}></i>
+                                        <p className="mb-0" style={{ color: 'var(--mdz-muted-foreground)' }}>No hay imágenes seleccionadas</p>
+                                        <small style={{ color: 'var(--mdz-muted-foreground)' }}>Haga clic en "Agregar Imágenes" para seleccionar</small>
                                     </div>
                                 )}
                             </Form.Group>
@@ -511,12 +505,12 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                 </Form>
 
                 <Modal.Footer className="mt-4">
-                    <Button variant="secondary" onClick={onHide} disabled={isLoading}>
+                    <button type="button" className="mdz-btn mdz-btn-filter" onClick={onHide} disabled={isLoading}>
                         Cancelar
-                    </Button>
-                    <Button 
-                        variant="primary" 
-                        type="submit" 
+                    </button>
+                    <button
+                        type="submit"
+                        className="mdz-btn mdz-btn-brand"
                         disabled={!formik.isValid || isLoading}
                         onClick={(e) => {
                             e.preventDefault();
@@ -525,16 +519,16 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                     >
                         {isLoading ? (
                             <>
-                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 Guardando...
                             </>
                         ) : (
                             <>
-                                <i className="fas fa-save me-2"></i>
+                                <i className="fas fa-save"></i>
                                 Guardar
                             </>
                         )}
-                    </Button>
+                    </button>
                 </Modal.Footer>
             </Modal.Body>
         </Modal>

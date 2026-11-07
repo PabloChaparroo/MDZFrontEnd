@@ -1,5 +1,6 @@
 import React from 'react';
-import './Pagination.css';
+import '../../styles/mdz-theme.css';
+import '../../styles/mdz-site.css';
 
 interface PaginationProps {
   currentPage: number;
@@ -8,11 +9,11 @@ interface PaginationProps {
   isLoading?: boolean;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ 
-  currentPage, 
-  totalPages, 
-  onPageChange, 
-  isLoading = false 
+const Pagination: React.FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+  isLoading = false
 }) => {
   // Función para generar el rango de páginas visibles
   const getVisiblePages = () => {
@@ -21,8 +22,8 @@ const Pagination: React.FC<PaginationProps> = ({
     const rangeWithDots = [];
 
     // Calcular el rango de páginas
-    for (let i = Math.max(2, currentPage - delta); 
-         i <= Math.min(totalPages - 1, currentPage + delta); 
+    for (let i = Math.max(2, currentPage - delta);
+         i <= Math.min(totalPages - 1, currentPage + delta);
          i++) {
       range.push(i);
     }
@@ -55,15 +56,15 @@ const Pagination: React.FC<PaginationProps> = ({
   const visiblePages = getVisiblePages();
 
   return (
-    <div className="pagination-container">
-      <div className="pagination-info">
+    <div className="mdz-pagination">
+      <div className="mdz-pagination-info">
         <span>Página {currentPage} de {totalPages}</span>
       </div>
-      
-      <div className="pagination-controls">
+
+      <div className="mdz-pagination-controls">
         {/* Botón Primera Página */}
         <button
-          className={`pagination-btn ${currentPage === 1 ? 'disabled' : ''}`}
+          className="mdz-pagination-btn"
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1 || isLoading}
           title="Primera página"
@@ -73,7 +74,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
         {/* Botón Anterior */}
         <button
-          className={`pagination-btn ${currentPage === 1 ? 'disabled' : ''}`}
+          className="mdz-pagination-btn"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1 || isLoading}
           title="Página anterior"
@@ -85,10 +86,10 @@ const Pagination: React.FC<PaginationProps> = ({
         {visiblePages.map((page, index) => (
           <React.Fragment key={index}>
             {page === '...' ? (
-              <span className="pagination-dots">...</span>
+              <span className="mdz-pagination-dots">...</span>
             ) : (
               <button
-                className={`pagination-btn ${currentPage === page ? 'active' : ''}`}
+                className={`mdz-pagination-btn ${currentPage === page ? 'is-active' : ''}`}
                 onClick={() => onPageChange(page as number)}
                 disabled={isLoading}
               >
@@ -100,7 +101,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
         {/* Botón Siguiente */}
         <button
-          className={`pagination-btn ${currentPage === totalPages ? 'disabled' : ''}`}
+          className="mdz-pagination-btn"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages || isLoading}
           title="Página siguiente"
@@ -110,7 +111,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
         {/* Botón Última Página */}
         <button
-          className={`pagination-btn ${currentPage === totalPages ? 'disabled' : ''}`}
+          className="mdz-pagination-btn"
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages || isLoading}
           title="Última página"
@@ -121,7 +122,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {/* Indicador de carga */}
       {isLoading && (
-        <div className="pagination-loading">
+        <div className="mdz-pagination-loading">
           <div className="spinner-border spinner-border-sm" role="status">
             <span className="visually-hidden">Cargando...</span>
           </div>

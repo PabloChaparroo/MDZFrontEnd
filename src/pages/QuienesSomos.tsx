@@ -1,407 +1,217 @@
-
-
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import './QuienesSomos.css';
+import fotoAbout from '../assets/images/fotoAbout.webp';
+import '../styles/mdz-theme.css';
+import '../styles/mdz-site.css';
+
+const timeline = [
+  { year: '2020', title: 'Los comienzos', text: 'MDZ Muebles nació con una visión clara: crear muebles de alta calidad que combinen funcionalidad, diseño y durabilidad para transformar los espacios de nuestros clientes.' },
+  { year: '2023', title: 'Crecimiento', text: 'Lo que comenzó como un sueño, se ha convertido en una empresa especializada en la fabricación de muebles personalizados.' },
+  { year: '2025', title: 'Líderes en el mercado', text: 'Nuestro compromiso con la excelencia y la satisfacción del cliente nos ha permitido crecer y ganarnos la confianza de más de 500 familias y empresas.' },
+];
+
+const servicios = [
+  { icon: 'fa-bed', title: 'Muebles para dormitorio', text: 'Camas, placares, mesas de luz y cómodas diseñadas para crear espacios de descanso únicos y funcionales.', items: ['Camas matrimoniales e individuales', 'Placares empotrados y modulares', 'Mesas de luz y cómodas', 'Vestidores a medida'] },
+  { icon: 'fa-tv', title: 'Muebles para living', text: 'Racks para TV, bibliotecas y muebles de entretenimiento que combinan estilo y funcionalidad.', items: ['Racks y centros de entretenimiento', 'Bibliotecas y estanterías', 'Mesas de centro y laterales', 'Muebles modulares'] },
+  { icon: 'fa-utensils', title: 'Muebles de cocina', text: 'Alacenas, despenseros y muebles auxiliares para optimizar el espacio de tu cocina.', items: ['Alacenas superiores e inferiores', 'Despenseros y auxiliares', 'Islas y barras', 'Muebles esquineros'] },
+  { icon: 'fa-laptop', title: 'Muebles de oficina', text: 'Escritorios, bibliotecas y soluciones de almacenamiento para espacios de trabajo productivos.', items: ['Escritorios ejecutivos y compactos', 'Bibliotecas y archivadores', 'Muebles para computadora', 'Estaciones de trabajo'] },
+  { icon: 'fa-child', title: 'Muebles infantiles', text: 'Cunas, camas y muebles especialmente diseñados para los más pequeños de la casa.', items: ['Cunas funcionales y tradicionales', 'Camas infantiles y juveniles', 'Escritorios para estudio', 'Jugueteros y organizadores'] },
+  { icon: 'fa-ruler-combined', title: 'Diseño personalizado', text: 'Creamos muebles únicos adaptados a tus espacios, necesidades y estilo personal.', items: ['Diseño personalizado', 'Asesoramiento profesional', 'Medidas exactas', 'Materiales premium'] },
+];
+
+const valores = [
+  { icon: 'fa-gem', title: 'Calidad premium', text: 'Utilizamos solo los mejores materiales y técnicas de fabricación para garantizar muebles duraderos y hermosos.' },
+  { icon: 'fa-handshake', title: 'Compromiso', text: 'Nos comprometemos con cada proyecto, desde el diseño inicial hasta la instalación final, asegurando tu satisfacción.' },
+  { icon: 'fa-lightbulb', title: 'Innovación', text: 'Combinamos técnicas tradicionales con tecnología moderna para crear soluciones innovadoras y funcionales.' },
+  { icon: 'fa-users', title: 'Atención personalizada', text: 'Cada cliente es único, por eso ofrecemos un servicio personalizado adaptado a sus necesidades específicas.' },
+];
 
 const QuienesSomos = () => {
   const location = useLocation();
-  const [, setIsVisible] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setIsVisible(true);
   }, [location]);
 
   return (
-    <div className="catalog-main-container">
-      {/* Hero Section */}
-        <div className="catalog-header fade-in-up">
-              <h1 className="catalog-title">
-                <i className="fas fa-users me-3"></i>
-                Quiénes Somos
-              </h1>
-               
-              <p className="catalog-subtitle">
-               5 años creando muebles únicos en Mendoza
+    <>
+      {/* Header de página */}
+      <div className="mdz-page-header mdz-diagonal-detail">
+        <div className="mdz-container">
+          <p className="mdz-eyebrow">El taller</p>
+          <h1>Quiénes somos.</h1>
+          <p className="mdz-section-copy">6 años creando muebles únicos en Mendoza.</p>
+        </div>
+      </div>
+
+      {/* Nuestra historia */}
+      <section className="mdz-container mdz-section">
+        <div className="mdz-section-heading">
+          <div>
+            <p className="mdz-eyebrow">Nuestra historia</p>
+            <h2>6 años creando muebles únicos en Mendoza.</h2>
+          </div>
+        </div>
+
+        <div className="mdz-timeline" style={{ marginBottom: 56 }}>
+          {timeline.map((item) => (
+            <div className="mdz-timeline-item" key={item.year}>
+              <div className="mdz-timeline-year">{item.year}</div>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mdz-about-text-stats">
+          <div>
+            <p className="mdz-section-copy" style={{ marginBottom: 14 }}>
+              MDZ Muebles nació en 2020 con una visión clara: crear muebles de alta calidad que combinen
+              funcionalidad, diseño y durabilidad para transformar los espacios de nuestros clientes.
             </p>
-            <hr/>
-            <div className="about-hero-divider"></div>
-         </div>          
-            
-           
-
-  
-
-      {/* Nuestra Historia */}
-      <section className="about-story-section">
-        <div className="about-container">
-          <div className="about-section-header-center about-fade-in">
-            <i className="fas fa-history about-icon"></i>
-            <h2>Nuestra Historia</h2>
-            <p>15 años creando muebles únicos en Mendoza</p>
-          </div>
-
-          {/* Timeline moderna */}
-          <div className="about-timeline about-fade-in-up">
-            <div className="about-timeline-item">
-              <div className="about-timeline-marker">
-                <div className="about-timeline-dot"></div>
-              </div>
-              <div className="about-timeline-content">
-                <div className="about-timeline-year">2020</div>
-                <h3 className="about-timeline-title">Los Comienzos</h3>
-                <p className="about-timeline-description">
-                  MDZ Muebles nació con una visión clara: crear muebles de alta calidad 
-                  que combinen funcionalidad, diseño y durabilidad para transformar los espacios 
-                  de nuestros clientes.
-                </p>
-              </div>
-              <div className="about-timeline-visual">
-                <div className="about-visual-card">
-                  <i className="fas fa-hammer"></i>
-                  <span>Primer Taller</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="about-timeline-item">
-              <div className="about-timeline-marker">
-                <div className="about-timeline-dot"></div>
-              </div>
-              <div className="about-timeline-content">
-                <div className="about-timeline-year">2023</div>
-                <h3 className="about-timeline-title">Crecimiento</h3>
-                <p className="about-timeline-description">
-                  Lo que comenzó como un sueño, se ha convertido en 
-                  una empresa especializada en la fabricación de muebles personalizados.
-                </p>
-              </div>
-              <div className="about-timeline-visual">
-                <div className="about-visual-card">
-                  <i className="fas fa-chart-line"></i>
-                  <span>Hoy</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="about-timeline-item">
-              <div className="about-timeline-marker">
-                <div className="about-timeline-dot"></div>
-              </div>
-              <div className="about-timeline-content">
-                <div className="about-timeline-year">2025</div>
-                <h3 className="about-timeline-title">Líderes en el Mercado</h3>
-                <p className="about-timeline-description">
-                  Nuestro compromiso con la excelencia y la satisfacción del cliente nos ha permitido 
-                  crecer y ganarnos la confianza de más de 500 familias y empresas.
-                </p>
-              </div>
-              <div className="about-timeline-visual">
-                <div className="about-visual-card">
-                  <i className="fas fa-trophy"></i>
-                  <span>Liderazgo</span>
-                </div>
-              </div>
+            <p className="mdz-section-copy" style={{ marginBottom: 28 }}>
+              Lo que comenzó como un pequeño sueño, se ha convertido en una empresa dedicada a la fabricación
+              de muebles personalizados. Nuestro compromiso con la excelencia y la satisfacción del cliente
+              nos ha permitido crecer y ganarnos la confianza de más de 500 familias y empresas.
+            </p>
+            <div className="mdz-stat-row">
+              <div className="mdz-stat"><strong>15+</strong><span>Años de experiencia</span></div>
+              <div className="mdz-stat"><strong>500+</strong><span>Proyectos completados</span></div>
+              <div className="mdz-stat"><strong>100%</strong><span>Satisfacción garantizada</span></div>
             </div>
           </div>
-
-          <div className="about-story-content-wrapper">
-            <div className="about-row about-align-items-center">
-              <div className="about-col-lg-6">
-                <div className="about-story-content about-fade-in-left">
-                  <p className="about-lead">
-                    MDZ Muebles nació en 2020 con una visión clara: crear muebles de alta calidad 
-                    que combinen funcionalidad, diseño y durabilidad para transformar los espacios 
-                    de nuestros clientes.
-                  </p>
-                  <p>
-                    Lo que comenzó como un pequeño sueño, se ha convertido en 
-                    una empresa dedicada a la fabricación de muebles personalizados. Nuestro compromiso 
-                    con la excelencia y la satisfacción del cliente nos ha permitido crecer y ganarnos 
-                    la confianza de más de 500 familias y empresas.
-                  </p>
-                </div>
-              </div>
-              <div className="about-col-lg-6">
-                <div className="about-story-stats about-fade-in-right">
-                  <div className="about-stat-item">
-                    <span className="about-stat-number">15+</span>
-                    <span className="about-stat-label">Años de experiencia</span>
-                  </div>
-                  <div className="about-stat-item">
-                    <span className="about-stat-number">500+</span>
-                    <span className="about-stat-label">Proyectos completados</span>
-                  </div>
-                  <div className="about-stat-item">
-                    <span className="about-stat-number">100%</span>
-                    <span className="about-stat-label">Satisfacción garantizada</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <img className="mdz-about-image" src={fotoAbout} alt="Taller MDZ Muebles" loading="lazy" />
         </div>
       </section>
 
       {/* A qué nos dedicamos */}
-      <section className="about-services-section">
-        <div className="about-container">
-          <div className="about-section-header-center about-fade-in">
-            <i className="fas fa-tools about-icon"></i>
-            <h2>A Qué Nos Dedicamos</h2>
-            <p>Especializados en la creación de muebles únicos y personalizados</p>
+      <section className="mdz-section mdz-process">
+        <div className="mdz-container">
+          <div className="mdz-section-heading">
+            <div>
+              <p className="mdz-eyebrow">A qué nos dedicamos</p>
+              <h2>Especializados en muebles únicos y personalizados.</h2>
+            </div>
           </div>
-
-          <div className="about-services-grid">
-            <div className="about-service-card about-fade-in-up">
-              <div className="about-service-icon">
-                <i className="fas fa-bed"></i>
+          <div className="mdz-card-grid">
+            {servicios.map((s) => (
+              <div className="mdz-card" key={s.title}>
+                <div className="mdz-card-icon"><i className={`fas ${s.icon}`}></i></div>
+                <h3>{s.title}</h3>
+                <p>{s.text}</p>
+                <ul>
+                  {s.items.map((it) => <li key={it}>{it}</li>)}
+                </ul>
               </div>
-              <h3>Muebles para Dormitorio</h3>
-              <p>Camas, placares, mesas de luz y cómodas diseñadas para crear espacios de descanso únicos y funcionales.</p>
-              <ul>
-                <li>Camas matrimoniales y individuales</li>
-                <li>Placares empotrados y modulares</li>
-                <li>Mesas de luz y cómodas</li>
-                <li>Vestidores a medida</li>
-              </ul>
-            </div>
-
-            <div className="about-service-card about-fade-in-up">
-              <div className="about-service-icon">
-                <i className="fas fa-tv"></i>
-              </div>
-              <h3>Muebles para Living</h3>
-              <p>Racks para TV, bibliotecas y muebles de entretenimiento que combinan estilo y funcionalidad.</p>
-              <ul>
-                <li>Racks y centros de entretenimiento</li>
-                <li>Bibliotecas y estanterías</li>
-                <li>Mesas de centro y laterales</li>
-                <li>Muebles modulares</li>
-              </ul>
-            </div>
-
-            <div className="about-service-card about-fade-in-up">
-              <div className="about-service-icon">
-                <i className="fas fa-utensils"></i>
-              </div>
-              <h3>Muebles de Cocina</h3>
-              <p>Alacenas, despenseros y muebles auxiliares para optimizar el espacio de tu cocina.</p>
-              <ul>
-                <li>Alacenas superiores e inferiores</li>
-                <li>Despenseros y auxiliares</li>
-                <li>Islas y barras</li>
-                <li>Muebles esquineros</li>
-              </ul>
-            </div>
-
-            <div className="about-service-card about-fade-in-up">
-              <div className="about-service-icon">
-                <i className="fas fa-laptop"></i>
-              </div>
-              <h3>Muebles de Oficina</h3>
-              <p>Escritorios, bibliotecas y soluciones de almacenamiento para espacios de trabajo productivos.</p>
-              <ul>
-                <li>Escritorios ejecutivos y compactos</li>
-                <li>Bibliotecas y archivadores</li>
-                <li>Muebles para computadora</li>
-                <li>Estaciones de trabajo</li>
-              </ul>
-            </div>
-
-            <div className="about-service-card about-fade-in-up">
-              <div className="about-service-icon">
-                <i className="fas fa-child"></i>
-              </div>
-              <h3>Muebles Infantiles</h3>
-              <p>Cunas, camas y muebles especialmente diseñados para los más pequeños de la casa.</p>
-              <ul>
-                <li>Cunas funcionales y tradicionales</li>
-                <li>Camas infantiles y juveniles</li>
-                <li>Escritorios para estudio</li>
-                <li>Jugueteros y organizadores</li>
-              </ul>
-            </div>
-
-            <div className="about-service-card about-fade-in-up">
-              <div className="about-service-icon">
-                <i className="fas fa-ruler-combined"></i>
-              </div>
-              <h3>Diseño Personalizado</h3>
-              <p>Creamos muebles únicos adaptados a tus espacios, necesidades y estilo personal.</p>
-              <ul>
-                <li>Diseño personalizado</li>
-                <li>Asesoramiento profesional</li>
-                <li>Medidas exactas</li>
-                <li>Materiales premium</li>
-              </ul>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Nuestros Valores */}
-      <section className="about-values-section">
-        <div className="about-container">
-          <div className="about-section-header-center about-fade-in">
-            <i className="fas fa-heart about-icon"></i>
-            <h2>Nuestros Valores</h2>
-            <p>Los principios que guían nuestro trabajo diario</p>
+      {/* Nuestros valores */}
+      <section className="mdz-container mdz-section">
+        <div className="mdz-section-heading">
+          <div>
+            <p className="mdz-eyebrow">Nuestros valores</p>
+            <h2>Los principios que guían nuestro trabajo diario.</h2>
           </div>
-
-          <div className="about-values-grid">
-            <div className="about-value-card about-fade-in-up">
-              <div className="about-value-icon">
-                <i className="fas fa-gem"></i>
-              </div>
-              <h3>Calidad Premium</h3>
-              <p>Utilizamos solo los mejores materiales y técnicas de fabricación para garantizar muebles duraderos y hermosos.</p>
+        </div>
+        <div className="mdz-value-grid">
+          {valores.map((v) => (
+            <div className="mdz-card mdz-value-card" key={v.title}>
+              <div className="mdz-card-icon"><i className={`fas ${v.icon}`}></i></div>
+              <h3>{v.title}</h3>
+              <p>{v.text}</p>
             </div>
-
-            <div className="about-value-card about-fade-in-up">
-              <div className="about-value-icon">
-                <i className="fas fa-handshake"></i>
-              </div>
-              <h3>Compromiso</h3>
-              <p>Nos comprometemos con cada proyecto, desde el diseño inicial hasta la instalación final, asegurando tu satisfacción.</p>
-            </div>
-
-            <div className="about-value-card about-fade-in-up">
-              <div className="about-value-icon">
-                <i className="fas fa-lightbulb"></i>
-              </div>
-              <h3>Innovación</h3>
-              <p>Combinamos técnicas tradicionales con tecnología moderna para crear soluciones innovadoras y funcionales.</p>
-            </div>
-
-            <div className="about-value-card about-fade-in-up">
-              <div className="about-value-icon">
-                <i className="fas fa-users"></i>
-              </div>
-              <h3>Atención Personalizada</h3>
-              <p>Cada cliente es único, por eso ofrecemos un servicio personalizado adaptado a sus necesidades específicas.</p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Ubicación y Contacto */}
-      <section className="about-location-section">
-        <div className="about-container">
-          <div className="about-section-header-center about-fade-in">
-            <i className="fas fa-map-marker-alt about-icon"></i>
-            <h2>Nuestra Ubicación</h2>
-            <p>Visítanos en nuestro taller en Mendoza</p>
-          </div>
-
-          {/* Mapa grande y prominente */}
-          <div className="about-map-large-container about-fade-in">
-            <div className="about-map-wrapper-large">
-              <iframe
-                src="https://maps.google.com/maps?q=-32.907694,-68.827500&t=&z=17&ie=UTF8&iwloc=&output=embed"
-                width="100%"
-                height="700"
-                style={{ 
-                  border: 0, 
-                  borderRadius: '20px',
-                  boxShadow: '0 20px 60px rgba(0,0,0,0.1)',
-                  filter: 'contrast(1.1) saturate(1.1)'
-                }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Ubicación MDZ Muebles - Dorrego, Mendoza, Argentina"
-              ></iframe>
+      {/* Ubicación y contacto */}
+      <section className="mdz-section mdz-process">
+        <div className="mdz-container">
+          <div className="mdz-section-heading">
+            <div>
+              <p className="mdz-eyebrow">Nuestra ubicación</p>
+              <h2>Visitanos en nuestro taller en Mendoza.</h2>
             </div>
           </div>
 
-          {/* Información de contacto en cards separadas */}
-          <div className="about-contact-cards-grid">
-            <div className="about-contact-card about-fade-in-up">
-              <div className="about-contact-card-icon">
-                <i className="fas fa-map-marker-alt"></i>
-              </div>
-              <div className="about-contact-card-content">
-                <h4>Nuestra Ubicación</h4>
-                <p>Dorrego, Mendoza<br />Argentina<br />CP: 5500</p>
-                <a href="https://maps.app.goo.gl/dPh9qndhp3Nus4fdA" target="_blank" rel="noopener noreferrer" className="about-contact-link">
-                  <i className="fas fa-external-link-alt"></i>
-                  Ver en Google Maps
-                </a>
-              </div>
-            </div>
-
-            <div className="about-contact-card about-fade-in-up">
-              <div className="about-contact-card-icon">
-                <i className="fas fa-phone"></i>
-              </div>
-              <div className="about-contact-card-content">
-                <h4>Teléfonos</h4>
-                <p>+54 261 123 4567<br />+54 261 765 4321</p>
-                <a href="tel:+542611234567" className="about-contact-link">
-                  <i className="fas fa-phone"></i>
-                  Llamar ahora
-                </a>
-              </div>
-            </div>
-
-            <div className="about-contact-card about-fade-in-up">
-              <div className="about-contact-card-icon">
-                <i className="fas fa-envelope"></i>
-              </div>
-              <div className="about-contact-card-content">
-                <h4>Correo Electrónico</h4>
-                <p>info@mdzmuebles.com<br />ventas@mdzmuebles.com</p>
-                <a href="mailto:info@mdzmuebles.com" className="about-contact-link">
-                  <i className="fas fa-envelope"></i>
-                  Enviar email
-                </a>
-              </div>
-            </div>
+          <div className="mdz-map">
+            <iframe
+              src="https://maps.google.com/maps?q=-32.907694,-68.827500&t=&z=17&ie=UTF8&iwloc=&output=embed"
+              width="100%"
+              height="420"
+              style={{ border: 0, display: 'block' }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Ubicación MDZ Muebles - Dorrego, Mendoza, Argentina"
+            ></iframe>
           </div>
 
-          {/* Redes sociales destacadas */}
-          <div className="about-social-section">
-            <h3>Síguenos en nuestras redes sociales</h3>
-            <div className="about-social-links-large">
-              <a href="https://www.facebook.com/Esteban.Chaparro028" target="_blank" rel="noopener noreferrer" className="about-social-link-large facebook">
-                <i className="fab fa-facebook-f"></i>
-                <span>Facebook</span>
+          <div className="mdz-card-grid" style={{ marginBottom: 48 }}>
+            <div className="mdz-card">
+              <div className="mdz-contact-card-icon"><i className="fas fa-map-marker-alt"></i></div>
+              <h3>Nuestra ubicación</h3>
+              <p>Dorrego, Mendoza<br />Argentina · CP 5500</p>
+              <a href="https://maps.app.goo.gl/dPh9qndhp3Nus4fdA" target="_blank" rel="noopener noreferrer" className="mdz-btn mdz-btn-filter mdz-btn-sm">
+                Ver en Google Maps <i className="fas fa-arrow-up-right-from-square"></i>
               </a>
-              <a href="https://www.instagram.com/mdz.muebles/" target="_blank" rel="noopener noreferrer" className="about-social-link-large instagram">
-                <i className="fab fa-instagram"></i>
-                <span>Instagram</span>
+            </div>
+            <div className="mdz-card">
+              <div className="mdz-contact-card-icon"><i className="fas fa-phone"></i></div>
+              <h3>Teléfonos</h3>
+              <p>+54 261 123 4567<br />+54 261 765 4321</p>
+              <a href="tel:+542611234567" className="mdz-btn mdz-btn-filter mdz-btn-sm">
+                Llamar ahora <i className="fas fa-phone"></i>
               </a>
-              <a href="https://wa.me/542613663197" target="_blank" rel="noopener noreferrer" className="about-social-link-large whatsapp">
-                <i className="fab fa-whatsapp"></i>
-                <span>WhatsApp</span>
+            </div>
+            <div className="mdz-card">
+              <div className="mdz-contact-card-icon"><i className="fas fa-envelope"></i></div>
+              <h3>Correo electrónico</h3>
+              <p>info@mdzmuebles.com<br />ventas@mdzmuebles.com</p>
+              <a href="mailto:info@mdzmuebles.com" className="mdz-btn mdz-btn-filter mdz-btn-sm">
+                Enviar email <i className="fas fa-envelope"></i>
+              </a>
+            </div>
+          </div>
+
+          <div style={{ textAlign: 'center' }}>
+            <h3 style={{ fontFamily: 'var(--mdz-font-display)', fontWeight: 500, marginBottom: 18 }}>
+              Síguenos en nuestras redes sociales
+            </h3>
+            <div className="mdz-social-row">
+              <a href="https://www.facebook.com/Esteban.Chaparro028" target="_blank" rel="noopener noreferrer">
+                <i className="fab fa-facebook-f"></i> Facebook
+              </a>
+              <a href="https://www.instagram.com/mdz.muebles/" target="_blank" rel="noopener noreferrer">
+                <i className="fab fa-instagram"></i> Instagram
+              </a>
+              <a href="https://wa.me/542613663197" target="_blank" rel="noopener noreferrer">
+                <i className="fab fa-whatsapp"></i> WhatsApp
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="about-cta-section">
-        <div className="about-container">
-          <div className="about-cta-content about-fade-in">
-            <h2>¿Listo para crear el mueble de tus sueños?</h2>
-            <p>Contáctanos hoy mismo y comencemos a trabajar en tu proyecto personalizado</p>
-            <div className="about-cta-buttons">
-              <a href="/catalogo" className="btn btn-primary">
-                <i className="fas fa-eye me-2"></i>
-                Ver Catálogo
-              </a>
-              <a href="tel:+542611234567" className="btn btn-secondary">
-                <i className="fas fa-phone me-2"></i>
-                Llamar Ahora
-              </a>
-            </div>
+      {/* CTA final */}
+      <section className="mdz-section mdz-cta">
+        <div className="mdz-container">
+          <h2>¿Listo para crear el mueble de tus sueños?</h2>
+          <p className="mdz-section-copy">Contactanos hoy mismo y comencemos a trabajar en tu proyecto personalizado.</p>
+          <div className="mdz-cta-actions">
+            <a href="/catalogo" className="mdz-btn mdz-btn-brand mdz-btn-lg">
+              Ver catálogo <i className="fas fa-eye"></i>
+            </a>
+            <a href="tel:+542611234567" className="mdz-btn mdz-btn-filter mdz-btn-lg">
+              Llamar ahora <i className="fas fa-phone"></i>
+            </a>
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 };
 

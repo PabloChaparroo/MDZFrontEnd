@@ -1,14 +1,25 @@
 import Footer from "./components/Footer/Footer"
 import Header from "./components/Header/Header"
-import { BrowserRouter as Router} from "react-router-dom"
+import { BrowserRouter as Router, useLocation} from "react-router-dom"
 import AppRoutes from "./routes/AppRoutes"
 import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
-import { Suspense, useEffect } from "react"
+import { Suspense, useEffect, type ReactNode } from "react"
 import { AuthService } from "./services/AuthService";
 import Loader from "./components/Loader/Loader"
-import 'animate.css/animate.min.css'
 import { Container } from "react-bootstrap"
+import './styles/mdz-site.css'
+
+// Reinicia la animación de entrada de página en cada cambio de ruta,
+// usando el pathname como key para forzar el remount del wrapper.
+function PageTransition({ children }: { children: ReactNode }) {
+  const location = useLocation();
+  return (
+    <div key={location.pathname} className="mdz-page-transition">
+      {children}
+    </div>
+  );
+}
 
 function App() {
   useEffect(() => {
@@ -26,15 +37,17 @@ function App() {
       pauseOnFocusLoss
       draggable
       pauseOnHover
-      theme="light"
+      theme="dark"
     />
     <Router>
       <Header/>
       <Container style={{minHeight: '100vh', minWidth: '100%', padding: '0'}}>
-        <Suspense fallback={<Loader/>}> 
-        <AppRoutes/>
+        <Suspense fallback={<Loader/>}>
+        <PageTransition>
+          <AppRoutes/>
+        </PageTransition>
         </Suspense>
-      </Container>  
+      </Container>
       <Footer/>
     </Router>
     </>
