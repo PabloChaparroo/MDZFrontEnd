@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  # Mismo nombre que en el backend: es el check que se exige en la protección de master
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # tsc (tipos) + vite build: si algo no compila, no llega a master
+      - name: Build
+        run: npm run build
