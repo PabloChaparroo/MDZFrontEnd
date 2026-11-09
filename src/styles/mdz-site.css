@@ -1052,3 +1052,14 @@ body.mdz-no-scroll { overflow: hidden; }
 .mdz-dropdown-menu li.is-selected { background: color-mix(in oklch, var(--mdz-primary) 16%, transparent); color: var(--mdz-primary); font-weight: 600; }
 .mdz-dropdown-menu li i { font-size: 12px; }
 @media (max-width: 640px) { .mdz-select { display: block; } }
+
+/* === Menú lateral y desplegable: negro sólido (sin transparencia) === */
+@media (max-width: 860px) {
+  .mdz-mobile-nav {
+    background: radial-gradient(90% 30% at 0% 0%, color-mix(in oklch, var(--mdz-primary) 12%, #0a0a0a), #0a0a0a 70%), #0a0a0a;
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+.mdz-dropdown-toggle { background: #101010; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: var(--mdz-border); }
+.mdz-dropdown-menu { background: #0d0d0d; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: var(--mdz-border); }
