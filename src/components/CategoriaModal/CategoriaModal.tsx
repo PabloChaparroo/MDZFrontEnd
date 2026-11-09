@@ -37,6 +37,8 @@ const ModalABMCategoria = ({
                 return "Editar Categoría";
             case ModalType.BAJA_LOGICA:
                 return "Dar de Baja Categoría";
+            case ModalType.DELETE:
+                return "Eliminar Categoría";
             default:
                 return "Categoría";
         }
@@ -164,6 +166,29 @@ const ModalABMCategoria = ({
         }
     };
 
+    // Función handleDelete (DELETE): borrado definitivo de una categoría dada de baja
+    const handleDelete = async () => {
+        setIsLoading(true);
+        try {
+            await CategoriaService.eliminarCategoria(cat.id);
+            toast.success("Categoría eliminada definitivamente", { autoClose: 3000 });
+            refreshData(prevState => !prevState);
+            onHide();
+        } catch (error) {
+            console.error(error);
+            let errorMessage = "Ha ocurrido un error al eliminar la categoría";
+            if (error instanceof Error) {
+                const match = error.message.match(/Detalles: ({.*})/);
+                if (match) {
+                    try { errorMessage = JSON.parse(match[1]).error || errorMessage; } catch { /* mensaje por defecto */ }
+                }
+            }
+            toast.error(errorMessage, { autoClose: 5000 });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     // Yup, esquema de validacion
     const validationSchema = () => {
         return Yup.object().shape({
@@ -183,7 +208,41 @@ const ModalABMCategoria = ({
 
     return (
         <>
-            {modalType === ModalType.BAJA_LOGICA ? (
+            {modalType === ModalType.DELETE ? (
+                <Modal show={show} onHide={onHide} centered backdrop="static" contentClassName="mdz-modal-content">
+                    <Modal.Header closeButton>
+                        <Modal.Title>{getModalTitle()}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <p>
+                            ¿Está seguro que desea eliminar definitivamente la categoría?
+                            <br /> <strong>{cat.nombreCategoria}</strong> ?
+                        </p>
+                        <div className="alert alert-warning mt-3">
+                            <i className="fas fa-exclamation-triangle me-2"></i>
+                            La categoría se borrará de la base de datos. Esta acción no se puede deshacer.
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button className="mdz-btn mdz-btn-filter" onClick={onHide} disabled={isLoading}>
+                            Cancelar
+                        </button>
+                        <button className="mdz-btn mdz-btn-brand" onClick={handleDelete} disabled={isLoading}>
+                            {isLoading ? (
+                                <>
+                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Eliminando...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-trash"></i>
+                                    Eliminar
+                                </>
+                            )}
+                        </button>
+                    </Modal.Footer>
+                </Modal>
+            ) : modalType === ModalType.BAJA_LOGICA ? (
                 <>
                     <Modal show={show} onHide={onHide} centered backdrop="static" contentClassName="mdz-modal-content">
                         <Modal.Header closeButton>

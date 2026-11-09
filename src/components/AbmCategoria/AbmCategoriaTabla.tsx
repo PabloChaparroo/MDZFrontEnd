@@ -434,9 +434,16 @@ const CatalogoTabla = () => {
                               </button>
                             </div>
                           ) : (
-                            <span style={{ color: 'var(--mdz-muted-foreground)', fontSize: 12 }}>
-                              <i className="fas fa-lock"></i> No editable
-                            </span>
+                            <div className="mdz-row-actions">
+                              <button
+                                className="mdz-icon-btn"
+                                title="Eliminar definitivamente"
+                                style={{ color: 'oklch(0.7 0.19 25)' }}
+                                onClick={() => handleClickCategoriaButton("Eliminar categoría", categoria, ModalType.DELETE)}
+                              >
+                                <i className="fas fa-trash"></i>
+                              </button>
+                            </div>
                           )}
                         </td>
                       </tr>

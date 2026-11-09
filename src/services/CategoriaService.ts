@@ -133,6 +133,21 @@ export const CategoriaService = {
         }
     },
 
+    eliminarCategoria: async (id: number): Promise<void> => {
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('No autenticado');
+
+        const response = await fetch(`${BASE_URL}/api/v1/categoria/eliminar/${id}`, {
+            method: "DELETE",
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Error al eliminar la categoría: ${response.status} ${response.statusText}. Detalles: ${errorText}`);
+        }
+    },
+
     getCategoriasDadasDeBaja: async (): Promise<Categoria[]> => {
         try {
             const response = await AuthService.fetchWithAuth(`${BASE_URL}/api/v1/categoria/dadas-de-baja`, {
