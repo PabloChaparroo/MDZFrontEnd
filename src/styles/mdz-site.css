@@ -1079,3 +1079,15 @@ body.mdz-no-scroll { overflow: hidden; }
   .mdz-table.mdz-cards-mueble .mdz-table-thumb { width: 56px; height: 56px; border-radius: 12px; }
   .mdz-table.mdz-cards-mueble .mdz-row-actions button:nth-child(2) { display: none; }
 }
+
+/* ---------- Footer: varios links ---------- */
+.mdz-footer-links { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+
+/* ---------- Páginas legales (privacidad) ---------- */
+.mdz-legal { max-width: 760px; }
+.mdz-legal h2 { font-family: var(--mdz-font-display); font-size: 20px; font-weight: 500; margin: 32px 0 10px; color: var(--mdz-foreground); }
+.mdz-legal p, .mdz-legal li { color: var(--mdz-muted-foreground); line-height: 1.7; font-size: 15px; }
+.mdz-legal ul { padding-left: 20px; margin: 0 0 12px; }
+.mdz-legal a { color: var(--mdz-primary); overflow-wrap: anywhere; }
+.mdz-legal strong { color: var(--mdz-foreground); }
+.mdz-legal-fecha { font-size: 13px !important; }

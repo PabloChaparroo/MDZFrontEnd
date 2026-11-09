@@ -12,9 +12,12 @@ function Footer() {
           <span>MDZ MUEBLES<small>Diseño &amp; carpintería a medida</small></span>
         </Link>
         <p>&copy; {new Date().getFullYear()} MDZ Muebles · Hecho con oficio, pensado para vos.</p>
-        <Link className="mdz-footer-link" to="/catalogo">
-          Ver catálogo <i className="fas fa-arrow-right"></i>
-        </Link>
+        <div className="mdz-footer-links">
+          <Link className="mdz-footer-link" to="/privacidad">Privacidad</Link>
+          <Link className="mdz-footer-link" to="/catalogo">
+            Ver catálogo <i className="fas fa-arrow-right"></i>
+          </Link>
+        </div>
       </div>
     </footer>
   );
