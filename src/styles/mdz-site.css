@@ -778,6 +778,28 @@ body.mdz-no-scroll { overflow: hidden; }
   .mdz-modal-content .modal-header { padding-block: 10px; }
 }
 
+/* === Modales: fondo desenfocado, esquinas más redondeadas y tablas oscuras === */
+.modal-backdrop { background-color: #000; }
+.modal-backdrop.show { opacity: 0.55; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.modal-content, .mdz-modal-content { border-radius: 22px !important; overflow: hidden; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45); }
+.mdz-modal-content .modal-footer { gap: 8px; }
+.mdz-modal-content .table-responsive { border: 1px solid var(--mdz-border); border-radius: 14px; overflow: hidden; }
+.mdz-modal-content .table {
+  --bs-table-bg: transparent; --bs-table-color: var(--mdz-foreground);
+  --bs-table-striped-bg: color-mix(in oklch, var(--mdz-foreground) 4%, transparent); --bs-table-striped-color: var(--mdz-foreground);
+  --bs-table-hover-bg: color-mix(in oklch, var(--mdz-primary) 10%, transparent); --bs-table-hover-color: var(--mdz-foreground);
+  --bs-table-border-color: var(--mdz-border);
+  margin-bottom: 0; border: 0; color: var(--mdz-foreground); vertical-align: middle;
+}
+.mdz-modal-content .table > :not(caption) > * > * { background-color: var(--bs-table-bg); color: var(--mdz-foreground); border-color: var(--mdz-border); padding: 12px; box-shadow: none; }
+.mdz-modal-content .table-striped > tbody > tr:nth-of-type(odd) > * { background-color: var(--bs-table-striped-bg); }
+.mdz-modal-content .table-hover > tbody > tr:hover > * { background-color: var(--bs-table-hover-bg); }
+.mdz-modal-content .table thead th { background: var(--mdz-secondary) !important; color: var(--mdz-muted-foreground); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.mdz-modal-content .table tr > :first-child { border-left: 0; }
+.mdz-modal-content .table tr > :last-child { border-right: 0; }
+.mdz-modal-content .table tbody tr:last-child > * { border-bottom: 0; }
+.mdz-modal-content .table img { border-radius: 10px !important; }
+
 /* === Catálogo: tarjetas más compactas y con más presencia === */
 .mdz-page-header.mdz-diagonal-detail { padding-block: 40px 30px; }
 .mdz-page-header h1 { font-size: clamp(32px, 4vw, 48px); letter-spacing: -0.02em; }
