@@ -1063,3 +1063,19 @@ body.mdz-no-scroll { overflow: hidden; }
 }
 .mdz-dropdown-toggle { background: #101010; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: var(--mdz-border); }
 .mdz-dropdown-menu { background: #0d0d0d; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: var(--mdz-border); }
+
+/* === Muebles en celular: lista compacta (foto · nombre · editar) === */
+@media (max-width: 640px) {
+  .mdz-table.mdz-cards-mueble tbody tr {
+    display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; grid-template-areas: "foto nombre acciones";
+    align-items: center; gap: 14px; padding: 10px 12px; margin-bottom: 10px; border-radius: 16px;
+  }
+  .mdz-table.mdz-cards-mueble td { display: none; padding: 0; border: 0; }
+  .mdz-table.mdz-cards-mueble td::before { content: none !important; }
+  .mdz-table.mdz-cards-mueble td:nth-child(2), .mdz-table.mdz-cards-mueble td:nth-child(7), .mdz-table.mdz-cards-mueble td:nth-child(8) { display: flex; }
+  .mdz-table.mdz-cards-mueble td:nth-child(7) { grid-area: foto; justify-content: flex-start; }
+  .mdz-table.mdz-cards-mueble td:nth-child(2) { grid-area: nombre; justify-content: flex-start; text-align: left; font-size: 15px; }
+  .mdz-table.mdz-cards-mueble td:nth-child(8) { grid-area: acciones; justify-content: flex-end; }
+  .mdz-table.mdz-cards-mueble .mdz-table-thumb { width: 56px; height: 56px; border-radius: 12px; }
+  .mdz-table.mdz-cards-mueble .mdz-row-actions button:nth-child(2) { display: none; }
+}

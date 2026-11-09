@@ -659,6 +659,7 @@ const CatalogoTabla = () => {
           refreshData={setRefreshData}
           categoria={categoriaSeleccionada}
           categorias={categorias}
+          onSolicitarBaja={() => setModalType(ModalType.BAJA_LOGICA)}
         />
       )}
 

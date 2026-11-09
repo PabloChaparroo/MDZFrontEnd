@@ -23,9 +23,10 @@ type CatalogoModalMuebleProps = {
     refreshData: React.Dispatch<React.SetStateAction<boolean>>;
     categoria: string; // Nuevo prop para almacenar la categoría seleccionada
     categorias: Categoria[]; // Lista de categorías
+    onSolicitarBaja?: () => void; // Desde la edición: pasa a la confirmación de baja
 }
 
-const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categoria,categorias  }: CatalogoModalMuebleProps) => {
+const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categoria,categorias, onSolicitarBaja  }: CatalogoModalMuebleProps) => {
     const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]); // Array de archivos seleccionados
     const [showImagenesModal, setShowImagenesModal] = useState(false); // Estado para controlar el modal de imágenes
     const [isLoading, setIsLoading] = useState(false); // Estado para mostrar indicador de carga
@@ -505,6 +506,18 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                 </Form>
 
                 <Modal.Footer className="mt-4">
+                    {modalType === ModalType.UPDATE && onSolicitarBaja && (
+                        <button
+                            type="button"
+                            className="mdz-btn mdz-btn-filter"
+                            style={{ marginRight: 'auto', color: 'oklch(0.7 0.19 25)', borderColor: 'color-mix(in oklch, oklch(0.7 0.19 25) 45%, transparent)' }}
+                            onClick={onSolicitarBaja}
+                            disabled={isLoading}
+                        >
+                            <i className="fas fa-ban"></i>
+                            Dar de baja
+                        </button>
+                    )}
                     <button type="button" className="mdz-btn mdz-btn-filter" onClick={onHide} disabled={isLoading}>
                         Cancelar
                     </button>
