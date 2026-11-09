@@ -248,7 +248,7 @@ const FichaMueble = ({ mueble, imagenesCompletas }: { mueble: any; imagenesCompl
             {/* Detalles */}
             <div style={{ marginTop: 40 }}>
               <h1 className="mdz-detail-title">{mueble.nombreMueble}</h1>
-              <p className="mdz-detail-desc">{mueble.descripcion}</p>
+              {mueble.descripcion?.trim() && <p className="mdz-detail-desc">{mueble.descripcion}</p>}
 
               <div className="mdz-share">
                 <a className="mdz-btn mdz-btn-filter" href={`https://wa.me/?text=${textoWhatsApp}`} target="_blank" rel="noopener noreferrer">

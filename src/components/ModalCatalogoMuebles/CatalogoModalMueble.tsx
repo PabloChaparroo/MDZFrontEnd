@@ -224,7 +224,7 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
             id: Yup.number().integer().min(0),
             nombreMueble: Yup.string().required('El titulo es requerido'),
             colorMueble: Yup.string().min(0).required('El color es requido'),
-            descripcion: Yup.string().min(0).required('La descripción es requerida'),
+            descripcion: Yup.string().nullable(),
             linkInstagram: Yup.string().url('Debe ser una URL válida').nullable(),
             linkFacebook: Yup.string().url('Debe ser una URL válida').nullable(),
         });
@@ -262,6 +262,12 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                     }
                     <br /> <strong> {mue.nombreMueble} </strong> ?
                 </p>
+                {modalType === ModalType.DELETE && (
+                    <div className="alert alert-warning mt-3">
+                        <i className="fas fa-exclamation-triangle me-2"></i>
+                        Se borrarán de la base de datos el producto, sus imágenes y todas las consultas hechas sobre él. Esta acción no se puede deshacer.
+                    </div>
+                )}
                 {modalType === ModalType.BAJA_LOGICA && (
                     <div className="alert alert-info mt-3">
                         <i className="fas fa-info-circle me-2"></i>
@@ -339,7 +345,7 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                     </Form.Group>
 
                     <Form.Group controlId="formDescripcion">
-                        <FormLabel> Descripción </FormLabel>
+                        <FormLabel> Descripción <span className="text-muted">(opcional)</span> </FormLabel>
                         <Form.Control
                             name= "descripcion"
                             type="text"
