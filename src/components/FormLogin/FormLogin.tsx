@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Form, Container, Button } from "react-bootstrap";
@@ -9,6 +9,7 @@ import { AuthService } from "../../services/AuthService";
 
 const FormLogin: React.FC = () => {
   const navigate = useNavigate();
+  const [mostrarPassword, setMostrarPassword] = useState(false);
 
   // YUP - Esquema de validación
   const validationSchema = Yup.object({
@@ -69,15 +70,28 @@ const FormLogin: React.FC = () => {
             <label htmlFor="password" className="form-label">
               Contraseña
             </label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              name="password"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.password}
-            />
+            <div className="password-field">
+              <input
+                type={mostrarPassword ? "text" : "password"}
+                className="form-control"
+                id="password"
+                name="password"
+                autoComplete="current-password"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setMostrarPassword((v) => !v)}
+                aria-label={mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                aria-pressed={mostrarPassword}
+                title={mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+              >
+                <i className={mostrarPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
+              </button>
+            </div>
             {formik.touched.password && formik.errors.password ? (
               <div className="text-danger"> {formik.errors.password} </div>
             ) : null}

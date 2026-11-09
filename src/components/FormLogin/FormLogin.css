@@ -347,3 +347,19 @@
     box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
   }
 }
+
+/* Ojito para mostrar/ocultar la contraseña */
+.password-field { position: relative; }
+/* El CSS del login usa !important en los inputs: sin esto el texto queda debajo del ícono */
+.login-container .password-field .form-control { padding-right: 52px !important; }
+.password-toggle {
+  position: absolute; top: 50%; right: 6px; transform: translateY(-50%);
+  width: 38px; height: 38px; display: grid; place-items: center;
+  background: transparent; border: 0; border-radius: 6px; cursor: pointer;
+  transition: color 0.15s;
+}
+/* Gris medio: se lee sobre el input claro y sobre el oscuro. Con !important porque
+   ".login-container button { color: inherit !important }" lo dejaría blanco. */
+.login-container .password-toggle { color: #7b818a !important; }
+.login-container .password-toggle:hover, .login-container .password-toggle:focus-visible { color: #c9a227 !important; }
+.password-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 1px; }
