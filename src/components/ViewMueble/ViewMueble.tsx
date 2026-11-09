@@ -203,6 +203,7 @@ const FichaMueble = ({ mueble, imagenesCompletas }: { mueble: any; imagenesCompl
         </div>
       )}
 
+      <div className="mdz-detail-bg">
       <div className="mdz-container mdz-section">
         <Link to="/catalogo" className="mdz-back-link">
           <i className="fas fa-arrow-left"></i> Volver al catálogo
@@ -272,7 +273,7 @@ const FichaMueble = ({ mueble, imagenesCompletas }: { mueble: any; imagenesCompl
             </div>
 
             {/* Formulario de consulta */}
-            <div style={{ marginTop: 48 }}>
+            <div className="mdz-glass mdz-glass-form" style={{ marginTop: 48 }}>
               <h2 style={{ fontFamily: 'var(--mdz-font-display)', fontWeight: 500, fontSize: 24, marginBottom: 6 }}>
                 Consultar por este mueble
               </h2>
@@ -373,6 +374,7 @@ const FichaMueble = ({ mueble, imagenesCompletas }: { mueble: any; imagenesCompl
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       {showSuccessMessage && (
