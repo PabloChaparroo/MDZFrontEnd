@@ -11,6 +11,7 @@ import { MuebleService } from '../../services/MuebleService';
 
 // Components
 import Loader from '../Loader/Loader';
+import MdzSelect from '../MdzSelect/MdzSelect';
 import Pagination from '../Pagination/Pagination';
 
 // Styles
@@ -245,19 +246,17 @@ const CatalogoMueble = () => {
         {/* Filtros de categoría */}
         {!esBusqueda && (
           <>
-            <select
+            <MdzSelect
               className="mdz-select"
+              ariaLabel="Filtrar por categoría"
               value={categoriaSeleccionada}
-              onChange={e => handleClickCategoria(e.target.value)}
+              onChange={handleClickCategoria}
+              options={[
+                { value: 'Todos', label: 'Todos los productos' },
+                ...categorias.map((c) => ({ value: c.nombreCategoria, label: c.nombreCategoria })),
+              ]}
               style={{ marginBottom: 28 }}
-            >
-              <option value="Todos">Todos los productos</option>
-              {categorias.map((categoria) => (
-                <option key={categoria.id} value={categoria.nombreCategoria}>
-                  {categoria.nombreCategoria}
-                </option>
-              ))}
-            </select>
+            />
 
             <div className="mdz-filters" style={{ marginBottom: 36 }}>
               <button

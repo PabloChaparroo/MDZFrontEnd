@@ -23,9 +23,10 @@ type CatalogoModalMuebleProps = {
     refreshData: React.Dispatch<React.SetStateAction<boolean>>;
     categoria: string; // Nuevo prop para almacenar la categoría seleccionada
     categorias: Categoria[]; // Lista de categorías
+    onSolicitarBaja?: () => void; // Desde la edición: pasa a la confirmación de baja
 }
 
-const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categoria,categorias  }: CatalogoModalMuebleProps) => {
+const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categoria,categorias, onSolicitarBaja  }: CatalogoModalMuebleProps) => {
     const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]); // Array de archivos seleccionados
     const [showImagenesModal, setShowImagenesModal] = useState(false); // Estado para controlar el modal de imágenes
     const [isLoading, setIsLoading] = useState(false); // Estado para mostrar indicador de carga
@@ -223,7 +224,7 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
             id: Yup.number().integer().min(0),
             nombreMueble: Yup.string().required('El titulo es requerido'),
             colorMueble: Yup.string().min(0).required('El color es requido'),
-            descripcion: Yup.string().min(0).required('La descripción es requerida'),
+            descripcion: Yup.string().nullable(),
             linkInstagram: Yup.string().url('Debe ser una URL válida').nullable(),
             linkFacebook: Yup.string().url('Debe ser una URL válida').nullable(),
         });
@@ -261,6 +262,12 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                     }
                     <br /> <strong> {mue.nombreMueble} </strong> ?
                 </p>
+                {modalType === ModalType.DELETE && (
+                    <div className="alert alert-warning mt-3">
+                        <i className="fas fa-exclamation-triangle me-2"></i>
+                        Se borrarán de la base de datos el producto, sus imágenes y todas las consultas hechas sobre él. Esta acción no se puede deshacer.
+                    </div>
+                )}
                 {modalType === ModalType.BAJA_LOGICA && (
                     <div className="alert alert-info mt-3">
                         <i className="fas fa-info-circle me-2"></i>
@@ -338,7 +345,7 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                     </Form.Group>
 
                     <Form.Group controlId="formDescripcion">
-                        <FormLabel> Descripción </FormLabel>
+                        <FormLabel> Descripción <span className="text-muted">(opcional)</span> </FormLabel>
                         <Form.Control
                             name= "descripcion"
                             type="text"
@@ -505,6 +512,18 @@ const CatalogoModalMueble = ({show, onHide, mue, modalType,refreshData, categori
                 </Form>
 
                 <Modal.Footer className="mt-4">
+                    {modalType === ModalType.UPDATE && onSolicitarBaja && (
+                        <button
+                            type="button"
+                            className="mdz-btn mdz-btn-filter"
+                            style={{ marginRight: 'auto', color: 'oklch(0.7 0.19 25)', borderColor: 'color-mix(in oklch, oklch(0.7 0.19 25) 45%, transparent)' }}
+                            onClick={onSolicitarBaja}
+                            disabled={isLoading}
+                        >
+                            <i className="fas fa-ban"></i>
+                            Dar de baja
+                        </button>
+                    )}
                     <button type="button" className="mdz-btn mdz-btn-filter" onClick={onHide} disabled={isLoading}>
                         Cancelar
                     </button>

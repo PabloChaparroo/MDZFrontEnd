@@ -12,6 +12,7 @@ const AdministrarCategorias = lazy(() => import("../pages/AdministrarCategorias"
 const QuienesSomos = lazy(() => import("../pages/QuienesSomos"));
 const AdministrarSolicitudPage = lazy(() => import("../pages/AdministrarSolicitud"));
 const PerfilPage = lazy(() => import("../pages/PerfilPage"));
+const Privacidad = lazy(() => import("../pages/Privacidad"));
 
 const AppRoutes: React.FC = () => {
     return (
@@ -23,6 +24,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/novedades" element={<Novedades/>}/>
             <Route path="/quienesSomos" element={<QuienesSomos/>}/>
             <Route path="/ViewMueble/:id" element={<ViewMueble/>} />
+            <Route path="/privacidad" element={<Privacidad/>} />
             <Route path="/perfil" element={<PrivateRoute element={<PerfilPage/>}/>} />
             <Route path="/administrarCategorias" element={<PrivateRoute element={<AdministrarCategorias/>}/>}/>
             <Route path="/administrarSolicitud" element={<PrivateRoute element={<AdministrarSolicitudPage/>}/>}/>

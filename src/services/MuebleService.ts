@@ -225,7 +225,7 @@ export const MuebleService = {
     deleteMueble: async (id: number): Promise<void> => {
         checkAuth();
 
-        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/${id}`, {
+        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/eliminar/${id}`, {
             method: "DELETE",
             headers: getAuthHeadersNoContentType()
         });
