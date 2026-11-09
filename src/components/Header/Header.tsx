@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '../../assets/images/logo-sm.webp';
 import '../../styles/mdz-theme.css';
 import '../../styles/mdz-site.css';
@@ -39,6 +39,30 @@ const Header = () => {
   }, [menuOpen]);
 
   const isLoggedIn = !!localStorage.getItem('token');
+  const [pressed, setPressed] = useState<string | null>(null);
+
+  const mobileLinks = [
+    { to: '/', label: 'Inicio', icon: 'fa-house' },
+    { to: '/catalogo', label: 'Catálogo', icon: 'fa-couch' },
+    { to: '/novedades', label: 'Novedades', icon: 'fa-newspaper' },
+    { to: '/quienesSomos', label: 'El taller', icon: 'fa-hammer' },
+    ...(isLoggedIn
+      ? [
+          { to: '/perfil', label: 'Mi perfil', icon: 'fa-user-circle' },
+          { to: '/administrarCategorias', label: 'Admin categorías', icon: 'fa-tags' },
+          { to: '/administrarSolicitud', label: 'Admin consultas', icon: 'fa-inbox' },
+        ]
+      : [{ to: '/login', label: 'Iniciar sesión', icon: 'fa-right-to-bracket' }]),
+  ];
+
+  // En el menú móvil: primero se anima el toque (naranja) y recién después se navega
+  const goMobile = (to: string) => {
+    setPressed(to);
+    window.setTimeout(() => {
+      setPressed(null);
+      go(to);
+    }, 280);
+  };
   const isActive = (path: string) => location.pathname === path;
 
   const go = (to: string) => {
@@ -109,19 +133,17 @@ const Header = () => {
             <i className="fas fa-xmark"></i>
           </button>
         </div>
-        <span onClick={() => go('/')}>Inicio</span>
-        <span onClick={() => go('/catalogo')}>Catálogo</span>
-        <span onClick={() => go('/novedades')}>Novedades</span>
-        <span onClick={() => go('/quienesSomos')}>El taller</span>
-        {isLoggedIn ? (
-          <>
-            <span onClick={() => go('/perfil')}>Mi perfil</span>
-            <span onClick={() => go('/administrarCategorias')}>Admin categorías</span>
-            <span onClick={() => go('/administrarSolicitud')}>Admin consultas</span>
-          </>
-        ) : (
-          <span onClick={() => go('/login')}>Iniciar sesión</span>
-        )}
+        {mobileLinks.map((link, i) => (
+          <span
+            key={link.to}
+            className={`mdz-mobile-link ${isActive(link.to) ? 'is-active' : ''} ${pressed === link.to ? 'is-pressed' : ''}`}
+            style={{ '--i': i } as React.CSSProperties}
+            onClick={() => goMobile(link.to)}
+          >
+            <i className={`fas ${link.icon}`}></i>
+            {link.label}
+          </span>
+        ))}
       </nav>
     </header>
   );
