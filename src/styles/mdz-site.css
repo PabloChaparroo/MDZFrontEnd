@@ -931,3 +931,61 @@ body.mdz-no-scroll { overflow: hidden; }
 }
 .mdz-notif-input:focus { outline: 0; border-color: var(--mdz-primary); }
 .mdz-notif button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* === Header de vidrio con luz que recorre el borde === */
+.mdz-site-header { background: transparent !important; border-bottom: 0 !important; isolation: isolate; transition: box-shadow 0.3s ease; }
+/* el blur va en un pseudo-elemento: un backdrop-filter en el header rompería el menú móvil (position: fixed) */
+.mdz-site-header::before { content: ''; position: absolute; inset: 0; z-index: -1; background: rgba(14, 14, 14, 0.55); backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%); border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: background 0.3s ease; }
+.mdz-site-header::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; z-index: -1; background: linear-gradient(90deg, transparent 0%, var(--mdz-primary) 50%, transparent 100%); background-size: 40% 100%; background-repeat: no-repeat; animation: mdz-header-glow 7s ease-in-out infinite alternate; opacity: 0.85; }
+@keyframes mdz-header-glow { from { background-position: -10% 0; } to { background-position: 110% 0; } }
+.mdz-site-header.is-scrolled { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35); }
+.mdz-site-header.is-scrolled::before { background: rgba(14, 14, 14, 0.78); }
+.mdz-site-header .mdz-container { transition: height 0.3s ease; }
+.mdz-site-header.is-scrolled .mdz-container { height: 68px; }
+.mdz-brand img { transition: transform 0.4s ease; }
+.mdz-brand:hover img { transform: rotate(-6deg) scale(1.06); }
+@media (prefers-reduced-motion: reduce) { .mdz-site-header::after { animation: none; background-position: 50% 0; } }
+
+/* === Home: luz ambiente y paneles de vidrio === */
+.mdz-home { background:
+  radial-gradient(50% 30% at 90% 22%, color-mix(in oklch, var(--mdz-primary) 13%, transparent), transparent 70%),
+  radial-gradient(45% 28% at 5% 52%, color-mix(in oklch, var(--mdz-primary) 9%, transparent), transparent 70%),
+  radial-gradient(50% 30% at 80% 82%, color-mix(in oklch, var(--mdz-primary) 12%, transparent), transparent 70%),
+  var(--mdz-background); }
+.mdz-home .mdz-section:not(.mdz-hero) { background: transparent; }
+.mdz-home .mdz-process-grid > div, .mdz-home .mdz-contact-form {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+}
+.mdz-home .mdz-process-grid > div:hover { border-color: var(--mdz-primary); }
+.mdz-home .mdz-contact-form input, .mdz-home .mdz-contact-form textarea { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.12); border-radius: 10px; }
+.mdz-home .mdz-contact-form input:focus, .mdz-home .mdz-contact-form textarea:focus { border-color: var(--mdz-primary); background: rgba(255, 255, 255, 0.08); }
+.mdz-home-tile { border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.1); }
+.mdz-home .mdz-about-image { border: 1px solid rgba(255, 255, 255, 0.14); }
+
+/* === Modales: el desenfoque del fondo siempre gana a Bootstrap === */
+.modal-backdrop.show { opacity: 0.55 !important; backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important; }
+
+/* === Modal de imágenes en celular: cada fila pasa a ser una tarjeta === */
+@media (max-width: 640px) {
+  .mdz-modal-content .table-responsive { border: 0; border-radius: 0; overflow: visible; }
+  .mdz-modal-content .table, .mdz-modal-content .table tbody { display: block; width: 100%; }
+  .mdz-modal-content .table thead { display: none; }
+  .mdz-modal-content .table tbody tr {
+    display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; grid-template-areas: "thumb orden del" "thumb name name" "thumb portada portada";
+    gap: 6px 12px; align-items: center; padding: 10px; margin-bottom: 10px;
+    border: 1px solid var(--mdz-border); border-radius: 14px; background: rgba(255, 255, 255, 0.04);
+  }
+  .mdz-modal-content .table > tbody > tr > td { display: block; padding: 0 !important; border: 0 !important; background: transparent !important; text-align: left !important; width: auto !important; }
+  .mdz-modal-content .table > tbody > tr > td:nth-child(1) { grid-area: orden; }
+  .mdz-modal-content .table > tbody > tr > td:nth-child(2) { grid-area: thumb; }
+  .mdz-modal-content .table > tbody > tr > td:nth-child(3) { grid-area: name; min-width: 0; }
+  .mdz-modal-content .table > tbody > tr > td:nth-child(4) { grid-area: portada; }
+  .mdz-modal-content .table > tbody > tr > td:nth-child(5) { grid-area: del; }
+  .mdz-modal-content .table tbody td:nth-child(2) img { width: 92px !important; height: 92px !important; }
+  .mdz-modal-content .table tbody td:nth-child(3) .text-truncate { max-width: 100% !important; }
+  .mdz-modal-content .table tbody td:nth-child(4) .form-check { min-height: 36px; }
+}

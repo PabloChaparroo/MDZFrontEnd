@@ -8,6 +8,14 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     const fontAwesomeLink = document.createElement('link');
@@ -39,7 +47,7 @@ const Header = () => {
   };
 
   return (
-    <header className="mdz-site-header">
+    <header className={`mdz-site-header ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="mdz-container">
         <Link to="/" className="mdz-brand" aria-label="MDZ Muebles, inicio">
           <img src={logo} alt="MDZ Muebles" />
