@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import logo from '../../assets/images/logo-sm.webp';
+import logo from '../../assets/images/logo-mdz-256.webp';
 import '../../styles/mdz-theme.css';
 import '../../styles/mdz-site.css';
 

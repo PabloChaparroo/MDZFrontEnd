@@ -5,7 +5,7 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
-    <meta name="theme-color" content="#151515" />
+    <meta name="theme-color" content="#000000" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="MDZ Muebles" />
@@ -17,8 +17,35 @@
   crossorigin="anonymous"
 />
     <title>MDZ MUEBLES</title>
+    <style>
+      /* Pantalla de arranque: solo cuando se abre como app instalada. Negro como el logo, para que
+         el paso desde la pantalla de carga del sistema sea continuo. */
+      #splash { display: none; position: fixed; inset: 0; z-index: 99999; background: #000; flex-direction: column;
+        align-items: center; justify-content: center; gap: 28px; transition: opacity .45s ease, visibility .45s; }
+      html.is-app #splash { display: flex; }
+      #splash.is-hiding { opacity: 0; visibility: hidden; }
+      #splash img { width: min(46vw, 220px); height: auto; opacity: 0; transform: scale(.82) rotate(-4deg);
+        animation: splash-in .9s cubic-bezier(.2,.8,.2,1) .1s forwards, splash-glow 2.4s ease-in-out 1s infinite; }
+      #splash .splash-bar { width: min(34vw, 150px); height: 2px; border-radius: 2px; overflow: hidden; background: rgba(245,166,35,.18); opacity: 0;
+        animation: splash-fade .4s ease .7s forwards; }
+      #splash .splash-bar::after { content: ""; display: block; width: 40%; height: 100%; background: #f5a623; border-radius: 2px;
+        animation: splash-slide 1.1s ease-in-out infinite; }
+      @keyframes splash-in { to { opacity: 1; transform: scale(1) rotate(0); } }
+      @keyframes splash-glow { 0%,100% { filter: drop-shadow(0 0 0 rgba(245,166,35,0)); } 50% { filter: drop-shadow(0 0 18px rgba(245,166,35,.45)); } }
+      @keyframes splash-fade { to { opacity: 1; } }
+      @keyframes splash-slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+      @media (prefers-reduced-motion: reduce) { #splash img, #splash .splash-bar, #splash .splash-bar::after { animation: none; opacity: 1; transform: none; } }
+    </style>
+    <script>
+      // Detecta si se abrió como app instalada (Android/PC: display-mode standalone; iPhone: navigator.standalone)
+      (function () {
+        var app = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+        if (app) { document.documentElement.classList.add('is-app'); window.__splashDesde = Date.now(); }
+      })();
+    </script>
   </head>
   <body>
+    <div id="splash" aria-hidden="true"><img src="/logo-splash.png" alt="" /><div class="splash-bar"></div></div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
