@@ -272,6 +272,26 @@ export const MuebleService = {
         }
     },
 
+    // Ficha pública liviana (sin fotos) y galería (solo ids); cada foto se pide como imagen con urlImagen()
+    getFichaById: async (id: number): Promise<Mueble> => {
+        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/${id}/ficha`);
+        if (!response.ok) {
+            throw new Error(`Mueble ${id} no encontrado`);
+        }
+        return response.json();
+    },
+
+    getGaleria: async (id: number): Promise<{ id: number; esPortada: boolean }[]> => {
+        const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/${id}/galeria`);
+        if (!response.ok) {
+            throw new Error(`Error al obtener la galería: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+    },
+
+    urlImagen: (imagenId: number, miniatura = false): string =>
+        `${BASE_URL}/api/v1/mueble/imagen/${imagenId}/archivo${miniatura ? '?miniatura=true' : ''}`,
+
     getMuebleById: async (id: number): Promise<Mueble> => {
         const response = await fetchWithTimeout(`${BASE_URL}/api/v1/mueble/${id}`);
         if (!response.ok) {

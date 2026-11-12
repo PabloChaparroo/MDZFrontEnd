@@ -1,6 +1,5 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Mueble } from "../../types/Mueble";
-import { MuebleImagenes } from "../../types/MuebleImagenes";
 import { useEffect, useRef, useState } from "react";
 import { CategoriaService } from "../../services/CategoriaService";
 import { Categoria } from "../../types/Categoria";
@@ -24,7 +23,7 @@ const ViewMueble = () => {
     let cancelado = false;
     setMuebleDelLink(null);
     setNoDisponible(false);
-    MuebleService.getMuebleById(Number(id))
+    MuebleService.getFichaById(Number(id))
       .then((data) => {
         if (cancelado) return;
         if (data.fechaBajaMueble) setNoDisponible(true);
@@ -50,10 +49,10 @@ const ViewMueble = () => {
     return <div className="mdz-container mdz-section"><Loader /></div>;
   }
 
-  return <FichaMueble key={mueble.id} mueble={mueble} imagenesCompletas={!muebleDelCatalogo} />;
+  return <FichaMueble key={mueble.id} mueble={mueble} />;
 };
 
-const FichaMueble = ({ mueble, imagenesCompletas }: { mueble: any; imagenesCompletas: boolean }) => {
+const FichaMueble = ({ mueble }: { mueble: any }) => {
   const location = useLocation();
   const [enlaceCopiado, setEnlaceCopiado] = useState(false);
   const enlaceMueble = `${window.location.origin}/ViewMueble/${mueble.id}`;
@@ -83,39 +82,40 @@ const FichaMueble = ({ mueble, imagenesCompletas }: { mueble: any; imagenesCompl
     fetchCategoria();
   }, []);
 
-  const [imagenesFromBackend, setImagenesFromBackend] = useState<MuebleImagenes[]>([]);
-  const [imagenPrincipal, setImagenPrincipal] = useState<MuebleImagenes | null>(null);
+  // Solo ids: cada foto se descarga como imagen (en paralelo y cacheada por el navegador)
+  type FotoGaleria = { id: number; esPortada: boolean };
+  const [galeria, setGaleria] = useState<FotoGaleria[]>([]);
+  const [imagenPrincipal, setImagenPrincipal] = useState<FotoGaleria | null>(null);
   const [loadingImages, setLoadingImages] = useState(true);
+  const [fotoCargada, setFotoCargada] = useState(false);
   const [showFullscreen, setShowFullscreen] = useState(false);
-  const [fullscreenImage, setFullscreenImage] = useState<MuebleImagenes | null>(null);
+  const [fullscreenImage, setFullscreenImage] = useState<FotoGaleria | null>(null);
 
   useEffect(() => {
-    const fetchImagenes = async () => {
+    let cancelado = false;
+    const fetchGaleria = async () => {
       try {
         setLoadingImages(true);
-        const imagenes = imagenesCompletas ? mueble.imagenes : await MuebleService.obtenerImagenesMueble(mueble.id);
-        setImagenesFromBackend(imagenes);
-        const imagenPortada = imagenes.find((img: MuebleImagenes) => img.esPortada) || imagenes[0];
-        setImagenPrincipal(imagenPortada);
+        const fotos = await MuebleService.getGaleria(mueble.id);
+        if (cancelado) return;
+        setGaleria(fotos);
+        setImagenPrincipal(fotos.find((f) => f.esPortada) || fotos[0] || null);
       } catch (error) {
         console.error('Error al obtener las imágenes del mueble:', error);
-        if (mueble.imagenes && mueble.imagenes.length > 0) {
-          setImagenesFromBackend(mueble.imagenes);
-          setImagenPrincipal(mueble.imagenes.find((imagen: any) => imagen.esPortada) || mueble.imagenes[0]);
-        }
       } finally {
-        setLoadingImages(false);
+        if (!cancelado) setLoadingImages(false);
       }
     };
-
-    fetchImagenes();
+    fetchGaleria();
+    return () => { cancelado = true; };
   }, [mueble.id]);
 
-  const handleClickImagen = (imagen: MuebleImagenes) => {
+  const handleClickImagen = (imagen: FotoGaleria) => {
+    setFotoCargada(false);
     setImagenPrincipal(imagen);
   };
 
-  const handleFullscreenImage = (imagen: MuebleImagenes) => {
+  const handleFullscreenImage = (imagen: FotoGaleria) => {
     setFullscreenImage(imagen);
     setShowFullscreen(true);
   };
@@ -196,7 +196,7 @@ const FichaMueble = ({ mueble, imagenesCompletas }: { mueble: any; imagenesCompl
             <i className="fas fa-times"></i>
           </button>
           <img
-            src={`data:image/png;base64, ${fullscreenImage.imagenes}`}
+            src={MuebleService.urlImagen(fullscreenImage.id)}
             alt={mueble.nombreMueble}
             onClick={(e) => e.stopPropagation()}
           />
@@ -217,12 +217,19 @@ const FichaMueble = ({ mueble, imagenesCompletas }: { mueble: any; imagenesCompl
               {loadingImages ? (
                 <div style={{ display: 'grid', placeItems: 'center', height: '100%' }}><Loader /></div>
               ) : imagenPrincipal ? (
-                <img
-                  key={imagenPrincipal.id}
-                  src={`data:image/png;base64, ${imagenPrincipal.imagenes}`}
-                  alt={mueble.nombreMueble}
-                  onClick={() => handleFullscreenImage(imagenPrincipal)}
-                />
+                <>
+                  {!fotoCargada && (
+                    <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center' }}><Loader /></div>
+                  )}
+                  <img
+                    key={imagenPrincipal.id}
+                    src={MuebleService.urlImagen(imagenPrincipal.id)}
+                    alt={mueble.nombreMueble}
+                    onLoad={() => setFotoCargada(true)}
+                    onError={() => setFotoCargada(true)}
+                    onClick={() => handleFullscreenImage(imagenPrincipal)}
+                  />
+                </>
               ) : (
                 <div style={{ display: 'grid', placeItems: 'center', height: '100%', color: 'var(--mdz-muted-foreground)' }}>
                   <i className="fas fa-image" style={{ fontSize: 32 }}></i>
@@ -230,16 +237,16 @@ const FichaMueble = ({ mueble, imagenesCompletas }: { mueble: any; imagenesCompl
               )}
             </div>
 
-            {imagenesFromBackend.length > 1 && (
+            {galeria.length > 1 && (
               <div className="mdz-gallery-thumbs">
-                {imagenesFromBackend.map((imagen: MuebleImagenes) => (
+                {galeria.map((imagen) => (
                   <button
                     key={imagen.id}
                     type="button"
                     className={`mdz-gallery-thumb ${imagenPrincipal?.id === imagen.id ? 'is-active' : ''}`}
                     onClick={() => handleClickImagen(imagen)}
                   >
-                    <img src={`data:image/png;base64, ${imagen.imagenes}`} alt={mueble.nombreMueble} />
+                    <img src={MuebleService.urlImagen(imagen.id, true)} alt={mueble.nombreMueble} loading="lazy" />
                   </button>
                 ))}
               </div>
