@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import logo from '../../assets/images/logo-sm.webp';
+import logo from '../../assets/images/logo-mdz-256.webp';
 import '../../styles/mdz-theme.css';
 import '../../styles/mdz-site.css';
 
